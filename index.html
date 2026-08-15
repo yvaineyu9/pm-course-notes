@@ -26,55 +26,60 @@ body::before{
 }
 .wrap{position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 110px}
 
-header{padding:110px 0 56px}
+header{padding:110px 0 50px}
 .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.32em; color:var(--ac); margin-bottom:20px}
 h1{font-size:60px; line-height:1.12; letter-spacing:-.02em; font-weight:700; margin-bottom:22px}
 h1 .thin{color:var(--dim2); font-weight:200}
-.lede{font-size:18.5px; color:var(--dim); max-width:680px; line-height:1.75; margin-bottom:28px}
+.lede{font-size:18.5px; color:var(--dim); max-width:700px; line-height:1.75; margin-bottom:28px}
 .pills{display:flex; gap:10px; flex-wrap:wrap}
 .pill{font-size:12.5px; padding:6px 15px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
 .pill.ac{border-color:rgba(94,234,212,.42); color:var(--ac); background:rgba(94,234,212,.06)}
 
-.seclbl{font-size:11.5px; letter-spacing:.2em; color:var(--dim2); font-family:var(--mono); margin:52px 0 18px; display:flex; align-items:center; gap:14px}
+.seclbl{font-size:11.5px; letter-spacing:.2em; color:var(--dim2); font-family:var(--mono); margin:46px 0 16px; display:flex; align-items:center; gap:14px}
 .seclbl::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--line2),transparent)}
 
-.list{display:grid; gap:14px}
-a.row{
-  display:grid; grid-template-columns:64px 1fr auto; gap:22px; align-items:center;
-  text-decoration:none; border:1px solid var(--line); background:var(--card);
-  border-radius:16px; padding:22px 26px; transition:.2s;
+.list{display:flex; flex-direction:column; gap:10px}
+.row{
+  display:grid; grid-template-columns:56px 1fr auto; gap:20px; align-items:center;
+  border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 24px;
+  text-decoration:none; transition:.18s;
 }
-a.row:hover{border-color:rgba(94,234,212,.5); background:var(--card2); transform:translateY(-2px)}
-a.row .no{font-family:var(--mono); font-size:26px; color:var(--ac); font-weight:600; letter-spacing:-.02em}
-a.row .t{font-size:21px; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-.01em}
-a.row .d{font-size:14px; color:var(--dim); line-height:1.65}
-a.row .meta{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-a.row .tag{font-size:11.5px; padding:4px 11px; border-radius:100px; background:rgba(94,234,212,.1); color:var(--ac); white-space:nowrap}
-a.row .tag.g{background:#1c2130; color:var(--dim2)}
-@media(max-width:720px){
-  a.row{grid-template-columns:48px 1fr; padding:18px}
-  a.row .meta{grid-column:1/-1; justify-content:flex-start}
-  h1{font-size:40px}
-}
+a.row:hover{border-color:rgba(94,234,212,.5); background:var(--card2); transform:translateX(3px)}
+.row .no{font-family:var(--mono); font-size:22px; color:var(--ac); font-weight:600}
+.row .t{font-size:18.5px; font-weight:700; color:#fff; letter-spacing:-.01em; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.row .d{font-size:13.5px; color:var(--dim); line-height:1.6; margin-top:4px}
+.row .meta{display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end}
+.row .tag{font-size:11.5px; padding:3px 10px; border-radius:100px; background:rgba(94,234,212,.1); color:var(--ac); white-space:nowrap}
+.row .tag.g{background:#1c2130; color:var(--dim2)}
+.rw{font-size:10.5px; padding:2px 9px; border-radius:100px; background:rgba(167,139,250,.15); color:var(--ac2); font-weight:600; letter-spacing:.04em}
 
-.soon{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
-@media(max-width:720px){.soon{grid-template-columns:1fr}}
-.soon div{
-  border:1px dashed var(--line2); border-radius:14px; padding:16px 20px;
-  color:var(--dim2); font-size:15px; display:flex; gap:14px; align-items:baseline;
-}
-.soon div span{font-family:var(--mono); font-size:13px; color:#4b5262}
+.row.off{border-style:dashed; border-color:var(--line2); background:transparent; cursor:default}
+.row.off .no{color:#3f4552}
+.row.off .t{color:var(--dim2); font-size:17px; font-weight:600}
+.row.off .tag.g{color:#4b5262}
 
-.about{margin-top:56px; border:1px solid var(--line); background:var(--card); border-radius:16px; padding:26px 28px}
+.demo{margin-top:14px; border:1px solid rgba(94,234,212,.4); border-radius:14px;
+  background:linear-gradient(180deg,rgba(94,234,212,.08),rgba(94,234,212,.02));
+  padding:20px 24px; display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap}
+.demo .t{font-size:16px; font-weight:700; color:#fff}
+.demo .d{font-size:13.5px; color:var(--dim); margin-top:3px}
+.demo a{background:var(--ac); color:#08110f; font-weight:700; font-size:14px; padding:9px 22px; border-radius:100px; text-decoration:none; white-space:nowrap}
+
+.about{margin-top:50px; border:1px solid var(--line); background:var(--card); border-radius:16px; padding:26px 28px}
 .about h3{font-size:15px; color:#fff; margin-bottom:12px; font-weight:650}
 .about ul{list-style:none; display:flex; flex-direction:column; gap:9px}
 .about li{position:relative; padding-left:20px; font-size:14.5px; color:var(--dim); line-height:1.7}
 .about li::before{content:""; position:absolute; left:2px; top:11px; width:6px; height:6px; border-radius:50%; background:var(--ac2)}
 .about b{color:#fff}
 
-footer{margin-top:60px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer{margin-top:56px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
 footer a{color:var(--dim); text-decoration:none}
 footer a:hover{color:var(--ac)}
+@media(max-width:720px){
+  h1{font-size:40px}
+  .row{grid-template-columns:44px 1fr; padding:16px}
+  .row .meta{grid-column:1/-1; justify-content:flex-start}
+}
 </style>
 </head>
 <body>
@@ -83,16 +88,18 @@ footer a:hover{color:var(--ac)}
 <header>
   <div class="kicker">PRODUCT MANAGER · COURSE NOTES</div>
   <h1>产品经理培训<br><span class="thin">图文笔记</span></h1>
-  <p class="lede">把课堂笔记整理成人能读下去的图文文档。深色阅读版，所有图示为手绘 SVG，单文件自包含，断网也能打开。</p>
+  <p class="lede">把课堂笔记整理成人能读下去的图文文档。深色阅读版，所有图示为手绘 SVG，单文件自包含，断网也能打开。其中原型三节按 2026 年的工具现状做了重写。</p>
   <div class="pills">
-    <span class="pill ac">3 / 11 节已完成</span>
-    <span class="pill">32 张原创图解</span>
+    <span class="pill ac">6 / 11 节已完成</span>
+    <span class="pill">46 张原创图解</span>
+    <span class="pill">1 个可运行原型</span>
     <span class="pill">无外部依赖</span>
   </div>
 </header>
 
-<div class="seclbl">已完成</div>
+<div class="seclbl">课程目录</div>
 <div class="list">
+
   <a class="row" href="01.html">
     <div class="no">01</div>
     <div>
@@ -101,6 +108,7 @@ footer a:hover{color:var(--ac)}
     </div>
     <div class="meta"><span class="tag g">了解</span><span class="tag">9 张图</span></div>
   </a>
+
   <a class="row" href="02.html">
     <div class="no">02</div>
     <div>
@@ -109,6 +117,7 @@ footer a:hover{color:var(--ac)}
     </div>
     <div class="meta"><span class="tag g">熟悉</span><span class="tag">12 张图</span></div>
   </a>
+
   <a class="row" href="03.html">
     <div class="no">03</div>
     <div>
@@ -117,24 +126,75 @@ footer a:hover{color:var(--ac)}
     </div>
     <div class="meta"><span class="tag g">熟悉</span><span class="tag">11 张图</span></div>
   </a>
+
+  <div class="row off">
+    <div class="no">04</div>
+    <div><div class="t">产品规划</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
+
+  <a class="row" href="05.html">
+    <div class="no">05</div>
+    <div>
+      <div class="t">原型基础 <span class="rw">重写</span></div>
+      <div class="d">原型三种分类 · 移动端设计规范（已更新到当前机型）· 交互思想 · 交互自查清单</div>
+    </div>
+    <div class="meta"><span class="tag g">掌握</span><span class="tag">4 张图</span></div>
+  </a>
+
+  <a class="row" href="06.html">
+    <div class="no">06</div>
+    <div>
+      <div class="t">Figma 实战 <span class="rw">重写</span></div>
+      <div class="d">Frame · Auto Layout · 组件与变体 · 原型连线 · Dev Mode 交付 · Axure 迁移对照</div>
+    </div>
+    <div class="meta"><span class="tag g">掌握</span><span class="tag">6 张图</span></div>
+  </a>
+
+  <a class="row" href="07.html">
+    <div class="no">07</div>
+    <div>
+      <div class="t">让 AI 直接做 HTML 原型 <span class="rw">重写</span></div>
+      <div class="d">三种工具的分工 · Prompt 五段结构 · 迭代方法 · 五个坑 · 怎么交付 · 完整示例</div>
+    </div>
+    <div class="meta"><span class="tag g">掌握</span><span class="tag">4 张图</span><span class="tag">含原型</span></div>
+  </a>
+
+  <div class="row off">
+    <div class="no">08</div>
+    <div><div class="t">产品设计规范（上）</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
+  <div class="row off">
+    <div class="no">09</div>
+    <div><div class="t">产品设计规范（下）</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
+  <div class="row off">
+    <div class="no">10</div>
+    <div><div class="t">后台基础 01</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
+  <div class="row off">
+    <div class="no">11</div>
+    <div><div class="t">后台基础 02</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
 </div>
 
-<div class="seclbl">整理中</div>
-<div class="soon">
-  <div><span>04</span>产品规划</div>
-  <div><span>05</span>原型及 Axure 介绍</div>
-  <div><span>06</span>Axure 交互进阶</div>
-  <div><span>07</span>中继器与交互自查</div>
-  <div><span>08</span>产品设计规范（上）</div>
-  <div><span>09</span>产品设计规范（下）</div>
-  <div><span>10</span>后台基础 01</div>
-  <div><span>11</span>后台基础 02</div>
+<div class="demo">
+  <div>
+    <div class="t">⚡ 需求池管理 · 可运行原型</div>
+    <div class="d">第 07 节的配套示例。筛选、搜索、状态流转、表单校验、空状态都是活的，单文件不联网也能跑。</div>
+  </div>
+  <a href="demo-需求池原型.html" target="_blank">打开原型 →</a>
 </div>
 
 <div class="about">
   <h3>关于这份笔记</h3>
   <ul>
-    <li>内容基于个人课堂笔记<b>重新组织和撰写</b>，不是课件原文的转载</li>
+    <li>大部分内容基于个人课堂笔记<b>重新组织和撰写</b>，不是课件原文的转载</li>
+    <li><b>05 / 06 / 07 三节是重写的</b>。原课程这里是三节 Axure 教程（含中继器、动态面板、全局变量），操作部分已经过时；只保留了跟工具无关的方法论，工具部分替换为 Figma 和 AI 生成 HTML 原型</li>
     <li>全部图示为<b>原创手绘 SVG</b>，无第三方素材</li>
     <li>纯静态单文件 HTML，<b>无外部依赖、无脚本追踪、无 CDN 请求</b>，下载后断网可看</li>
   </ul>

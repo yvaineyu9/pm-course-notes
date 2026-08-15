@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>需求池管理 · 原型</title>
+<style>
+/* 低保真灰阶 + 单一强调色 */
+:root{
+  --bg:#0e1013; --panel:#16181d; --panel2:#1c1f26;
+  --line:#282c34; --line2:#363b46;
+  --t1:#e6e8ec; --t2:#9ba1ac; --t3:#6b7180;
+  --ac:#5eead4;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--t1); min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 60px}
+
+/* 原型水印条 */
+.banner{
+  border:1px dashed var(--line2); border-radius:8px; padding:9px 16px; margin-bottom:22px;
+  font-size:12.5px; color:var(--t3); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.banner b{color:var(--ac); font-weight:600}
+
+h1{font-size:22px;font-weight:650;margin-bottom:4px}
+.sub{font-size:13px;color:var(--t3);margin-bottom:22px}
+
+/* 统计条 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px 18px}
+.stat .n{font-size:26px;font-weight:650;font-family:var(--mono);letter-spacing:-.02em}
+.stat .l{font-size:12px;color:var(--t3);margin-top:2px}
+.stat.hl .n{color:var(--ac)}
+
+/* 筛选栏 */
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+select,input[type=text]{
+  background:var(--panel);border:1px solid var(--line2);color:var(--t1);
+  border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;
+}
+select:focus,input:focus{border-color:var(--ac)}
+input[type=text]{min-width:220px;flex:1;max-width:320px}
+.bar .sp{flex:1}
+button{font-family:inherit;cursor:pointer;border:none;font-size:13px}
+.btn{background:var(--ac);color:#08110f;font-weight:650;padding:9px 18px;border-radius:8px}
+.btn:disabled{background:var(--line2);color:var(--t3);cursor:not-allowed}
+.btn2{background:var(--panel);color:var(--t2);border:1px solid var(--line2);padding:8px 16px;border-radius:8px}
+.btn2:hover{color:var(--t1);border-color:var(--t3)}
+
+/* 表格 */
+.tbox{border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:840px}
+th{
+  text-align:left;padding:11px 16px;font-size:11.5px;letter-spacing:.06em;color:var(--t3);
+  font-weight:600;background:var(--panel2);border-bottom:1px solid var(--line);white-space:nowrap;
+}
+td{padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+td.desc{color:var(--t1);max-width:340px}
+td.dim{color:var(--t2)}
+td.time{color:var(--t3);font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+
+/* 优先级：灰阶区分，仅 P0 用强调色 */
+.p{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:650;
+   padding:3px 9px;border-radius:5px;border:1px solid var(--line2);color:var(--t2)}
+.p.P0{border-color:var(--ac);color:var(--ac)}
+.p.P1{color:var(--t1);border-color:var(--t3)}
+
+/* 状态：可点 */
+.stbtn{background:none;border:1px solid transparent;border-radius:7px;padding:4px 9px;
+       color:var(--t2);display:inline-flex;align-items:center;gap:7px;font-size:13px}
+.stbtn:hover{border-color:var(--line2);background:var(--panel2)}
+.stbtn .dot{width:7px;height:7px;border-radius:50%;background:var(--t3);flex:none}
+.stbtn[data-s="已排期"] .dot{background:var(--t2)}
+.stbtn[data-s="开发中"] .dot{background:var(--t1)}
+.stbtn[data-s="已上线"] .dot{background:var(--ac)}
+.stbtn[data-s="已上线"]{color:var(--ac)}
+.stbtn .car{font-size:9px;color:var(--t3)}
+.stbtn.lock{cursor:default}
+.stbtn.lock:hover{border-color:transparent;background:none}
+
+/* 状态下拉 */
+.pop{position:absolute;z-index:40;background:var(--panel2);border:1px solid var(--line2);
+     border-radius:9px;padding:5px;min-width:140px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pop .ph{font-size:11px;color:var(--t3);padding:5px 10px 6px}
+.pop button{display:block;width:100%;text-align:left;background:none;color:var(--t1);
+            padding:8px 10px;border-radius:6px;font-size:13px}
+.pop button:hover{background:rgba(94,234,212,.12);color:var(--ac)}
+
+/* 空状态 */
+.empty{padding:56px 20px;text-align:center}
+.empty .i{font-size:30px;opacity:.35;margin-bottom:12px}
+.empty .t{font-size:15px;color:var(--t2);margin-bottom:6px}
+.empty .d{font-size:12.5px;color:var(--t3);margin-bottom:18px}
+
+/* 弹窗 */
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.66);display:none;
+      align-items:center;justify-content:center;z-index:50;padding:20px}
+.mask.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:14px;
+       width:100%;max-width:520px;padding:24px}
+.modal h2{font-size:17px;font-weight:650;margin-bottom:18px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:12.5px;color:var(--t2);margin-bottom:6px}
+.fld label .req{color:var(--ac)}
+.fld textarea{
+  width:100%;background:var(--panel2);border:1px solid var(--line2);color:var(--t1);
+  border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;resize:vertical;
+  min-height:74px;outline:none;line-height:1.6;
+}
+.fld textarea:focus{border-color:var(--ac)}
+.fld textarea.err{border-color:#e5686f}
+.cnt{font-size:11.5px;color:var(--t3);text-align:right;margin-top:4px;font-family:var(--mono)}
+.cnt.over{color:#e5686f}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row2 select{width:100%}
+.tip{font-size:11.5px;color:#e5686f;margin-top:5px;display:none}
+.tip.on{display:block}
+.mfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    <span>🧪 <b>低保真原型</b> —— 用于对齐交互逻辑，视觉以设计稿为准</span>
+    <span>数据为演示假数据，刷新即恢复　·　<a href="07.html" style="color:#5eead4;text-decoration:none">← 回到第 07 节</a></span>
+  </div>
+
+  <h1>需求池管理</h1>
+  <div class="sub">登记和管理各部门提过来的需求</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-all">0</div><div class="l">总需求数</div></div>
+    <div class="stat"><div class="n" id="s-wait">0</div><div class="l">待评估</div></div>
+    <div class="stat"><div class="n" id="s-plan">0</div><div class="l">已排期</div></div>
+    <div class="stat hl"><div class="n" id="s-live">0</div><div class="l">已上线</div></div>
+  </div>
+
+  <div class="bar">
+    <select id="f-status">
+      <option value="">全部状态</option>
+      <option>待评估</option><option>已排期</option><option>开发中</option><option>已上线</option>
+    </select>
+    <select id="f-pri">
+      <option value="">全部优先级</option>
+      <option>P0</option><option>P1</option><option>P2</option>
+    </select>
+    <input type="text" id="f-kw" placeholder="搜索需求描述或提交人…">
+    <div class="sp"></div>
+    <button class="btn" id="btn-add">+ 新增需求</button>
+  </div>
+
+  <div class="tbox">
+    <table>
+      <thead><tr>
+        <th style="width:34%">需求描述</th><th>来源</th><th>提交人</th>
+        <th>优先级</th><th>状态</th><th>提交时间</th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">
+      <div class="i">🔍</div>
+      <div class="t">没有符合条件的需求</div>
+      <div class="d">试试放宽筛选条件</div>
+      <button class="btn2" id="btn-clear">清除筛选</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新增需求弹窗 -->
+<div class="mask" id="mask">
+  <div class="modal">
+    <h2>新增需求</h2>
+    <div class="fld">
+      <label>需求描述 <span class="req">*</span></label>
+      <textarea id="m-desc" placeholder="什么用户、在什么场景下、想达成什么目标"></textarea>
+      <div class="cnt"><span id="m-cnt">0</span> / 50</div>
+      <div class="tip" id="m-tip">需求描述不能超过 50 字</div>
+    </div>
+    <div class="row2">
+      <div class="fld">
+        <label>来源</label>
+        <select id="m-src"><option>业务部门</option><option>用户反馈</option><option>竞品分析</option><option>内部提出</option></select>
+      </div>
+      <div class="fld">
+        <label>优先级</label>
+        <select id="m-pri"><option>P0</option><option selected>P1</option><option>P2</option></select>
+      </div>
+    </div>
+    <div class="fld">
+      <label>提交人</label>
+      <select id="m-who"></select>
+    </div>
+    <div class="mfoot">
+      <button class="btn2" id="m-cancel">取消</button>
+      <button class="btn" id="m-ok" disabled>提交</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var FLOW = ['待评估','已排期','开发中','已上线'];
+  var PEOPLE = ['张伟','李静','王芳','陈磊','刘洋'];
+
+  var data = [
+    {d:'用户反馈手机号登录收不到验证码，需要增加语音验证码',s:'用户反馈',w:'李静',p:'P0',st:'开发中',t:'2026-07-28'},
+    {d:'新用户注册流程步骤太多，希望精简到两步内完成',s:'用户反馈',w:'李静',p:'P0',st:'已排期',t:'2026-08-02'},
+    {d:'后台缺少操作日志，线上出问题无法追溯是谁改的',s:'内部提出',w:'陈磊',p:'P1',st:'开发中',t:'2026-07-21'},
+    {d:'导出功能希望支持筛选后导出，而不是每次都全量导出',s:'业务部门',w:'王芳',p:'P1',st:'待评估',t:'2026-08-08'},
+    {d:'运营希望活动页能自行配置倒计时组件，不用每次找开发',s:'业务部门',w:'王芳',p:'P1',st:'已上线',t:'2026-06-30'},
+    {d:'需求列表默认按提交时间倒序排列',s:'内部提出',w:'张伟',p:'P2',st:'已排期',t:'2026-07-15'},
+    {d:'竞品已支持批量修改状态，我们的后台只能一条条改',s:'竞品分析',w:'张伟',p:'P2',st:'待评估',t:'2026-08-05'},
+    {d:'增加深色模式，晚上用眼睛受不了',s:'用户反馈',w:'刘洋',p:'P2',st:'待评估',t:'2026-08-11'}
+  ];
+
+  var $ = function(id){return document.getElementById(id)};
+  var fS=$('f-status'), fP=$('f-pri'), fK=$('f-kw'), tb=$('tb'), emp=$('empty');
+  var pop=null;
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function filtered(){
+    var s=fS.value, p=fP.value, k=fK.value.trim().toLowerCase();
+    return data.filter(function(r){
+      if(s && r.st!==s) return false;
+      if(p && r.p!==p) return false;
+      if(k && (r.d+r.w).toLowerCase().indexOf(k)<0) return false;
+      return true;
+    });
+  }
+
+  function stats(){
+    $('s-all').textContent = data.length;
+    $('s-wait').textContent = data.filter(function(r){return r.st==='待评估'}).length;
+    $('s-plan').textContent = data.filter(function(r){return r.st==='已排期'}).length;
+    $('s-live').textContent = data.filter(function(r){return r.st==='已上线'}).length;
+  }
+
+  function render(){
+    closePop();
+    var rows = filtered();
+    stats();
+    if(!rows.length){ tb.innerHTML=''; emp.style.display='block'; return; }
+    emp.style.display='none';
+    tb.innerHTML = rows.map(function(r){
+      var i = data.indexOf(r);
+      var last = r.st === FLOW[FLOW.length-1];
+      return '<tr>'+
+        '<td class="desc">'+esc(r.d)+'</td>'+
+        '<td class="dim">'+esc(r.s)+'</td>'+
+        '<td class="dim">'+esc(r.w)+'</td>'+
+        '<td><span class="p '+r.p+'">'+r.p+'</span></td>'+
+        '<td><button class="stbtn'+(last?' lock':'')+'" data-s="'+r.st+'" data-i="'+i+'">'+
+          '<span class="dot"></span>'+r.st+(last?'':' <span class="car">▼</span>')+'</button></td>'+
+        '<td class="time">'+r.t+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  function closePop(){ if(pop){pop.remove(); pop=null;} }
+
+  // 状态流转：只能选当前状态之后的
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.stbtn') : null;
+    if(!b || b.classList.contains('lock')){ if(!e.target.closest||!e.target.closest('.pop')) closePop(); return; }
+    e.stopPropagation(); closePop();
+    var i = +b.dataset.i, cur = data[i].st, ci = FLOW.indexOf(cur);
+    var next = FLOW.slice(ci+1);
+    if(!next.length) return;
+    pop = document.createElement('div');
+    pop.className='pop';
+    pop.innerHTML = '<div class="ph">流转到（不可回退）</div>' + next.map(function(s){
+      return '<button data-to="'+s+'">'+s+'</button>';
+    }).join('');
+    document.body.appendChild(pop);
+    var r = b.getBoundingClientRect();
+    pop.style.left = (Math.min(r.left, innerWidth-pop.offsetWidth-14) + scrollX)+'px';
+    pop.style.top  = (r.bottom + scrollY + 5)+'px';
+    pop.addEventListener('click', function(ev){
+      var t = ev.target.dataset && ev.target.dataset.to;
+      if(!t) return;
+      data[i].st = t; render();
+    });
+  });
+
+  fS.onchange = fP.onchange = render;
+  fK.oninput = render;
+  $('btn-clear').onclick = function(){ fS.value=''; fP.value=''; fK.value=''; render(); };
+
+  // ── 新增弹窗 ──
+  var mask=$('mask'), desc=$('m-desc'), cnt=$('m-cnt'), tip=$('m-tip'), ok=$('m-ok'), who=$('m-who');
+  who.innerHTML = PEOPLE.map(function(p){return '<option>'+p+'</option>'}).join('');
+
+  function validate(){
+    var v = desc.value.trim(), n = desc.value.length;
+    cnt.textContent = n;
+    var over = n > 50;
+    cnt.className = 'cnt' + (over?' over':'');
+    tip.className = 'tip' + (over?' on':'');
+    desc.className = over ? 'err' : '';
+    ok.disabled = (v.length === 0 || over);   // 必填 且 不超 50 字
+  }
+  desc.oninput = validate;
+
+  $('btn-add').onclick = function(){
+    desc.value=''; $('m-src').selectedIndex=0; $('m-pri').value='P1'; who.selectedIndex=0;
+    validate(); mask.classList.add('on'); desc.focus();
+  };
+  function close(){ mask.classList.remove('on'); }
+  $('m-cancel').onclick = close;
+  mask.onclick = function(e){ if(e.target===mask) close(); };
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ close(); closePop(); } });
+
+  $('m-ok').onclick = function(){
+    if(ok.disabled) return;
+    var d = new Date(2026,7,15);
+    var t = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    data.unshift({                       // 新记录出现在第一行
+      d: desc.value.trim(), s: $('m-src').value, w: who.value,
+      p: $('m-pri').value, st: '待评估', t: t
+    });
+    close(); render();                   // 统计数字同步变化
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

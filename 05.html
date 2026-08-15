@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 原型基础 · 阅读版</title>
+<style>
+:root{
+  --bg:#0b0c10; --bg2:#101219; --card:#161923; --card2:#1c2130;
+  --line:#272c3a; --line2:#343b4d;
+  --txt:#e8eaf0; --dim:#9aa2b4; --dim2:#6f7686;
+  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24; --danger:#fb7185; --blue:#60a5fa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px; line-height:1.85; letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(94,234,212,.10), transparent 60%),
+    radial-gradient(800px 500px at 90% 4%, rgba(167,139,250,.10), transparent 60%);
+}
+.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 28px 120px; display:grid; grid-template-columns:214px 1fr; gap:52px}
+@media(max-width:900px){ .wrap{grid-template-columns:1fr; gap:0; padding:0 18px 80px} nav.toc{display:none} }
+
+nav.toc{position:sticky; top:0; align-self:start; height:100vh; padding:120px 0 40px; font-size:13.5px; overflow-y:auto}
+nav.toc .lbl{color:var(--dim2); font-size:11px; letter-spacing:.18em; margin-bottom:14px}
+nav.toc a{display:block; color:var(--dim); text-decoration:none; padding:7px 12px; border-left:2px solid var(--line); transition:.18s}
+nav.toc a:hover{color:var(--ac); border-left-color:var(--ac); background:rgba(94,234,212,.05)}
+nav.toc a.sub{padding-left:24px; font-size:12.5px; color:var(--dim2)}
+
+header{padding:88px 0 46px}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ac); margin-bottom:18px}
+h1{font-size:52px; line-height:1.15; margin:0 0 22px; letter-spacing:-.01em; font-weight:700}
+h1 .thin{color:var(--dim2); font-weight:300}
+.lede{font-size:19px; color:var(--dim); max-width:660px; line-height:1.75; margin:0 0 26px}
+.meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; padding:5px 13px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
+.pill b{color:var(--txt); font-weight:600}
+.pill.ac{border-color:rgba(94,234,212,.4); color:var(--ac)}
+.pill.wn{border-color:rgba(251,191,36,.4); color:var(--warn)}
+
+h2{font-size:15px; margin:0}
+section{scroll-margin-top:30px}
+.sechead{display:flex; align-items:baseline; gap:16px; margin:86px 0 30px; padding-bottom:18px; border-bottom:1px solid var(--line)}
+.sechead .num{font-family:var(--mono); font-size:13px; color:var(--ac); letter-spacing:.1em; padding-top:6px}
+.sechead h2{font-size:32px; font-weight:700; letter-spacing:-.01em}
+h3{font-size:20px; margin:48px 0 14px; font-weight:650}
+h3::before{content:"# "; color:var(--ac2); font-weight:400}
+h4{font-size:16px; margin:30px 0 10px; color:var(--txt); font-weight:650}
+p{margin:0 0 16px; color:#cfd4e0}
+strong{color:#fff; font-weight:650}
+em{font-style:normal; color:var(--ac); font-weight:600}
+a{color:var(--ac)}
+ul,ol{color:#cfd4e0}
+li{margin:6px 0}
+code{font-family:var(--mono); font-size:13.5px; color:var(--ac2)}
+
+.note{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:20px 24px; margin:26px 0}
+.note.warn{border-color:rgba(251,191,36,.32); background:linear-gradient(180deg,rgba(251,191,36,.07),rgba(251,191,36,.02))}
+.note.key{border-color:rgba(94,234,212,.32); background:linear-gradient(180deg,rgba(94,234,212,.07),rgba(94,234,212,.02))}
+.note.quote{border-color:var(--line2); background:var(--card); border-left:3px solid var(--ac2)}
+.note.old{border-color:rgba(251,113,133,.3); background:linear-gradient(180deg,rgba(251,113,133,.06),rgba(251,113,133,.015))}
+.note .tag{display:inline-block; font-size:11px; letter-spacing:.16em; margin-bottom:9px; color:var(--warn); font-family:var(--mono)}
+.note.key .tag{color:var(--ac)}
+.note.quote .tag{color:var(--ac2)}
+.note.old .tag{color:var(--danger)}
+.note p:last-child{margin-bottom:0}
+.note ol,.note ul{margin:8px 0 0; padding-left:20px; color:#cfd4e0}
+.note li{margin:5px 0}
+
+blockquote{margin:22px 0; padding:2px 0 2px 22px; border-left:3px solid var(--ac2); color:#d6dae6; font-size:17px}
+blockquote p{margin:0}
+
+.tw{overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:14px; background:var(--card)}
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th{text-align:left; padding:13px 18px; font-size:12px; letter-spacing:.1em; color:var(--dim2); font-weight:600; border-bottom:1px solid var(--line); background:var(--bg2); white-space:nowrap}
+td{padding:13px 18px; border-bottom:1px solid var(--line); color:#cfd4e0; vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+td b,th b{color:#fff}
+
+figure{margin:32px 0; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,var(--card),var(--bg2)); padding:26px 24px 18px; overflow:hidden}
+figure svg{display:block; width:100%; height:auto}
+figcaption{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--dim2); text-align:center}
+figcaption b{color:var(--dim)}
+.svgt{font-family:-apple-system,"PingFang SC",sans-serif}
+
+.grid{display:grid; gap:14px; margin:24px 0}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 18px 16px; transition:.2s}
+.tile:hover{border-color:var(--line2); background:var(--card2); transform:translateY(-2px)}
+.tile .ic{font-size:22px; margin-bottom:8px; display:block}
+.tile .t{font-size:15px; font-weight:650; color:#fff; margin-bottom:5px}
+.tile .d{font-size:13px; color:var(--dim); line-height:1.65}
+
+.map{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:34px 0 10px}
+@media(max-width:760px){.map{grid-template-columns:repeat(2,1fr)}}
+.map a{text-decoration:none; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:16px; display:block; transition:.2s}
+.map a:hover{border-color:rgba(94,234,212,.45); background:var(--card2)}
+.map .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.14em}
+.map .t{font-size:14.5px; color:var(--txt); margin-top:7px; line-height:1.5; font-weight:600}
+
+/* 自查清单 */
+.ck{border:1px solid var(--line); border-radius:14px; background:var(--card); margin:22px 0; overflow:hidden}
+.ck .h{padding:14px 20px; background:var(--bg2); border-bottom:1px solid var(--line); font-size:13.5px; font-weight:650; color:#fff; display:flex; align-items:center; gap:10px}
+.ck .h span{font-size:11px; color:var(--dim2); font-weight:400; font-family:var(--mono)}
+.ck ul{list-style:none; padding:8px 0; margin:0}
+.ck li{padding:8px 20px 8px 46px; position:relative; font-size:14.5px; color:#cfd4e0; line-height:1.6}
+.ck li::before{content:"☐"; position:absolute; left:20px; top:8px; color:var(--ac); font-size:15px}
+.ck li b{color:#fff}
+
+.quizlist{counter-reset:q; list-style:none; padding:0; margin:22px 0}
+.quizlist li{counter-increment:q; position:relative; padding:14px 18px 14px 52px; border:1px solid var(--line); background:var(--card); border-radius:12px; margin-bottom:10px; font-size:15px; color:#d6dae6}
+.quizlist li::before{content:counter(q,decimal-leading-zero); position:absolute; left:18px; top:14px; font-family:var(--mono); font-size:12px; color:var(--ac2)}
+
+hr.big{border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line2),transparent); margin:70px 0}
+footer{margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer a{color:var(--ac); text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="lbl">本节目录</div>
+  <a href="#top">封面 · 本节地图</a>
+  <a href="#s1">1 · 原型的三种分类</a>
+  <a href="#s2">2 · 移动端设计规范</a>
+  <a href="#s2" class="sub">尺寸怎么定</a>
+  <a href="#s3">3 · PC 端原型规范</a>
+  <a href="#s4">4 · 交互思想三步法</a>
+  <a href="#s5">5 · 全局说明与交互自查</a>
+  <a href="#biao" class="sub">自查清单</a>
+  <a href="#s6">6 · 一条清醒的话</a>
+  <a href="#quiz">本节自测</a>
+</nav>
+
+<main>
+<header id="top">
+  <div class="kicker">产品经理培训 · 第 05 节</div>
+  <h1>原型基础<br><span class="thin">跟工具无关的那部分</span></h1>
+  <p class="lede">原型分几种、按什么规范画、交付前怎么自查。这些换任何工具都成立——工具本身在下两节。</p>
+  <div class="meta">
+    <span class="pill ac">掌握程度 · <b>掌握</b></span>
+    <span class="pill">6 个主题</span>
+    <span class="pill">4 张图解</span>
+    <span class="pill wn">含重写内容</span>
+  </div>
+
+  <div class="note old" style="margin-top:34px">
+    <span class="tag">◆ 关于这一节</span>
+    <p>原课程这里是<strong>三节 Axure 教程</strong>（05 原型及 Axure 介绍 / 06 Axure 交互进阶 / 07 中继器与交互自查）。其中绝大部分是「怎么在 Axure 里做出某个效果」的操作步骤 —— 中继器、动态面板、全局变量这些，已经不再是 2026 年产品经理的必备技能。</p>
+    <p style="margin-top:10px">这一节<strong>只保留跟工具无关的方法论</strong>（原型分类、设计规范、交互思想、交互自查），并更新了其中已经过时的数据。工具部分重写为 <a href="06.html">06 · Figma 实战</a> 和 <a href="07.html">07 · 让 AI 直接做 HTML 原型</a>。</p>
+  </div>
+
+  <div class="map">
+    <a href="#s1"><div class="n">01</div><div class="t">原型的三种分类</div></a>
+    <a href="#s2"><div class="n">02</div><div class="t">移动端设计规范</div></a>
+    <a href="#s4"><div class="n">03</div><div class="t">交互思想三步法</div></a>
+    <a href="#s5"><div class="n">04</div><div class="t">全局说明与交互自查</div></a>
+  </div>
+</header>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <div class="sechead"><div class="num">PART 01</div><h2>原型的三种分类</h2></div>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="草图原型、低保真、高保真三种原型对比">
+    <!-- 草图 -->
+    <rect x="14" y="30" width="248" height="196" rx="16" fill="#161923" stroke="#272c3a"/>
+    <text x="138" y="60" text-anchor="middle" fill="#9aa2b4" font-size="15" font-weight="700">草图原型</text>
+    <g stroke="#4b5262" stroke-width="1.6" fill="none" stroke-linecap="round">
+      <rect x="82" y="76" width="112" height="126" rx="8"/>
+      <path d="M94 92 L182 92 M94 104 L154 104"/>
+      <rect x="94" y="118" width="88" height="34" rx="4" stroke-dasharray="4 3"/>
+      <path d="M104 168 L172 168 M104 180 L146 180"/>
+    </g>
+    <text x="138" y="220" text-anchor="middle" fill="#6f7686" font-size="11.5">手绘图稿</text>
+
+    <!-- 低保真 -->
+    <rect x="276" y="30" width="248" height="196" rx="16" fill="rgba(94,234,212,.06)" stroke="#5eead4" stroke-opacity=".5"/>
+    <text x="400" y="60" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">低保真</text>
+    <rect x="344" y="76" width="112" height="126" rx="8" fill="#0f1720" stroke="#4b5262"/>
+    <rect x="356" y="88" width="88" height="12" rx="3" fill="#343b4d"/>
+    <rect x="356" y="106" width="56" height="9" rx="3" fill="#272c3a"/>
+    <rect x="356" y="124" width="88" height="30" rx="5" fill="#1c2130" stroke="#4b5262"/>
+    <text x="400" y="144" text-anchor="middle" fill="#6f7686" font-size="10">按钮</text>
+    <rect x="356" y="162" width="88" height="9" rx="3" fill="#272c3a"/>
+    <rect x="356" y="177" width="64" height="9" rx="3" fill="#272c3a"/>
+    <text x="400" y="220" text-anchor="middle" fill="#5eead4" font-size="11.5">黑白灰即可</text>
+
+    <!-- 高保真 -->
+    <rect x="538" y="30" width="248" height="196" rx="16" fill="#161923" stroke="#a78bfa" stroke-opacity=".45"/>
+    <text x="662" y="60" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">高保真</text>
+    <rect x="606" y="76" width="112" height="126" rx="8" fill="#141a2e" stroke="#a78bfa" stroke-opacity=".4"/>
+    <rect x="618" y="88" width="88" height="26" rx="5" fill="url(#hg)"/>
+    <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs>
+    <rect x="618" y="122" width="56" height="9" rx="4" fill="#4b5262"/>
+    <rect x="618" y="140" width="88" height="30" rx="15" fill="#5eead4"/>
+    <text x="662" y="160" text-anchor="middle" fill="#08110f" font-size="10" font-weight="700">立即购买</text>
+    <circle cx="628" cy="186" r="7" fill="#fbbf24"/><circle cx="648" cy="186" r="7" fill="#fb7185"/><circle cx="668" cy="186" r="7" fill="#60a5fa"/>
+    <text x="662" y="220" text-anchor="middle" fill="#a78bfa" font-size="11.5">有配色、有设计图</text>
+
+    <rect x="14" y="244" width="772" height="44" rx="12" fill="rgba(94,234,212,.07)" stroke="rgba(94,234,212,.32)"/>
+    <text x="400" y="271" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">最好的原型是黑白灰的 —— 产品经理日常产出的是低保真</text>
+  </svg>
+  <figcaption><b>图 1</b> · 三种原型：保真度越高越像成品，但也越贵、越难改</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:100px">类型</th><th>交互</th><th>设计图</th><th>制作特点</th><th>什么时候用</th></tr></thead>
+    <tbody>
+      <tr><td><b>草图原型</b></td><td>—</td><td>无</td><td>手绘图稿，<b>制作方便，修改不方便</b></td><td>规划的<b>早期</b></td></tr>
+      <tr><td><b>低保真</b></td><td>简单交互</td><td>无</td><td>无需配色，<b>黑白灰即可</b></td><td>产品经理做<b>产品规划及评审</b>阶段</td></tr>
+      <tr><td><b>高保真</b></td><td>复杂交互</td><td>有</td><td>需要图片设计功底</td><td>做<b>公开演示</b>时</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note key">
+    <span class="tag">◆ 为什么强调黑白灰</span>
+    <p>颜色是 UI 的事。<strong>产品经理上色反而会让评审跑偏</strong> —— 本该讨论「这个流程对不对」，结果变成讨论「这个蓝色好不好看」。</p>
+    <p style="margin-top:10px">这条在 AI 能一键生成漂亮界面的今天<em>更重要，不是更不重要</em>：AI 给你的东西默认就很好看，你得主动压住保真度，别让好看盖过逻辑。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <div class="sechead"><div class="num">PART 02</div><h2>移动端设计规范</h2></div>
+  <p>企业中实际制作原型，<strong>绝大多数情况做 iOS 版本</strong>。原因很简单：iOS 机型少、尺寸统一，定一套就够；Android 碎片化，跟着 iOS 稿等比适配即可。</p>
+
+  <div class="note old">
+    <span class="tag">⚠ 原笔记这里有两处要更正</span>
+    <p><strong>① 尺寸过时。</strong>原笔记给的 <code>375 × 667</code> 是 iPhone 6/7/8 时代的标准，那批机型 2017 年后就停止更新了。现在做稿主流是 <code>393 × 852</code>。</p>
+    <p style="margin-top:10px"><strong>② 有一处硬错误。</strong>原笔记说「iPhone 5/6/7/8 的屏幕分辨率都是 750 × 1334」—— <em>iPhone 5 不是</em>。iPhone 5/5s/SE 一代是 4 英寸，<code>640 × 1136</code>（即 320 × 568 pt），跟 6/7/8 完全不同。</p>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 800 400" class="svgt" role="img" aria-label="移动端原型的关键尺寸">
+    <!-- 手机框 -->
+    <rect x="250" y="24" width="300" height="352" rx="26" fill="#0f1720" stroke="#4b5262" stroke-width="1.6"/>
+
+    <!-- 状态栏 + 灵动岛 -->
+    <rect x="250" y="24" width="300" height="46" rx="26" fill="#161923"/>
+    <rect x="250" y="52" width="300" height="18" fill="#161923"/>
+    <rect x="356" y="34" width="88" height="24" rx="12" fill="#08090d"/>
+    <text x="272" y="52" fill="#9aa2b4" font-size="11">9:41</text>
+    <text x="510" y="52" text-anchor="end" fill="#9aa2b4" font-size="11">▮▮▮</text>
+
+    <!-- 导航栏 -->
+    <rect x="250" y="70" width="300" height="40" fill="#1c2130"/>
+    <text x="268" y="95" fill="#9aa2b4" font-size="13">‹</text>
+    <text x="400" y="95" text-anchor="middle" fill="#e8eaf0" font-size="13" font-weight="600">页面标题</text>
+
+    <!-- 内容区 -->
+    <rect x="266" y="126" width="268" height="16" rx="4" fill="#272c3a"/>
+    <rect x="266" y="150" width="180" height="12" rx="4" fill="#1c2130"/>
+    <rect x="266" y="176" width="268" height="70" rx="8" fill="#161923" stroke="#272c3a"/>
+    <rect x="266" y="258" width="268" height="70" rx="8" fill="#161923" stroke="#272c3a"/>
+    <text x="400" y="217" text-anchor="middle" fill="#4b5262" font-size="12">内容区</text>
+
+    <!-- 标签栏 -->
+    <rect x="250" y="336" width="300" height="26" fill="#1c2130"/>
+    <g fill="#5eead4"><circle cx="310" cy="346" r="5"/></g>
+    <g fill="#4b5262"><circle cx="400" cy="346" r="5"/><circle cx="490" cy="346" r="5"/></g>
+    <text x="310" y="359" text-anchor="middle" fill="#5eead4" font-size="7">首页</text>
+    <text x="400" y="359" text-anchor="middle" fill="#4b5262" font-size="7">发现</text>
+    <text x="490" y="359" text-anchor="middle" fill="#4b5262" font-size="7">我的</text>
+    <!-- Home Indicator -->
+    <rect x="360" y="368" width="80" height="4" rx="2" fill="#4b5262"/>
+
+    <!-- 左侧标注 -->
+    <g stroke="#5eead4" stroke-opacity=".5" stroke-width="1" stroke-dasharray="3 3">
+      <line x1="240" y1="47" x2="150" y2="47"/><line x1="240" y1="90" x2="150" y2="90"/>
+      <line x1="240" y1="349" x2="150" y2="349"/><line x1="240" y1="370" x2="150" y2="370"/>
+    </g>
+    <text x="142" y="51" text-anchor="end" fill="#9aa2b4" font-size="12">状态栏 44–54</text>
+    <text x="142" y="94" text-anchor="end" fill="#9aa2b4" font-size="12">导航栏 44</text>
+    <text x="142" y="353" text-anchor="end" fill="#9aa2b4" font-size="12">标签栏 49</text>
+    <text x="142" y="374" text-anchor="end" fill="#9aa2b4" font-size="12">底部安全区 34</text>
+
+    <!-- 右侧对照 -->
+    <rect x="584" y="40" width="202" height="140" rx="14" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.35)"/>
+    <text x="685" y="68" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700">现在做稿用</text>
+    <text x="685" y="102" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">393 × 852</text>
+    <text x="685" y="126" text-anchor="middle" fill="#9aa2b4" font-size="11.5">iPhone 15 / 16 等主流机型</text>
+    <text x="685" y="150" text-anchor="middle" fill="#6f7686" font-size="11">@3x 导出 → 1179 × 2556</text>
+    <text x="685" y="168" text-anchor="middle" fill="#6f7686" font-size="11">单位是 pt，不是 px</text>
+
+    <rect x="584" y="192" width="202" height="120" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="685" y="218" text-anchor="middle" fill="#9aa2b4" font-size="12.5" font-weight="700">老教材里的旧标准</text>
+    <text x="685" y="248" text-anchor="middle" fill="#6f7686" font-size="18" font-weight="700">375 × 667</text>
+    <text x="685" y="270" text-anchor="middle" fill="#6f7686" font-size="11">iPhone 6/7/8（已停更）</text>
+    <text x="685" y="292" text-anchor="middle" fill="#fb7185" font-size="11">还有人用，但已不是主流</text>
+
+    <text x="685" y="340" text-anchor="middle" fill="#fbbf24" font-size="11.5">导航栏 44 / 标签栏 49</text>
+    <text x="685" y="360" text-anchor="middle" fill="#fbbf24" font-size="11.5">这两个数十年没变</text>
+  </svg>
+  <figcaption><b>图 2</b> · 尺寸会换代，但导航栏 44、标签栏 49 这两个数从 iOS 7 至今没动过</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:190px">部分</th><th style="width:140px">尺寸（pt）</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>画板大小</b></td><td><b>393 × 852</b></td><td>当前主流。老教材的 375 × 667 已是上一代</td></tr>
+      <tr><td>顶部状态栏</td><td>44 – 54</td><td>视机型而定：刘海机型 44，灵动岛机型 54</td></tr>
+      <tr><td><b>导航栏</b></td><td><b>44</b></td><td>十年未变，闭眼记</td></tr>
+      <tr><td>二级导航</td><td>40 左右</td><td>非系统规范，各家略有差异</td></tr>
+      <tr><td><b>底部标签栏</b></td><td><b>49</b></td><td>十年未变。<b>加上底部安全区 34，实际占 83</b></td></tr>
+      <tr><td>底部安全区</td><td>34</td><td>Home Indicator 区域，全面屏机型才有</td></tr>
+      <tr><td>标签栏图标</td><td>25 × 25 上下</td><td>非硬规范</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note warn">
+    <span class="tag">⚠ 一个新人常错的点</span>
+    <p>这些数字的单位是 <strong>pt（点），不是 px</strong>。做稿按 pt 画 1 倍图，交付时按 @2x / @3x 导出。原笔记那句「把 750 × 1334 长宽缩小一半得到 375 × 667」说的就是这件事 —— <em>它算的是从 @2x 像素回到 pt</em>，只是没点破单位的区别。</p>
+  </div>
+
+  <blockquote><p><strong>尽量做 1:1 的原型</strong>，这类原型体验最好。</p></blockquote>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <div class="sechead"><div class="num">PART 03</div><h2>PC 端原型规范</h2></div>
+
+  <div class="note key">
+    <span class="tag">◆ 一句话</span>
+    <p><strong>PC 端的原型相对于移动端非常自由，没有任何硬性设计规范。</strong>但要求<em>样式上保持统一</em> —— 比如同一个级别的按钮，高度、宽度都要一致。</p>
+  </div>
+
+  <p>对比一下就清楚：移动端有 393×852、导航栏 44、标签栏 49 这套硬规范，是因为它跑在<strong>尺寸固定的设备</strong>上；PC 端窗口能被用户随意拉伸，根本没有「标准尺寸」这回事。</p>
+
+  <div class="grid g3">
+    <div class="tile"><div class="t">画板宽度取多少</div><div class="d">常见取 <b style="color:#fff">1440</b> 或 <b style="color:#fff">1920</b> 做设计基准，同时想清楚<b style="color:#fff">最窄</b>能到多少还不崩</div></div>
+    <div class="tile"><div class="t">自由的代价</div><div class="d">没规范 = 全靠自律。同一套原型里出现三种按钮高度，是 PC 端原型最常见的毛病</div></div>
+    <div class="tile"><div class="t">怎么保证统一</div><div class="d">把按钮、输入框、表格行做成<b style="color:#fff">组件</b>复用 —— 这正是下一节 Figma 要解决的事</div></div>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 4 ══════════ -->
+<section id="s4">
+  <div class="sechead"><div class="num">PART 04</div><h2>交互思想三步法</h2></div>
+  <p>这是原课程里<strong>唯一跟工具无关的交互内容</strong>，换成 Figma、换成 AI 生成 HTML，这三步照样成立。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="交互思想三步法">
+    <defs><marker id="s1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5eead4"/></marker></defs>
+
+    <rect x="14" y="40" width="230" height="126" rx="16" fill="#161923" stroke="#5eead4" stroke-opacity=".45"/>
+    <text x="129" y="74" text-anchor="middle" fill="#5eead4" font-size="13" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">STEP 1</text>
+    <text x="129" y="106" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">如何触发？</text>
+    <text x="129" y="134" text-anchor="middle" fill="#9aa2b4" font-size="12.5">点击 / 滑动 / 页面载入 /</text>
+    <text x="129" y="152" text-anchor="middle" fill="#9aa2b4" font-size="12.5">输入变化 / 定时</text>
+
+    <path d="M252 103 L272 103" stroke="#5eead4" stroke-width="1.8" marker-end="url(#s1)"/>
+
+    <rect x="285" y="40" width="230" height="126" rx="16" fill="#161923" stroke="#a78bfa" stroke-opacity=".45"/>
+    <text x="400" y="74" text-anchor="middle" fill="#a78bfa" font-size="13" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">STEP 2</text>
+    <text x="400" y="106" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">什么效果？</text>
+    <text x="400" y="134" text-anchor="middle" fill="#9aa2b4" font-size="12.5">跳页 / 弹层 / 局部刷新 /</text>
+    <text x="400" y="152" text-anchor="middle" fill="#9aa2b4" font-size="12.5">状态变化 / 提示</text>
+
+    <path d="M523 103 L543 103" stroke="#5eead4" stroke-width="1.8" marker-end="url(#s1)"/>
+
+    <rect x="556" y="40" width="230" height="126" rx="16" fill="#161923" stroke="#fbbf24" stroke-opacity=".45"/>
+    <text x="671" y="74" text-anchor="middle" fill="#fbbf24" font-size="13" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">STEP 3</text>
+    <text x="671" y="106" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">怎么实现？</text>
+    <text x="671" y="134" text-anchor="middle" fill="#9aa2b4" font-size="12.5">具体到工具里的</text>
+    <text x="671" y="152" text-anchor="middle" fill="#9aa2b4" font-size="12.5">哪个动作 / 哪段代码</text>
+
+    <rect x="14" y="184" width="772" height="52" rx="12" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.3)"/>
+    <text x="400" y="207" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700">前两步跟工具完全无关 —— 换 Axure、Figma 还是让 AI 写代码，都要先想清楚这两步</text>
+    <text x="400" y="227" text-anchor="middle" fill="#9aa2b4" font-size="12">只有第三步跟工具有关。所以别把学工具当成学交互。</text>
+  </svg>
+  <figcaption><b>图 3</b> · 三步法：触发 → 效果 → 实现。会不会用工具，只影响第三步</figcaption>
+  </figure>
+
+  <div class="note">
+    <span class="tag">◆ 复杂交互的通用做法</span>
+    <p><strong>先把所有元件都添加出来</strong>，再考虑每个元件涉及的交互动作，然后挨个添加交互事件。<em>添加完成后一定要验证效果是否正确。</em></p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 5 ══════════ -->
+<section id="s5">
+  <div class="sechead"><div class="num">PART 05</div><h2>全局说明与交互自查</h2></div>
+
+  <blockquote><p><strong>在企业中需要做一整套原型时，一定要有「交互自查表」和「全局说明」。</strong></p></blockquote>
+
+  <p>这两样东西的作用：把散落在各个页面的通用规则 —— 所有输入框的字符限制、所有按钮的禁用态、所有列表的空状态 —— <strong>统一写一遍</strong>，不用在每个页面重复标注。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 260" class="svgt" role="img" aria-label="全局说明避免逐页重复标注">
+    <text x="24" y="30" fill="#fb7185" font-size="12.5" font-weight="700">✗ 没有全局说明</text>
+    <g>
+      <rect x="24" y="42" width="104" height="72" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="76" y="66" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 A</text>
+      <text x="76" y="84" text-anchor="middle" fill="#fb7185" font-size="9">输入框限 20 字</text>
+      <text x="76" y="98" text-anchor="middle" fill="#fb7185" font-size="9">空态文案…</text>
+      <rect x="140" y="42" width="104" height="72" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="192" y="66" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 B</text>
+      <text x="192" y="84" text-anchor="middle" fill="#fb7185" font-size="9">输入框限 20 字</text>
+      <text x="192" y="98" text-anchor="middle" fill="#fb7185" font-size="9">空态文案…</text>
+      <rect x="256" y="42" width="104" height="72" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="308" y="66" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 C</text>
+      <text x="308" y="84" text-anchor="middle" fill="#fb7185" font-size="9">输入框限 20 字</text>
+      <text x="308" y="98" text-anchor="middle" fill="#fb7185" font-size="9">空态文案…</text>
+    </g>
+    <text x="24" y="140" fill="#6f7686" font-size="11.5">同一条规则抄 N 遍。改一次要改 N 处，必漏。</text>
+
+    <text x="440" y="30" fill="#5eead4" font-size="12.5" font-weight="700">✓ 有全局说明</text>
+    <rect x="440" y="42" width="346" height="52" rx="10" fill="rgba(94,234,212,.1)" stroke="#5eead4" stroke-opacity=".45"/>
+    <text x="613" y="64" text-anchor="middle" fill="#5eead4" font-size="12" font-weight="700">全局说明（写一次）</text>
+    <text x="613" y="82" text-anchor="middle" fill="#9aa2b4" font-size="10.5">输入框限 20 字 · 空态文案 · 按钮禁用态 · 加载态</text>
+    <g stroke="#5eead4" stroke-opacity=".4" stroke-width="1" stroke-dasharray="3 3">
+      <line x1="500" y1="96" x2="500" y2="112"/><line x1="613" y1="96" x2="613" y2="112"/><line x1="726" y1="96" x2="726" y2="112"/>
+    </g>
+    <rect x="448" y="114" width="104" height="46" rx="9" fill="#161923" stroke="#272c3a"/>
+    <text x="500" y="142" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 A</text>
+    <rect x="561" y="114" width="104" height="46" rx="9" fill="#161923" stroke="#272c3a"/>
+    <text x="613" y="142" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 B</text>
+    <rect x="674" y="114" width="104" height="46" rx="9" fill="#161923" stroke="#272c3a"/>
+    <text x="726" y="142" text-anchor="middle" fill="#9aa2b4" font-size="10.5">页面 C</text>
+    <text x="440" y="182" fill="#6f7686" font-size="11.5">改一次，全套生效。</text>
+
+    <rect x="14" y="202" width="772" height="46" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="400" y="222" text-anchor="middle" fill="#e8eaf0" font-size="13">这件事跟你用什么工具<tspan fill="#5eead4" font-weight="700">毫无关系</tspan> —— 它是产品经理的硬功夫，不是 Axure 或 Figma 的功能</text>
+    <text x="400" y="240" text-anchor="middle" fill="#6f7686" font-size="11.5">也是评审时最能看出一个人专不专业的地方</text>
+  </svg>
+  <figcaption><b>图 4</b> · 全局说明：把通用规则抽出来写一次，是原型能不能维护的分水岭</figcaption>
+  </figure>
+
+  <h3 id="biao">交互自查清单</h3>
+  <p>下面这份清单是<strong>按常见遗漏项整理的</strong>，交原型之前挨条过一遍。绝大多数评审会上被开发问住的问题，都在这张表里。</p>
+
+  <div class="ck">
+    <div class="h">① 页面状态 <span>最常漏的一类</span></div>
+    <ul>
+      <li><b>空状态</b> —— 列表一条数据都没有时，页面长什么样？文案是什么？有没有引导按钮</li>
+      <li><b>加载状态</b> —— 数据在路上时显示什么？骨架屏、转圈，还是什么都不显示</li>
+      <li><b>出错状态</b> —— 请求失败、断网时显示什么？能不能重试</li>
+      <li><b>首次进入 vs 再次进入</b> —— 新用户要不要引导？老用户会不会被烦到</li>
+      <li><b>极限数据</b> —— 标题特别长会不会撑破？列表 1000 条怎么办</li>
+    </ul>
+  </div>
+
+  <div class="ck">
+    <div class="h">② 输入与校验 <span>开发最爱问的一类</span></div>
+    <ul>
+      <li><b>字符限制</b> —— 最少几个字、最多几个字？超了是截断还是报错</li>
+      <li><b>允许的字符类型</b> —— 能不能输空格、emoji、特殊符号</li>
+      <li><b>必填还是选填</b> —— 必填项怎么标</li>
+      <li><b>校验时机</b> —— 边输边校验，还是失焦后校验，还是提交时才校验</li>
+      <li><b>错误提示的位置和文案</b> —— 提示出现在哪、说什么、什么时候消失</li>
+    </ul>
+  </div>
+
+  <div class="ck">
+    <div class="h">③ 按钮与操作 <span></span></div>
+    <ul>
+      <li><b>禁用态</b> —— 什么条件下按钮是灰的？灰的时候点了有没有反馈</li>
+      <li><b>防重复提交</b> —— 连点两次会不会下两个单</li>
+      <li><b>不可逆操作</b> —— 删除、取消这类操作要不要二次确认</li>
+      <li><b>操作结果反馈</b> —— 成功了怎么告诉用户？Toast、跳页，还是就地刷新</li>
+    </ul>
+  </div>
+
+  <div class="ck">
+    <div class="h">④ 流程与权限 <span></span></div>
+    <ul>
+      <li><b>未登录怎么办</b> —— 半路要登录，登录完回到哪一步</li>
+      <li><b>没有权限怎么办</b> —— 是隐藏入口，还是显示但点了提示</li>
+      <li><b>中断与返回</b> —— 填到一半退出，数据保不保留</li>
+      <li><b>跨端一致性</b> —— 手机上做的操作，PC 端刷新后能不能看到</li>
+    </ul>
+  </div>
+
+  <div class="note key">
+    <span class="tag">◆ 关于非功能性需求</span>
+    <p>不会写就<strong>随时找开发或者测试的同事询问</strong>。这条和第 01 节的建议一致 —— 同一家公司里，不同项目的非功能性需求几乎是相同的，抄上一份就行。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 6 ══════════ -->
+<section id="s6">
+  <div class="sechead"><div class="num">PART 06</div><h2>一条清醒的话</h2></div>
+
+  <div class="note quote">
+    <span class="tag">◆ 原课程的原话，老师说了两遍</span>
+    <ol>
+      <li><strong>交互，在绝大多数企业中，对于产品经理的要求，都是制作静态原型（不带交互）。</strong></li>
+      <li>如果在这个阶段学得比较费力，<strong>建议把更多时间花在其他知识点上</strong>。</li>
+      <li>如果在这个阶段学得比较好，<strong>建议不要沉迷交互</strong>。</li>
+    </ol>
+  </div>
+
+  <p><strong>交互是加分项，不是核心竞争力。</strong>这句话在 Axure 时代成立，在 Figma 和 AI 时代<em>只会更成立</em> —— 因为把交互做出来的成本已经从「学三节课的中继器」降到了「写一段话」。</p>
+
+  <p>成本降到接近零的技能，不可能是你的护城河。真正拉开差距的是前面几节的东西：<strong>需求判断、场景分析、优先级排序</strong>，以及这一节的<strong>交互自查</strong>——这些 AI 目前都替你做不了，因为它不知道你的用户是谁。</p>
+
+  <div class="note">
+    <span class="tag">◆ 产出物的自明性</span>
+    <p>原课程点评作业时给的规范，做任何对外产出物都适用：</p>
+    <ul>
+      <li><strong>引用数据时一定要注明数据来源</strong></li>
+      <li><strong>同一类内容，样式和格式保持统一</strong></li>
+      <li>注意错别字和标点符号</li>
+      <li>结论要认真写，不要写成流水账</li>
+      <li><strong>产品经理的产出物要有「自明性」</strong> —— 不用你在旁边解释，别人也看得懂</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 自测 ══════════ -->
+<section id="quiz">
+  <div class="sechead"><div class="num">CHECK</div><h2>本节自测</h2></div>
+  <ol class="quizlist">
+    <li>原型分哪三类？产品经理日常产出的是哪一类？为什么强调黑白灰？</li>
+    <li>现在做 iOS 原型画板取多少？导航栏和标签栏分别多高？</li>
+    <li>这些尺寸的单位是 pt 还是 px？@2x、@3x 是什么意思？</li>
+    <li>PC 端原型有硬性规范吗？没有的话靠什么保证质量？</li>
+    <li>交互思想的三步是什么？哪几步跟工具无关？</li>
+    <li>「全局说明」解决的是什么问题？</li>
+    <li>交互自查里，页面状态要覆盖哪几种？</li>
+    <li>为什么说交互是加分项而不是核心竞争力？</li>
+  </ol>
+</section>
+
+<footer>
+  <span><a href="index.html">← 返回课程目录</a>　·　产品经理培训 · 05 原型基础 · 阅读版</span>
+  <span>下一节：06 Figma 实战</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

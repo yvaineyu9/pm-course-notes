@@ -58,12 +58,6 @@ a.row:hover{border-color:rgba(94,234,212,.5); background:var(--card2); transform
 .row.off .t{color:var(--dim2); font-size:17px; font-weight:600}
 .row.off .tag.g{color:#4b5262}
 
-.demo{margin-top:14px; border:1px solid rgba(94,234,212,.4); border-radius:14px;
-  background:linear-gradient(180deg,rgba(94,234,212,.08),rgba(94,234,212,.02));
-  padding:20px 24px; display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap}
-.demo .t{font-size:16px; font-weight:700; color:#fff}
-.demo .d{font-size:13.5px; color:var(--dim); margin-top:3px}
-.demo a{background:var(--ac); color:#08110f; font-weight:700; font-size:14px; padding:9px 22px; border-radius:100px; text-decoration:none; white-space:nowrap}
 
 .about{margin-top:50px; border:1px solid var(--line); background:var(--card); border-radius:16px; padding:26px 28px}
 .about h3{font-size:15px; color:#fff; margin-bottom:12px; font-weight:650}
@@ -88,11 +82,10 @@ footer a:hover{color:var(--ac)}
 <header>
   <div class="kicker">PRODUCT MANAGER · COURSE NOTES</div>
   <h1>产品经理培训<br><span class="thin">图文笔记</span></h1>
-  <p class="lede">把课堂笔记整理成人能读下去的图文文档。深色阅读版，所有图示为手绘 SVG，单文件自包含，断网也能打开。其中原型三节按 2026 年的工具现状做了重写。</p>
+  <p class="lede">把课堂笔记整理成人能读下去的图文文档。深色阅读版，所有图示为手绘 SVG，单文件自包含，断网也能打开。</p>
   <div class="pills">
-    <span class="pill ac">7 / 11 节已完成</span>
-    <span class="pill">56 张原创图解</span>
-    <span class="pill">1 个可运行原型</span>
+    <span class="pill ac">4 / 11 节已完成</span>
+    <span class="pill">42 张原创图解</span>
     <span class="pill">无外部依赖</span>
   </div>
 </header>
@@ -136,32 +129,23 @@ footer a:hover{color:var(--ac)}
     <div class="meta"><span class="tag g">掌握</span><span class="tag">10 张图</span></div>
   </a>
 
-  <a class="row" href="05.html">
+  <div class="row off">
     <div class="no">05</div>
-    <div>
-      <div class="t">原型基础 <span class="rw">重写</span></div>
-      <div class="d">原型三种分类 · 移动端设计规范（已更新到当前机型）· 交互思想 · 交互自查清单</div>
-    </div>
-    <div class="meta"><span class="tag g">掌握</span><span class="tag">4 张图</span></div>
-  </a>
+    <div><div class="t">原型及 Axure 介绍</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
 
-  <a class="row" href="06.html">
+  <div class="row off">
     <div class="no">06</div>
-    <div>
-      <div class="t">Figma 实战 <span class="rw">重写</span></div>
-      <div class="d">Frame · Auto Layout · 组件与变体 · 原型连线 · Dev Mode 交付 · Axure 迁移对照</div>
-    </div>
-    <div class="meta"><span class="tag g">掌握</span><span class="tag">6 张图</span></div>
-  </a>
+    <div><div class="t">Axure 交互进阶</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
 
-  <a class="row" href="07.html">
+  <div class="row off">
     <div class="no">07</div>
-    <div>
-      <div class="t">让 AI 直接做 HTML 原型 <span class="rw">重写</span></div>
-      <div class="d">三种工具的分工 · Prompt 五段结构 · 迭代方法 · 五个坑 · 怎么交付 · 完整示例</div>
-    </div>
-    <div class="meta"><span class="tag g">掌握</span><span class="tag">4 张图</span><span class="tag">含原型</span></div>
-  </a>
+    <div><div class="t">中继器与交互自查</div></div>
+    <div class="meta"><span class="tag g">整理中</span></div>
+  </div>
 
   <div class="row off">
     <div class="no">08</div>
@@ -185,19 +169,10 @@ footer a:hover{color:var(--ac)}
   </div>
 </div>
 
-<div class="demo">
-  <div>
-    <div class="t">⚡ 需求池管理 · 可运行原型</div>
-    <div class="d">第 07 节的配套示例。筛选、搜索、状态流转、表单校验、空状态都是活的，单文件不联网也能跑。</div>
-  </div>
-  <a href="demo-需求池原型.html" target="_blank">打开原型 →</a>
-</div>
-
 <div class="about">
   <h3>关于这份笔记</h3>
   <ul>
-    <li>大部分内容基于个人课堂笔记<b>重新组织和撰写</b>，不是课件原文的转载</li>
-    <li><b>05 / 06 / 07 三节是重写的</b>。原课程这里是三节 Axure 教程（含中继器、动态面板、全局变量），操作部分已经过时；只保留了跟工具无关的方法论，工具部分替换为 Figma 和 AI 生成 HTML 原型</li>
+    <li>内容基于个人课堂笔记<b>重新组织和撰写</b>，不是课件原文的转载</li>
     <li>全部图示为<b>原创手绘 SVG</b>，无第三方素材</li>
     <li>纯静态单文件 HTML，<b>无外部依赖、无脚本追踪、无 CDN 请求</b>，下载后断网可看</li>
   </ul>

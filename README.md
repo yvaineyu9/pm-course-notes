@@ -15,7 +15,7 @@
 | [01](https://yvaineyu9.github.io/pm-course-notes/01.html) | 产品基础 —— 定义与分类 / 项目组配合 / 工作流程 / 3D 文档 | 了解 | 9 张 | ✅ |
 | [02](https://yvaineyu9.github.io/pm-course-notes/02.html) | 需求收集和需求管理 —— 竞品分析 / SWOT / 用户体验五要素 / 需求池 | 熟悉 | 12 张 | ✅ |
 | [03](https://yvaineyu9.github.io/pm-course-notes/03.html) | 用户研究和需求分析 —— 用户画像 / 场景公式 / KANO / 四象限 | 熟悉 | 11 张 | ✅ |
-| 04 | 产品规划 | | | 整理中 |
+| [04](https://yvaineyu9.github.io/pm-course-notes/04.html) | 产品规划 —— 信息架构 / 三种结构图 / 三种流程图与泳道图 | 掌握 | 10 张 | ✅ |
 | [05](https://yvaineyu9.github.io/pm-course-notes/05.html) | 原型基础 —— 分类 / 设计规范 / 交互思想 / 交互自查清单 | 掌握 | 4 张 | ✅ **重写** |
 | [06](https://yvaineyu9.github.io/pm-course-notes/06.html) | Figma 实战 —— Auto Layout / 组件变体 / 原型连线 / Dev Mode | 掌握 | 6 张 | ✅ **重写** |
 | [07](https://yvaineyu9.github.io/pm-course-notes/07.html) | 让 AI 直接做 HTML 原型 —— Prompt 五段结构 / 迭代 / 交付 | 掌握 | 4 张 | ✅ **重写** |
@@ -53,6 +53,8 @@
 **02**　需要→欲望→需求三层 · 需求四来源 · 三类竞品 · SWOT 四象限（淘宝案例）· 道斯矩阵四战略 · QCDMS 与 PEST · 五要素两种方向 · 五层与产出物对应 · 访谈四个错误 · 好问题 vs 坏问题 · 需求池四类内容
 
 **03**　两类标签与数据来源 · 用户角色 vs 用户画像 · 三套经典画像 · 羊/头羊/狼商业模式 · 业务需求→产品需求 · 场景公式 · 真伪需求三种情况 · 马斯洛需求层次 · KANO 非线性曲线 · 四象限法则 · 需求池 vs 功能清单
+
+**04**　商场导览类比 · 包含 vs 并列 · 使用频率两类 · 三种结构图 · 信息结构图 vs 产品结构图 · 三种流程图 · 流程图元素 · 顺序/选择/循环结构 · 两个常见错误 · B2C 电商泳道图
 
 **05–07**　三种原型对比 · 移动端关键尺寸 · 交互思想三步法 · 全局说明 · Axure/Figma 工作流对比 · Auto Layout 原理 · Hug/Fill/Fixed · 组件与变体 · 原型连线构成 · 能力分层 · 三种工具分工 · 含糊 vs 清晰描述 · Prompt 五段结构 · PRD/原型/设计稿分工
 

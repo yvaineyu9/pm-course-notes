@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 产品规划 · 阅读版</title>
+<style>
+:root{
+  --bg:#0b0c10; --bg2:#101219; --card:#161923; --card2:#1c2130;
+  --line:#272c3a; --line2:#343b4d;
+  --txt:#e8eaf0; --dim:#9aa2b4; --dim2:#6f7686;
+  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24; --danger:#fb7185; --blue:#60a5fa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px; line-height:1.85; letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(94,234,212,.10), transparent 60%),
+    radial-gradient(800px 500px at 90% 4%, rgba(167,139,250,.10), transparent 60%);
+}
+.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 28px 120px; display:grid; grid-template-columns:214px 1fr; gap:52px}
+@media(max-width:900px){ .wrap{grid-template-columns:1fr; gap:0; padding:0 18px 80px} nav.toc{display:none} }
+
+nav.toc{position:sticky; top:0; align-self:start; height:100vh; padding:120px 0 40px; font-size:13.5px; overflow-y:auto}
+nav.toc .lbl{color:var(--dim2); font-size:11px; letter-spacing:.18em; margin-bottom:14px}
+nav.toc a{display:block; color:var(--dim); text-decoration:none; padding:7px 12px; border-left:2px solid var(--line); transition:.18s}
+nav.toc a:hover{color:var(--ac); border-left-color:var(--ac); background:rgba(94,234,212,.05)}
+nav.toc a.sub{padding-left:24px; font-size:12.5px; color:var(--dim2)}
+
+header{padding:88px 0 46px}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ac); margin-bottom:18px}
+h1{font-size:52px; line-height:1.15; margin:0 0 22px; letter-spacing:-.01em; font-weight:700}
+h1 .thin{color:var(--dim2); font-weight:300}
+.lede{font-size:19px; color:var(--dim); max-width:660px; line-height:1.75; margin:0 0 26px}
+.meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; padding:5px 13px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
+.pill b{color:var(--txt); font-weight:600}
+.pill.ac{border-color:rgba(94,234,212,.4); color:var(--ac)}
+
+h2{font-size:15px; margin:0}
+section{scroll-margin-top:30px}
+.sechead{display:flex; align-items:baseline; gap:16px; margin:86px 0 30px; padding-bottom:18px; border-bottom:1px solid var(--line)}
+.sechead .num{font-family:var(--mono); font-size:13px; color:var(--ac); letter-spacing:.1em; padding-top:6px}
+.sechead h2{font-size:32px; font-weight:700; letter-spacing:-.01em}
+h3{font-size:20px; margin:48px 0 14px; font-weight:650}
+h3::before{content:"# "; color:var(--ac2); font-weight:400}
+h4{font-size:16px; margin:30px 0 10px; color:var(--txt); font-weight:650}
+p{margin:0 0 16px; color:#cfd4e0}
+strong{color:#fff; font-weight:650}
+em{font-style:normal; color:var(--ac); font-weight:600}
+a{color:var(--ac)}
+ul,ol{color:#cfd4e0}
+li{margin:6px 0}
+code{font-family:var(--mono); font-size:13.5px; color:var(--ac2)}
+
+.note{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:20px 24px; margin:26px 0}
+.note.warn{border-color:rgba(251,191,36,.32); background:linear-gradient(180deg,rgba(251,191,36,.07),rgba(251,191,36,.02))}
+.note.key{border-color:rgba(94,234,212,.32); background:linear-gradient(180deg,rgba(94,234,212,.07),rgba(94,234,212,.02))}
+.note.quote{border-color:var(--line2); background:var(--card); border-left:3px solid var(--ac2)}
+.note .tag{display:inline-block; font-size:11px; letter-spacing:.16em; margin-bottom:9px; color:var(--warn); font-family:var(--mono)}
+.note.key .tag{color:var(--ac)}
+.note.quote .tag{color:var(--ac2)}
+.note p:last-child{margin-bottom:0}
+.note ol,.note ul{margin:8px 0 0; padding-left:20px; color:#cfd4e0}
+.note li{margin:5px 0}
+
+blockquote{margin:22px 0; padding:2px 0 2px 22px; border-left:3px solid var(--ac2); color:#d6dae6; font-size:17px}
+blockquote p{margin:0}
+
+.tw{overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:14px; background:var(--card)}
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th{text-align:left; padding:13px 18px; font-size:12px; letter-spacing:.1em; color:var(--dim2); font-weight:600; border-bottom:1px solid var(--line); background:var(--bg2); white-space:nowrap}
+td{padding:13px 18px; border-bottom:1px solid var(--line); color:#cfd4e0; vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+td b,th b{color:#fff}
+
+figure{margin:32px 0; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,var(--card),var(--bg2)); padding:26px 24px 18px; overflow:hidden}
+figure svg{display:block; width:100%; height:auto}
+figcaption{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--dim2); text-align:center}
+figcaption b{color:var(--dim)}
+.svgt{font-family:-apple-system,"PingFang SC",sans-serif}
+
+.grid{display:grid; gap:14px; margin:24px 0}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:900px){.g5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 18px 16px; transition:.2s}
+.tile:hover{border-color:var(--line2); background:var(--card2); transform:translateY(-2px)}
+.tile .ic{font-size:22px; margin-bottom:8px; display:block}
+.tile .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.12em; margin-bottom:6px}
+.tile .t{font-size:15px; font-weight:650; color:#fff; margin-bottom:5px}
+.tile .d{font-size:13px; color:var(--dim); line-height:1.65}
+
+.map{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:34px 0 10px}
+@media(max-width:760px){.map{grid-template-columns:1fr}}
+.map a{text-decoration:none; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:16px; display:block; transition:.2s}
+.map a:hover{border-color:rgba(94,234,212,.45); background:var(--card2)}
+.map .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.14em}
+.map .t{font-size:14.5px; color:var(--txt); margin-top:7px; line-height:1.5; font-weight:600}
+
+.ck{border:1px solid var(--line); border-radius:14px; background:var(--card); margin:22px 0; overflow:hidden}
+.ck .h{padding:14px 20px; background:var(--bg2); border-bottom:1px solid var(--line); font-size:13.5px; font-weight:650; color:#fff; display:flex; align-items:center; gap:10px}
+.ck .h span{font-size:11px; color:var(--dim2); font-weight:400; font-family:var(--mono)}
+.ck ul{list-style:none; padding:8px 0; margin:0}
+.ck li{padding:8px 20px 8px 46px; position:relative; font-size:14.5px; color:#cfd4e0; line-height:1.6}
+.ck li::before{content:"☐"; position:absolute; left:20px; top:8px; color:var(--ac); font-size:15px}
+.ck li b{color:#fff}
+
+.quizlist{counter-reset:q; list-style:none; padding:0; margin:22px 0}
+.quizlist li{counter-increment:q; position:relative; padding:14px 18px 14px 52px; border:1px solid var(--line); background:var(--card); border-radius:12px; margin-bottom:10px; font-size:15px; color:#d6dae6}
+.quizlist li::before{content:counter(q,decimal-leading-zero); position:absolute; left:18px; top:14px; font-family:var(--mono); font-size:12px; color:var(--ac2)}
+
+hr.big{border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line2),transparent); margin:70px 0}
+footer{margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer a{color:var(--ac); text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="lbl">本节目录</div>
+  <a href="#top">封面 · 本节地图</a>
+  <a href="#s1">1 · 信息架构</a>
+  <a href="#wuge" class="sub">分类的五个因素</a>
+  <a href="#s2">2 · 三种结构图</a>
+  <a href="#qubie" class="sub">最容易画错的地方</a>
+  <a href="#s3">3 · 流程图</a>
+  <a href="#yuansu" class="sub">元素与结构</a>
+  <a href="#cuowu" class="sub">两个常见错误</a>
+  <a href="#yongdao" class="sub">泳道图</a>
+  <a href="#pingfen">附 · 作业评分标准</a>
+  <a href="#quiz">本节自测</a>
+</nav>
+
+<main>
+<header id="top">
+  <div class="kicker">产品经理培训 · 第 04 节</div>
+  <h1>产品规划<br><span class="thin">怎么摆，怎么走</span></h1>
+  <p class="lede">功能定了、信息分好了，接下来解决「怎么摆」和「怎么走」——信息架构管摆放，结构图管呈现，流程图管路径。</p>
+  <div class="meta">
+    <span class="pill ac">掌握程度 · <b>掌握</b></span>
+    <span class="pill">3 个主题</span>
+    <span class="pill">10 张图解</span>
+    <span class="pill">含作业评分自查表</span>
+  </div>
+
+  <div class="map">
+    <a href="#s1"><div class="n">01</div><div class="t">信息架构 —— 功能和信息按什么规则组织</div></a>
+    <a href="#s2"><div class="n">02</div><div class="t">三种结构图 —— 功能 / 信息 / 产品结构图</div></a>
+    <a href="#s3"><div class="n">03</div><div class="t">三种流程图 —— 业务 / 页面 / 数据，以及泳道图</div></a>
+  </div>
+</header>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <div class="sechead"><div class="num">PART 01</div><h2>信息架构</h2></div>
+
+  <h3>用商场导览图理解它</h3>
+  <p>课上从一个生活例子切入：<strong>为什么商场要有导览图？导览图里有什么？</strong></p>
+
+  <figure>
+  <svg viewBox="0 0 800 330" class="svgt" role="img" aria-label="商场导览图与产品信息架构的类比">
+    <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5eead4"/></marker></defs>
+
+    <!-- 商场 -->
+    <rect x="14" y="30" width="340" height="230" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="184" y="58" text-anchor="middle" fill="#9aa2b4" font-size="14" font-weight="700">🏬 商场导览图</text>
+    <g>
+      <rect x="40" y="74" width="288" height="40" rx="6" fill="#1c2130"/>
+      <text x="52" y="99" fill="#6f7686" font-size="11">3F</text>
+      <rect x="76" y="82" width="52" height="24" rx="4" fill="#272c3a"/><rect x="134" y="82" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="192" y="82" width="52" height="24" rx="4" fill="#272c3a"/><rect x="250" y="82" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="40" y="120" width="288" height="40" rx="6" fill="#1c2130"/>
+      <text x="52" y="145" fill="#6f7686" font-size="11">2F</text>
+      <rect x="76" y="128" width="52" height="24" rx="4" fill="#272c3a"/><rect x="134" y="128" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="192" y="128" width="52" height="24" rx="4" fill="#272c3a"/><rect x="250" y="128" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="40" y="166" width="288" height="40" rx="6" fill="#1c2130"/>
+      <text x="52" y="191" fill="#6f7686" font-size="11">1F</text>
+      <rect x="76" y="174" width="52" height="24" rx="4" fill="#272c3a"/><rect x="134" y="174" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="192" y="174" width="52" height="24" rx="4" fill="#272c3a"/>
+      <rect x="250" y="174" width="52" height="24" rx="4" fill="rgba(94,234,212,.2)"/>
+      <text x="276" y="190" text-anchor="middle" fill="#5eead4" font-size="9">收银</text>
+      <!-- 电梯 -->
+      <rect x="308" y="82" width="14" height="116" rx="4" fill="rgba(94,234,212,.16)"/>
+      <text x="315" y="212" text-anchor="middle" fill="#5eead4" font-size="9">梯</text>
+    </g>
+    <text x="184" y="234" text-anchor="middle" fill="#6f7686" font-size="11.5">每层多个店铺 · 有出入口和收银台 · 电梯连接各层</text>
+    <text x="184" y="252" text-anchor="middle" fill="#5eead4" font-size="11.5">在任何位置，都能通过一个路径到想去的地方</text>
+
+    <path d="M366 145 L406 145" stroke="#5eead4" stroke-width="1.8" marker-end="url(#a1)"/>
+
+    <!-- 产品 -->
+    <rect x="418" y="30" width="368" height="230" rx="14" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
+    <text x="602" y="58" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">📱 互联网产品的信息架构</text>
+    <text x="602" y="82" text-anchor="middle" fill="#9aa2b4" font-size="12">用户使用产品，跟在地图上行走一样</text>
+
+    <rect x="446" y="98" width="312" height="60" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="470" y="124" fill="#5eead4" font-size="16" font-weight="700">①</text>
+    <text x="496" y="124" fill="#fff" font-size="13.5" font-weight="600">在任何一个页面</text>
+    <text x="496" y="146" fill="#9aa2b4" font-size="12.5">最快地找到自己想要的信息</text>
+
+    <rect x="446" y="166" width="312" height="60" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="470" y="192" fill="#5eead4" font-size="16" font-weight="700">②</text>
+    <text x="496" y="192" fill="#fff" font-size="13.5" font-weight="600">通过最短的路径</text>
+    <text x="496" y="214" fill="#9aa2b4" font-size="12.5">去到下一个想去的页面</text>
+
+    <text x="602" y="248" text-anchor="middle" fill="#6f7686" font-size="11.5">两个共通需求，就是信息架构要解决的全部问题</text>
+
+    <rect x="14" y="276" width="772" height="44" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="400" y="303" text-anchor="middle" fill="#e8eaf0" font-size="13">在功能确定的情况下，合理设置和摆放，<tspan fill="#5eead4" font-weight="700">建立尽可能短的使用路径</tspan></text>
+  </svg>
+  <figcaption><b>图 1</b> · 商场导览图和产品信息架构解决的是同一个问题：让人快速找到、快速抵达</figcaption>
+  </figure>
+
+  <div class="note key">
+    <span class="tag">◆ 别把它想复杂</span>
+    <p>信息架构的<strong>本质就是产品整体结构设计、页面布局</strong>；<strong>目的就是让用户更高效地使用产品</strong>。</p>
+  </div>
+
+  <h3 id="wuge">本质就是分类：要考虑的五个因素</h3>
+  <blockquote><p><strong>当你有意识地对功能进行分类，其实已经开始做信息架构的工作了。</strong></p></blockquote>
+
+  <div class="grid g5">
+    <div class="tile"><div class="n">因素 01</div><div class="t">对应性</div><div class="d">产品目标与用户需求互相对应</div></div>
+    <div class="tile"><div class="n">因素 02</div><div class="t">功能相似性</div><div class="d">相似的功能放一起</div></div>
+    <div class="tile"><div class="n">因素 03</div><div class="t">功能间关系</div><div class="d">包含 → 纵向<br>并列 → 横向</div></div>
+    <div class="tile"><div class="n">因素 04</div><div class="t">使用频率</div><div class="d">越高频越要放在触手可及处</div></div>
+    <div class="tile"><div class="n">因素 05</div><div class="t">可扩展性</div><div class="d">加功能时不用推翻重来</div></div>
+  </div>
+
+  <h4>① 对应性 —— 产品目标与用户需求互相对应</h4>
+  <div class="tw"><table>
+    <thead><tr><th style="width:120px">产品类型</th><th style="width:220px">用户需求</th><th>架构怎么定</th></tr></thead>
+    <tbody>
+      <tr><td><b>电商类</b></td><td>购物</td><td>首页是各类<b>导购入口</b></td></tr>
+      <tr><td><b>新闻类</b></td><td>时效性是唯一重要要素</td><td>以<b>时间顺序</b>组织信息架构</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>② 功能的相似性 —— 把相似的功能放一起</h4>
+  <p><strong>大类别做主框架，小类别做子框架。</strong>课上用微信举例：</p>
+  <div class="grid g2">
+    <div class="tile"><div class="t">微信页</div><div class="d">聚合<b style="color:#fff">所有类型的消息</b> —— 好友消息、群消息、公众号、文件传输助手、微信运动</div></div>
+    <div class="tile"><div class="t">发现页</div><div class="d">具有<b style="color:#fff">探索性质</b>的功能 —— 扫一扫、看一看</div></div>
+  </div>
+
+  <h4>③ 功能之间的关系 —— 包含还是并列</h4>
+
+  <figure>
+  <svg viewBox="0 0 800 260" class="svgt" role="img" aria-label="包含关系走纵向，并列关系走横向">
+    <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a78bfa"/></marker></defs>
+
+    <rect x="14" y="24" width="380" height="216" rx="14" fill="rgba(167,139,250,.05)" stroke="rgba(167,139,250,.35)"/>
+    <text x="204" y="52" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">包含关系 → 纵向</text>
+    <text x="204" y="72" text-anchor="middle" fill="#6f7686" font-size="11.5">有先后顺序，后一步依赖前一步</text>
+    <g>
+      <rect x="120" y="86" width="168" height="28" rx="7" fill="#161923" stroke="#272c3a"/><text x="204" y="105" text-anchor="middle" fill="#cfd4e0" font-size="12.5">挑选</text>
+      <line x1="204" y1="116" x2="204" y2="128" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#a2)"/>
+      <rect x="120" y="130" width="168" height="28" rx="7" fill="#161923" stroke="#272c3a"/><text x="204" y="149" text-anchor="middle" fill="#cfd4e0" font-size="12.5">下单</text>
+      <line x1="204" y1="160" x2="204" y2="172" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#a2)"/>
+      <rect x="120" y="174" width="168" height="28" rx="7" fill="#161923" stroke="#272c3a"/><text x="204" y="193" text-anchor="middle" fill="#cfd4e0" font-size="12.5">支付</text>
+      <line x1="204" y1="204" x2="204" y2="216" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#a2)"/>
+      <rect x="120" y="218" width="168" height="28" rx="7" fill="#161923" stroke="#272c3a"/><text x="204" y="237" text-anchor="middle" fill="#cfd4e0" font-size="12.5">邮寄</text>
+    </g>
+    <text x="42" y="180" fill="#6f7686" font-size="11" transform="rotate(-90 42 180)">要邮寄必须先支付</text>
+
+    <rect x="406" y="24" width="380" height="216" rx="14" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
+    <text x="596" y="52" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">并列关系 → 横向</text>
+    <text x="596" y="72" text-anchor="middle" fill="#6f7686" font-size="11.5">两个功能没有关联，谁先谁后都行</text>
+    <g>
+      <rect x="430" y="120" width="76" height="60" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="468" y="147" text-anchor="middle" font-size="16">💬</text><text x="468" y="168" text-anchor="middle" fill="#cfd4e0" font-size="11">微信</text>
+      <rect x="514" y="120" width="76" height="60" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="552" y="147" text-anchor="middle" font-size="16">👥</text><text x="552" y="168" text-anchor="middle" fill="#cfd4e0" font-size="11">通讯录</text>
+      <rect x="598" y="120" width="76" height="60" rx="9" fill="#161923" stroke="#5eead4" stroke-opacity=".5"/>
+      <text x="636" y="147" text-anchor="middle" font-size="16">🧭</text><text x="636" y="168" text-anchor="middle" fill="#5eead4" font-size="11">发现</text>
+      <rect x="682" y="120" width="76" height="60" rx="9" fill="#161923" stroke="#272c3a"/>
+      <text x="720" y="147" text-anchor="middle" font-size="16">👤</text><text x="720" y="168" text-anchor="middle" fill="#cfd4e0" font-size="11">我</text>
+    </g>
+    <text x="596" y="208" text-anchor="middle" fill="#6f7686" font-size="11.5">底部标签栏就是典型的并列结构</text>
+  </svg>
+  <figcaption><b>图 2</b> · 关系决定方向：有依赖就往下走一层，没依赖就并排放</figcaption>
+  </figure>
+
+  <h4>④ 功能的使用频率</h4>
+  <blockquote><p><strong>使用频率越高，功能越重要，越要放在最容易触及的地方。</strong></p></blockquote>
+  <p>例子：共享单车里<em>扫码</em>是频率最高的，所以打开产品第一眼就是扫码。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 230" class="svgt" role="img" aria-label="使用频率分两类：用户实际需要与产品希望">
+    <rect x="14" y="26" width="374" height="128" rx="14" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.4)"/>
+    <text x="201" y="56" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">① 用户实际需要</text>
+    <text x="201" y="80" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">确实使用频率高</text>
+    <text x="201" y="106" text-anchor="middle" fill="#9aa2b4" font-size="12.5">这是<tspan fill="#5eead4" font-weight="700">事实</tspan> —— 从数据里能看出来</text>
+    <text x="201" y="132" text-anchor="middle" fill="#6f7686" font-size="11.5">共享单车的扫码、外卖的搜索</text>
+
+    <rect x="412" y="26" width="374" height="128" rx="14" fill="rgba(251,191,36,.05)" stroke="rgba(251,191,36,.4)"/>
+    <text x="599" y="56" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="700">② 我们希望用户使用</text>
+    <text x="599" y="80" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">希望它的频率高</text>
+    <text x="599" y="106" text-anchor="middle" fill="#9aa2b4" font-size="12.5">这是<tspan fill="#fbbf24" font-weight="700">产品的意图</tspan> —— 商业目标</text>
+    <text x="599" y="132" text-anchor="middle" fill="#6f7686" font-size="11.5">新上线的会员入口、想推的新功能</text>
+
+    <rect x="14" y="170" width="772" height="48" rx="12" fill="#12141b" stroke="rgba(251,113,133,.3)"/>
+    <text x="400" y="192" text-anchor="middle" fill="#fb7185" font-size="13" font-weight="700">⚠ 两者不一定重合 —— 这是最容易忽略的一点</text>
+    <text x="400" y="210" text-anchor="middle" fill="#9aa2b4" font-size="12">把「希望」当成「事实」来排架构，用户会觉得处处别扭</text>
+  </svg>
+  <figcaption><b>图 3</b> · 使用频率分两类：一个是事实，一个是意图。别混为一谈</figcaption>
+  </figure>
+
+  <h4>⑤ 系统的可扩展性</h4>
+  <p>产品从 0 到 1、从 1 到 N 是一步步来的。做架构时不清楚未来会加什么功能，但<strong>要做好「加了功能不用推翻重来」的准备</strong>。</p>
+  <blockquote><p>好产品的信息架构一般都非常稳定 —— <strong>微信从出生到现在增加了很多功能，主架构没怎么变过</strong>。</p></blockquote>
+
+  <div class="note warn">
+    <span class="tag">⚠ 课堂补充</span>
+    <p><strong>产品经理不要一直考虑做加法，有时候要考虑做减法。</strong></p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <div class="sechead"><div class="num">PART 02</div><h2>三种结构图</h2></div>
+  <p><strong>产品结构图（广义）</strong>：产品功能和信息的图表化展现。它下面分三种，名字很像，画的东西完全不同。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="三种结构图的区别">
+    <rect x="14" y="24" width="250" height="256" rx="16" fill="#161923" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="139" y="54" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">产品功能结构图</text>
+    <text x="139" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">专注于：功能模块</text>
+    <line x1="40" y1="90" x2="238" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="104" y="104" width="70" height="24" rx="6" fill="rgba(94,234,212,.16)"/><text x="139" y="121" text-anchor="middle" fill="#5eead4" font-size="11">微信</text>
+      <g stroke="#343b4d" stroke-width="1">
+        <line x1="139" y1="128" x2="139" y2="138"/><line x1="72" y1="138" x2="206" y2="138"/>
+        <line x1="72" y1="138" x2="72" y2="148"/><line x1="139" y1="138" x2="139" y2="148"/><line x1="206" y1="138" x2="206" y2="148"/>
+      </g>
+      <rect x="44" y="148" width="56" height="22" rx="5" fill="#1c2130"/><text x="72" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">发送消息</text>
+      <rect x="111" y="148" width="56" height="22" rx="5" fill="#1c2130"/><text x="139" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">添加好友</text>
+      <rect x="178" y="148" width="56" height="22" rx="5" fill="#1c2130"/><text x="206" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">扫一扫</text>
+      <g stroke="#343b4d" stroke-width="1"><line x1="72" y1="170" x2="72" y2="182"/></g>
+      <rect x="44" y="182" width="56" height="22" rx="5" fill="#1c2130"/><text x="72" y="198" text-anchor="middle" fill="#cfd4e0" font-size="10">发送图片</text>
+    </g>
+    <text x="139" y="230" text-anchor="middle" fill="#9aa2b4" font-size="12">只画功能，按从属关系</text>
+    <text x="139" y="250" text-anchor="middle" fill="#9aa2b4" font-size="12">逐级延展</text>
+    <rect x="46" y="260" width="186" height="0" fill="none"/>
+    <text x="139" y="272" text-anchor="middle" fill="#5eead4" font-size="11">命名用「动词 + 名词」</text>
+
+    <rect x="276" y="24" width="250" height="256" rx="16" fill="#161923" stroke="#a78bfa" stroke-opacity=".42"/>
+    <text x="401" y="54" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">产品信息结构图</text>
+    <text x="401" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">专注于：产品承载的信息</text>
+    <line x1="302" y1="90" x2="500" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="366" y="104" width="70" height="24" rx="6" fill="rgba(167,139,250,.16)"/><text x="401" y="121" text-anchor="middle" fill="#a78bfa" font-size="11">个人信息</text>
+      <g stroke="#343b4d" stroke-width="1">
+        <line x1="401" y1="128" x2="401" y2="138"/><line x1="340" y1="138" x2="462" y2="138"/>
+        <line x1="340" y1="138" x2="340" y2="148"/><line x1="462" y1="138" x2="462" y2="148"/>
+      </g>
+      <rect x="310" y="148" width="60" height="22" rx="5" fill="#1c2130"/><text x="340" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">头像</text>
+      <rect x="432" y="148" width="60" height="22" rx="5" fill="#1c2130"/><text x="462" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">昵称</text>
+      <g stroke="#343b4d" stroke-width="1"><line x1="340" y1="170" x2="340" y2="182"/><line x1="462" y1="170" x2="462" y2="182"/></g>
+      <rect x="306" y="182" width="68" height="22" rx="5" fill="#1c2130"/><text x="340" y="198" text-anchor="middle" fill="#9aa2b4" font-size="9.5">图片 / URL</text>
+      <rect x="428" y="182" width="68" height="22" rx="5" fill="#1c2130"/><text x="462" y="198" text-anchor="middle" fill="#9aa2b4" font-size="9.5">文本 / 20 字</text>
+    </g>
+    <text x="401" y="230" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">脱离页面</text>
+    <text x="401" y="250" text-anchor="middle" fill="#9aa2b4" font-size="12">把数据抽象出来分类</text>
+    <text x="401" y="272" text-anchor="middle" fill="#6f7686" font-size="11">开发建数据库的参考</text>
+
+    <rect x="538" y="24" width="248" height="256" rx="16" fill="#161923" stroke="#fbbf24" stroke-opacity=".42"/>
+    <text x="662" y="54" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="700">产品结构图（狭义）</text>
+    <text x="662" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">专注于：功能 + 信息</text>
+    <line x1="564" y1="90" x2="760" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="627" y="104" width="70" height="24" rx="6" fill="rgba(251,191,36,.16)"/><text x="662" y="121" text-anchor="middle" fill="#fbbf24" font-size="11">首页</text>
+      <g stroke="#343b4d" stroke-width="1">
+        <line x1="662" y1="128" x2="662" y2="138"/><line x1="600" y1="138" x2="724" y2="138"/>
+        <line x1="600" y1="138" x2="600" y2="148"/><line x1="724" y1="138" x2="724" y2="148"/>
+      </g>
+      <rect x="570" y="148" width="60" height="22" rx="5" fill="#1c2130"/><text x="600" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">搜索栏</text>
+      <rect x="694" y="148" width="60" height="22" rx="5" fill="#1c2130"/><text x="724" y="164" text-anchor="middle" fill="#cfd4e0" font-size="10">列表页</text>
+      <g stroke="#343b4d" stroke-width="1"><line x1="724" y1="170" x2="724" y2="182"/></g>
+      <rect x="690" y="182" width="68" height="22" rx="5" fill="#1c2130"/><text x="724" y="198" text-anchor="middle" fill="#cfd4e0" font-size="10">详情页</text>
+    </g>
+    <text x="662" y="230" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">按页面层级</text>
+    <text x="662" y="250" text-anchor="middle" fill="#9aa2b4" font-size="12">从上到下、从左到右</text>
+    <text x="662" y="272" text-anchor="middle" fill="#6f7686" font-size="11">就是产品原型的简化表达</text>
+  </svg>
+  <figcaption><b>图 4</b> · 三种结构图：一个只画功能，一个只画信息，一个按页面把两者摆出来</figcaption>
+  </figure>
+
+  <h3>① 功能结构图</h3>
+  <p><strong>概念</strong>：侧重「功能」二字，将产品功能<em>按从属关系</em>绘制出来。</p>
+  <div class="note">
+    <span class="tag">◆ 画法两步</span>
+    <ol>
+      <li>先根据<strong>一级页面</strong>找出主功能模块（比如微信有四个：微信、通讯录、发现、我）</li>
+      <li>再按层级归属关系，<strong>逐级展开下一级功能模块</strong></li>
+    </ol>
+  </div>
+  <div class="note warn">
+    <span class="tag">⚠ 命名规范</span>
+    <p>描述功能名称时建议用<strong>「动词 + 名词」</strong> —— 写「发送消息」而不是「消息」。</p>
+    <p style="margin-top:10px">这条不是形式主义：写成「消息」时，你分不清它指的是<em>一个功能</em>还是<em>一条数据</em>；加上动词，功能结构图和信息结构图的界限自然就清楚了。</p>
+  </div>
+
+  <h3>② 信息结构图</h3>
+  <p><strong>概念</strong>：<em>脱离产品的实际页面</em>，将产品的数据抽象出来，组合分类的图表。</p>
+  <div class="note key">
+    <span class="tag">◆ 三个作用</span>
+    <ol>
+      <li>梳理复杂内容的信息组成，<strong>避免信息遗漏、混乱、重复</strong></li>
+      <li>作为<strong>开发工程师建立数据库</strong>的参考依据</li>
+      <li>适用于信息构成复杂、需要优化的产品，如内容型产品（博客、门户网站）</li>
+    </ol>
+  </div>
+  <p><strong>画法</strong>：根据一级页面梳理主要信息模块 → 罗列子信息模块 → 最后罗列每个子模块的<em>信息字段</em>。</p>
+
+  <h3 id="qubie">最容易画错的地方</h3>
+  <div class="note warn">
+    <span class="tag">⚠ 课上有一道判断题，考的就是这一条</span>
+    <p><strong>信息结构图不需要按照页面层级去做。</strong>这是它和产品结构图最大的不同。</p>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 800 290" class="svgt" role="img" aria-label="信息结构图与产品结构图的关键区别">
+    <rect x="14" y="26" width="374" height="212" rx="14" fill="rgba(251,113,133,.05)" stroke="rgba(251,113,133,.42)"/>
+    <text x="201" y="54" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="700">✗ 常见错误画法</text>
+    <text x="201" y="76" text-anchor="middle" fill="#9aa2b4" font-size="12">把信息结构图按页面层级来画</text>
+    <g>
+      <rect x="130" y="92" width="142" height="24" rx="6" fill="#1c2130"/><text x="201" y="109" text-anchor="middle" fill="#9aa2b4" font-size="11">「我」的页面</text>
+      <line x1="201" y1="116" x2="201" y2="128" stroke="#4b5262" stroke-width="1"/>
+      <rect x="130" y="128" width="142" height="24" rx="6" fill="#1c2130"/><text x="201" y="145" text-anchor="middle" fill="#9aa2b4" font-size="11">个人信息页</text>
+      <line x1="201" y1="152" x2="201" y2="164" stroke="#4b5262" stroke-width="1"/>
+      <rect x="130" y="164" width="142" height="24" rx="6" fill="#1c2130"/><text x="201" y="181" text-anchor="middle" fill="#9aa2b4" font-size="11">头像</text>
+    </g>
+    <text x="201" y="212" text-anchor="middle" fill="#fb7185" font-size="12">跟着页面走 → 那是产品结构图</text>
+
+    <rect x="412" y="26" width="374" height="212" rx="14" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.45)"/>
+    <text x="599" y="54" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">✓ 正确画法</text>
+    <text x="599" y="76" text-anchor="middle" fill="#9aa2b4" font-size="12">按数据本身的归属分类，与页面无关</text>
+    <g>
+      <rect x="528" y="92" width="142" height="24" rx="6" fill="rgba(94,234,212,.16)"/><text x="599" y="109" text-anchor="middle" fill="#5eead4" font-size="11">用户信息</text>
+      <g stroke="#343b4d" stroke-width="1">
+        <line x1="599" y1="116" x2="599" y2="126"/><line x1="484" y1="126" x2="714" y2="126"/>
+        <line x1="484" y1="126" x2="484" y2="136"/><line x1="599" y1="126" x2="599" y2="136"/><line x1="714" y1="126" x2="714" y2="136"/>
+      </g>
+      <rect x="444" y="136" width="80" height="24" rx="6" fill="#1c2130"/><text x="484" y="153" text-anchor="middle" fill="#cfd4e0" font-size="11">头像</text>
+      <rect x="559" y="136" width="80" height="24" rx="6" fill="#1c2130"/><text x="599" y="153" text-anchor="middle" fill="#cfd4e0" font-size="11">昵称</text>
+      <rect x="674" y="136" width="80" height="24" rx="6" fill="#1c2130"/><text x="714" y="153" text-anchor="middle" fill="#cfd4e0" font-size="11">微信号</text>
+      <g stroke="#343b4d" stroke-width="1"><line x1="484" y1="160" x2="484" y2="172"/><line x1="599" y1="160" x2="599" y2="172"/><line x1="714" y1="160" x2="714" y2="172"/></g>
+      <rect x="440" y="172" width="88" height="22" rx="5" fill="#12141b" stroke="#272c3a"/><text x="484" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">图片 / URL</text>
+      <rect x="555" y="172" width="88" height="22" rx="5" fill="#12141b" stroke="#272c3a"/><text x="599" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">文本 / ≤20 字</text>
+      <rect x="670" y="172" width="88" height="22" rx="5" fill="#12141b" stroke="#272c3a"/><text x="714" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">唯一 / 不可改</text>
+    </g>
+    <text x="599" y="212" text-anchor="middle" fill="#5eead4" font-size="12">最后一层罗列信息字段的类型和约束</text>
+
+    <rect x="14" y="252" width="772" height="34" rx="10" fill="#12141b" stroke="#272c3a"/>
+    <text x="400" y="274" text-anchor="middle" fill="#e8eaf0" font-size="12.5">判断口诀：<tspan fill="#5eead4" font-weight="700">出现「页」「页面」字样的，就不是信息结构图</tspan></text>
+  </svg>
+  <figcaption><b>图 5</b> · 这是本节最容易考的一条：信息结构图跟着<b>数据</b>走，产品结构图跟着<b>页面</b>走</figcaption>
+  </figure>
+
+  <h3>③ 产品结构图</h3>
+  <p><strong>概念</strong>：综合展示产品信息和功能逻辑的图表 —— <em>就是产品原型的简化表达</em>。</p>
+  <div class="grid g2">
+    <div class="tile"><div class="t">作用一</div><div class="d">在前期需求评审等场景中，<b style="color:#fff">作为产品原型的替代</b></div></div>
+    <div class="tile"><div class="t">作用二</div><div class="d"><b style="color:#fff">实现成本低</b>，能快速对产品功能结构做增删改，减少产品经理的实现成本</div></div>
+  </div>
+  <p><strong>画法</strong>：功能 + 信息。先列出一级页面，再按<em>页面层级逐级展开</em>，每个页面<em>从上到下、从左到右</em>罗列内容。</p>
+
+  <div class="note warn">
+    <span class="tag">⚠ 三条实操注意</span>
+    <ul>
+      <li><strong>重点功能，重点制作；层级尽量深</strong></li>
+      <li><strong>不要出现「万箭穿心」的效果</strong>，尽量使用超链接</li>
+      <li>不要出现错别字，不要留下未编辑的子主题</li>
+    </ul>
+  </div>
+
+  <p><strong>工具</strong>：Xmind（或任何思维导图工具）。这三种图的价值在于<em>分类的准确性</em>，跟用什么软件画关系不大。</p>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <div class="sechead"><div class="num">PART 03</div><h2>流程图</h2></div>
+
+  <p><strong>流程</strong>：为达到特定目标而进行的一系列有逻辑性的操作步骤。<em>两个及以上的步骤</em>完成一个完整行为，就叫流程。</p>
+
+  <h3>产品经理为什么要画流程图</h3>
+  <div class="grid g3">
+    <div class="tile"><div class="n">01</div><div class="t">保证使用逻辑</div><div class="d">合理顺畅，没有走不通的死路</div></div>
+    <div class="tile"><div class="n">02</div><div class="t">传达需求</div><div class="d">向项目组成员清晰传达</div></div>
+    <div class="tile"><div class="n">03</div><div class="t">对应五要素</div><div class="d">对应用户体验五要素的<b style="color:#fff">范围层和结构层</b>（见 <a href="02.html">02 节</a>）</div></div>
+  </div>
+
+  <div class="note key">
+    <span class="tag">◆ 课堂强调的三条，比课件更实用</span>
+    <ul>
+      <li><strong>流程图中一定要画出流程的所有异常状态，以及如何处理</strong> —— 这是最常被漏掉的</li>
+      <li><strong>判断流程图好坏的标准，是看它跟真实业务流程是否吻合</strong></li>
+      <li>需求评审时，<strong>先介绍业务流程，再介绍具体产品</strong></li>
+    </ul>
+  </div>
+
+  <h3>三种流程图</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 290" class="svgt" role="img" aria-label="业务流程图、页面流程图、数据流程图的区别">
+    <rect x="14" y="24" width="250" height="246" rx="16" fill="#161923" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="139" y="54" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">业务流程图</text>
+    <text x="139" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">描述：业务如何流转</text>
+    <line x1="40" y1="90" x2="238" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="64" y="104" width="150" height="22" rx="11" fill="rgba(94,234,212,.14)"/><text x="139" y="120" text-anchor="middle" fill="#5eead4" font-size="10.5">打开冰箱门</text>
+      <line x1="139" y1="126" x2="139" y2="136" stroke="#4b5262"/>
+      <rect x="64" y="136" width="150" height="22" rx="4" fill="#1c2130"/><text x="139" y="152" text-anchor="middle" fill="#cfd4e0" font-size="10.5">把大象放进去</text>
+      <line x1="139" y1="158" x2="139" y2="168" stroke="#4b5262"/>
+      <rect x="64" y="168" width="150" height="22" rx="11" fill="rgba(94,234,212,.14)"/><text x="139" y="184" text-anchor="middle" fill="#5eead4" font-size="10.5">关上冰箱门</text>
+    </g>
+    <text x="139" y="216" text-anchor="middle" fill="#9aa2b4" font-size="12">用特定符号和连线表示</text>
+    <text x="139" y="234" text-anchor="middle" fill="#9aa2b4" font-size="12">业务的实际处理步骤</text>
+    <text x="139" y="258" text-anchor="middle" fill="#5eead4" font-size="11">评审时先讲这个</text>
+
+    <rect x="276" y="24" width="250" height="246" rx="16" fill="#161923" stroke="#a78bfa" stroke-opacity=".42"/>
+    <text x="401" y="54" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">页面流程图</text>
+    <text x="401" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">描述：页面之间如何跳转</text>
+    <line x1="302" y1="90" x2="500" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="318" y="104" width="58" height="70" rx="6" fill="#0f1720" stroke="#4b5262"/>
+      <rect x="326" y="112" width="42" height="8" rx="2" fill="#272c3a"/><rect x="326" y="126" width="42" height="26" rx="3" fill="#1c2130"/>
+      <text x="347" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">列表页</text>
+      <text x="386" y="144" text-anchor="middle" fill="#a78bfa" font-size="13">→</text>
+      <rect x="398" y="104" width="58" height="70" rx="6" fill="#0f1720" stroke="#4b5262"/>
+      <rect x="406" y="112" width="42" height="30" rx="3" fill="#1c2130"/><rect x="406" y="148" width="42" height="8" rx="2" fill="#272c3a"/>
+      <text x="427" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">详情页</text>
+      <text x="466" y="144" text-anchor="middle" fill="#a78bfa" font-size="13">→</text>
+      <rect x="478" y="104" width="34" height="70" rx="6" fill="#0f1720" stroke="#4b5262"/>
+      <text x="495" y="188" text-anchor="middle" fill="#6f7686" font-size="9.5">下单</text>
+    </g>
+    <text x="401" y="216" text-anchor="middle" fill="#9aa2b4" font-size="12">承载了业务流程图</text>
+    <text x="401" y="234" text-anchor="middle" fill="#9aa2b4" font-size="12">所包含的业务流转信息</text>
+    <text x="401" y="258" text-anchor="middle" fill="#a78bfa" font-size="11">看得见「长什么样」</text>
+
+    <rect x="538" y="24" width="248" height="246" rx="16" fill="#161923" stroke="#60a5fa" stroke-opacity=".42"/>
+    <text x="662" y="54" text-anchor="middle" fill="#60a5fa" font-size="15" font-weight="700">数据流程图</text>
+    <text x="662" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">描述：数据如何流转</text>
+    <line x1="564" y1="90" x2="760" y2="90" stroke="#272c3a"/>
+    <g>
+      <rect x="580" y="104" width="72" height="24" rx="4" fill="#1c2130"/><text x="616" y="120" text-anchor="middle" fill="#cfd4e0" font-size="10">前端提交</text>
+      <text x="662" y="120" text-anchor="middle" fill="#60a5fa" font-size="12">→</text>
+      <rect x="672" y="104" width="72" height="24" rx="4" fill="#1c2130"/><text x="708" y="120" text-anchor="middle" fill="#cfd4e0" font-size="10">校验</text>
+      <line x1="708" y1="128" x2="708" y2="140" stroke="#4b5262"/>
+      <rect x="672" y="140" width="72" height="24" rx="4" fill="#1c2130"/><text x="708" y="156" text-anchor="middle" fill="#cfd4e0" font-size="10">写库</text>
+      <line x1="672" y1="152" x2="656" y2="152" stroke="#4b5262"/>
+      <rect x="580" y="140" width="72" height="24" rx="4" fill="#1c2130"/><text x="616" y="156" text-anchor="middle" fill="#cfd4e0" font-size="10">返回结果</text>
+    </g>
+    <text x="662" y="200" text-anchor="middle" fill="#9aa2b4" font-size="12">表达程序对业务的实现原理</text>
+    <text x="662" y="222" text-anchor="middle" fill="#6f7686" font-size="11.5">也叫程序流程图</text>
+    <text x="662" y="252" text-anchor="middle" fill="#60a5fa" font-size="11">多数情况由开发画</text>
+  </svg>
+  <figcaption><b>图 6</b> · 三种流程图分别回答：业务怎么走、页面怎么跳、数据怎么流</figcaption>
+  </figure>
+
+  <h3 id="yuansu">组成元素</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 200" class="svgt" role="img" aria-label="流程图的四种基本元素">
+    <rect x="20" y="40" width="170" height="120" rx="14" fill="#161923" stroke="#272c3a"/>
+    <rect x="55" y="66" width="100" height="34" rx="17" fill="rgba(94,234,212,.16)" stroke="#5eead4" stroke-opacity=".5"/>
+    <text x="105" y="88" text-anchor="middle" fill="#5eead4" font-size="12.5">开始 / 结束</text>
+    <text x="105" y="124" text-anchor="middle" fill="#9aa2b4" font-size="12">圆角矩形</text>
+    <text x="105" y="144" text-anchor="middle" fill="#6f7686" font-size="11">流程的起点和终点</text>
+
+    <rect x="210" y="40" width="170" height="120" rx="14" fill="#161923" stroke="#272c3a"/>
+    <rect x="245" y="66" width="100" height="34" rx="4" fill="#1c2130" stroke="#4b5262"/>
+    <text x="295" y="88" text-anchor="middle" fill="#cfd4e0" font-size="12.5">节点</text>
+    <text x="295" y="124" text-anchor="middle" fill="#9aa2b4" font-size="12">矩形</text>
+    <text x="295" y="144" text-anchor="middle" fill="#6f7686" font-size="11">任何一个操作或状态</text>
+
+    <rect x="400" y="40" width="180" height="120" rx="14" fill="rgba(251,191,36,.05)" stroke="#fbbf24" stroke-opacity=".45"/>
+    <path d="M490 60 L536 83 L490 106 L444 83 Z" fill="rgba(251,191,36,.14)" stroke="#fbbf24" stroke-opacity=".55"/>
+    <text x="490" y="88" text-anchor="middle" fill="#fbbf24" font-size="12.5">判定</text>
+    <text x="490" y="124" text-anchor="middle" fill="#9aa2b4" font-size="12">菱形</text>
+    <text x="490" y="144" text-anchor="middle" fill="#fbbf24" font-size="11">必须标出「是」和「否」</text>
+
+    <rect x="600" y="40" width="180" height="120" rx="14" fill="#161923" stroke="#272c3a"/>
+    <rect x="640" y="66" width="100" height="34" rx="4" fill="#1c2130" stroke="#4b5262"/>
+    <line x1="649" y1="66" x2="649" y2="100" stroke="#4b5262"/><line x1="731" y1="66" x2="731" y2="100" stroke="#4b5262"/>
+    <text x="690" y="88" text-anchor="middle" fill="#cfd4e0" font-size="12.5">子流程</text>
+    <text x="690" y="124" text-anchor="middle" fill="#9aa2b4" font-size="12">双边矩形</text>
+    <text x="690" y="144" text-anchor="middle" fill="#6f7686" font-size="11">被主流程频繁调用的一段</text>
+  </svg>
+  <figcaption><b>图 7</b> · 四种基本元素。菱形是最容易画错的 —— 出现它就必须标是 / 否</figcaption>
+  </figure>
+
+  <h3>三种结构</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="顺序结构、选择结构、循环结构">
+    <defs><marker id="f1" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4b5262"/></marker></defs>
+
+    <rect x="14" y="24" width="250" height="256" rx="16" fill="#161923" stroke="#272c3a"/>
+    <text x="139" y="54" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">顺序结构</text>
+    <text x="139" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">从上到下依次执行</text>
+    <g>
+      <rect x="94" y="96" width="90" height="28" rx="14" fill="rgba(94,234,212,.14)"/><text x="139" y="115" text-anchor="middle" fill="#5eead4" font-size="11">开始</text>
+      <line x1="139" y1="124" x2="139" y2="140" stroke="#4b5262" marker-end="url(#f1)"/>
+      <rect x="94" y="142" width="90" height="28" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="139" y="161" text-anchor="middle" fill="#cfd4e0" font-size="11">步骤 A</text>
+      <line x1="139" y1="170" x2="139" y2="186" stroke="#4b5262" marker-end="url(#f1)"/>
+      <rect x="94" y="188" width="90" height="28" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="139" y="207" text-anchor="middle" fill="#cfd4e0" font-size="11">步骤 B</text>
+      <line x1="139" y1="216" x2="139" y2="232" stroke="#4b5262" marker-end="url(#f1)"/>
+      <rect x="94" y="234" width="90" height="28" rx="14" fill="rgba(94,234,212,.14)"/><text x="139" y="253" text-anchor="middle" fill="#5eead4" font-size="11">结束</text>
+    </g>
+
+    <rect x="276" y="24" width="250" height="256" rx="16" fill="#161923" stroke="#272c3a"/>
+    <text x="401" y="54" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="700">选择结构</text>
+    <text x="401" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">二选一或多选一</text>
+    <g>
+      <rect x="356" y="96" width="90" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="401" y="114" text-anchor="middle" fill="#cfd4e0" font-size="11">输入密码</text>
+      <line x1="401" y1="122" x2="401" y2="134" stroke="#4b5262" marker-end="url(#f1)"/>
+      <path d="M401 136 L452 166 L401 196 L350 166 Z" fill="rgba(251,191,36,.13)" stroke="#fbbf24" stroke-opacity=".5"/>
+      <text x="401" y="171" text-anchor="middle" fill="#fbbf24" font-size="11">是否正确</text>
+      <line x1="350" y1="166" x2="316" y2="166" stroke="#4b5262" marker-end="url(#f1)"/>
+      <text x="333" y="159" text-anchor="middle" fill="#fb7185" font-size="10">否</text>
+      <line x1="401" y1="196" x2="401" y2="216" stroke="#4b5262" marker-end="url(#f1)"/>
+      <text x="412" y="210" fill="#5eead4" font-size="10">是</text>
+      <rect x="288" y="152" width="30" height="28" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="303" y="171" text-anchor="middle" fill="#cfd4e0" font-size="9">报错</text>
+      <rect x="356" y="218" width="90" height="28" rx="14" fill="rgba(94,234,212,.14)"/><text x="401" y="237" text-anchor="middle" fill="#5eead4" font-size="11">登录成功</text>
+    </g>
+
+    <rect x="538" y="24" width="248" height="256" rx="16" fill="#161923" stroke="#272c3a"/>
+    <text x="662" y="54" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">循环结构</text>
+    <text x="662" y="76" text-anchor="middle" fill="#6f7686" font-size="11.5">判定失败则回到判定前</text>
+    <g>
+      <rect x="617" y="96" width="90" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="662" y="114" text-anchor="middle" fill="#cfd4e0" font-size="11">输入验证码</text>
+      <line x1="662" y1="122" x2="662" y2="134" stroke="#4b5262" marker-end="url(#f1)"/>
+      <path d="M662 136 L713 166 L662 196 L611 166 Z" fill="rgba(167,139,250,.13)" stroke="#a78bfa" stroke-opacity=".5"/>
+      <text x="662" y="171" text-anchor="middle" fill="#a78bfa" font-size="11">是否正确</text>
+      <line x1="662" y1="196" x2="662" y2="216" stroke="#4b5262" marker-end="url(#f1)"/>
+      <text x="673" y="210" fill="#5eead4" font-size="10">是</text>
+      <rect x="617" y="218" width="90" height="28" rx="14" fill="rgba(94,234,212,.14)"/><text x="662" y="237" text-anchor="middle" fill="#5eead4" font-size="11">通过</text>
+      <path d="M611 166 L576 166 L576 109 L613 109" fill="none" stroke="#a78bfa" stroke-width="1.3" marker-end="url(#f1)"/>
+      <text x="576" y="140" text-anchor="middle" fill="#fb7185" font-size="10">否</text>
+      <text x="576" y="196" text-anchor="middle" fill="#6f7686" font-size="10">重新输入</text>
+    </g>
+  </svg>
+  <figcaption><b>图 8</b> · 三种结构。循环结构的关键是那条<b>回头的线</b>：判定失败要能重来</figcaption>
+  </figure>
+
+  <h3>画到多细才算合格</h3>
+  <blockquote><p><strong>依据实际业务步骤或操作步骤；除非特殊要求，否则不需要画出所有的系统判定。</strong></p></blockquote>
+
+  <h3 id="cuowu">三条硬规则与两个常见错误</h3>
+
+  <div class="note key">
+    <span class="tag">◆ 三条硬规则</span>
+    <ol>
+      <li><strong>流程图必须有开始和结束</strong></li>
+      <li><strong>出现判定，使用菱形</strong> —— 且菱形必须标出「是」和「否」</li>
+      <li>主流程复杂时，关系不大的子流程可用<strong>子流程图标</strong>替代</li>
+    </ol>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="流程图的两个最常见错误">
+    <defs><marker id="f2" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4b5262"/></marker></defs>
+
+    <rect x="14" y="26" width="374" height="200" rx="14" fill="rgba(251,113,133,.05)" stroke="rgba(251,113,133,.42)"/>
+    <text x="201" y="54" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="700">✗ 错误一：没有任何异常分支</text>
+    <g>
+      <rect x="156" y="70" width="90" height="24" rx="12" fill="#1c2130"/><text x="201" y="87" text-anchor="middle" fill="#9aa2b4" font-size="10.5">开始</text>
+      <line x1="201" y1="94" x2="201" y2="106" stroke="#4b5262" marker-end="url(#f2)"/>
+      <rect x="156" y="108" width="90" height="24" rx="4" fill="#1c2130"/><text x="201" y="125" text-anchor="middle" fill="#9aa2b4" font-size="10.5">输入账号密码</text>
+      <line x1="201" y1="132" x2="201" y2="144" stroke="#4b5262" marker-end="url(#f2)"/>
+      <rect x="156" y="146" width="90" height="24" rx="12" fill="#1c2130"/><text x="201" y="163" text-anchor="middle" fill="#9aa2b4" font-size="10.5">登录成功</text>
+    </g>
+    <text x="201" y="196" text-anchor="middle" fill="#fb7185" font-size="12">密码错了怎么办？没画。</text>
+    <text x="201" y="216" text-anchor="middle" fill="#9aa2b4" font-size="11.5">跟真实业务不吻合，等于白画</text>
+
+    <rect x="412" y="26" width="374" height="200" rx="14" fill="rgba(251,113,133,.05)" stroke="rgba(251,113,133,.42)"/>
+    <text x="599" y="54" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="700">✗ 错误二：菱形没标「是」和「否」</text>
+    <g>
+      <path d="M599 70 L648 96 L599 122 L550 96 Z" fill="#1c2130" stroke="#4b5262"/>
+      <text x="599" y="101" text-anchor="middle" fill="#9aa2b4" font-size="10.5">是否正确</text>
+      <line x1="550" y1="96" x2="510" y2="96" stroke="#4b5262" marker-end="url(#f2)"/>
+      <line x1="599" y1="122" x2="599" y2="146" stroke="#4b5262" marker-end="url(#f2)"/>
+      <rect x="454" y="84" width="52" height="24" rx="4" fill="#1c2130"/><text x="480" y="101" text-anchor="middle" fill="#9aa2b4" font-size="10">分支 A</text>
+      <rect x="554" y="148" width="90" height="24" rx="4" fill="#1c2130"/><text x="599" y="165" text-anchor="middle" fill="#9aa2b4" font-size="10">分支 B</text>
+      <text x="528" y="86" text-anchor="middle" fill="#fb7185" font-size="14">?</text>
+      <text x="612" y="140" fill="#fb7185" font-size="14">?</text>
+    </g>
+    <text x="599" y="196" text-anchor="middle" fill="#fb7185" font-size="12">哪条是「是」，哪条是「否」？</text>
+    <text x="599" y="216" text-anchor="middle" fill="#9aa2b4" font-size="11.5">分支走向不明，开发只能来问你</text>
+  </svg>
+  <figcaption><b>图 9</b> · 两个最常见的错误。第一个尤其致命 —— 异常分支才是流程图的价值所在</figcaption>
+  </figure>
+
+  <div class="note warn">
+    <span class="tag">⚠ 课堂补充</span>
+    <p>当流程图中出现<strong>多元选择</strong>，如果后续流程都比较复杂，<strong>建议拆成三个不同的流程图</strong>，别硬挤在一张里。</p>
+  </div>
+
+  <h3 id="yongdao">泳道图</h3>
+  <p><strong>什么时候用</strong>：一个流程涉及<em>多个角色或部门</em>时。也叫<strong>跨职能流程图</strong>，展示工作流中每个步骤涉及的流程和职能部门。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 330" class="svgt" role="img" aria-label="B2C 电商泳道图">
+    <defs><marker id="sw" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#5eead4"/></marker></defs>
+
+    <!-- 泳道背景 -->
+    <rect x="14" y="30" width="772" height="66" rx="8" fill="rgba(94,234,212,.04)" stroke="#272c3a"/>
+    <rect x="14" y="100" width="772" height="66" rx="8" fill="rgba(167,139,250,.04)" stroke="#272c3a"/>
+    <rect x="14" y="170" width="772" height="66" rx="8" fill="rgba(96,165,250,.04)" stroke="#272c3a"/>
+    <rect x="14" y="240" width="772" height="66" rx="8" fill="rgba(251,191,36,.04)" stroke="#272c3a"/>
+
+    <!-- 泳道标题 -->
+    <rect x="14" y="30" width="86" height="66" rx="8" fill="#1c2130"/>
+    <text x="57" y="68" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700">卖家</text>
+    <rect x="14" y="100" width="86" height="66" rx="8" fill="#1c2130"/>
+    <text x="57" y="138" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="700">平台</text>
+    <rect x="14" y="170" width="86" height="66" rx="8" fill="#1c2130"/>
+    <text x="57" y="208" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="700">买家</text>
+    <rect x="14" y="240" width="86" height="66" rx="8" fill="#1c2130"/>
+    <text x="57" y="278" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">物流</text>
+
+    <!-- 节点 -->
+    <rect x="120" y="50" width="86" height="26" rx="13" fill="rgba(94,234,212,.16)"/><text x="163" y="68" text-anchor="middle" fill="#5eead4" font-size="11">卖家入驻</text>
+    <rect x="240" y="50" width="86" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="283" y="68" text-anchor="middle" fill="#cfd4e0" font-size="11">上架商品</text>
+    <rect x="360" y="120" width="86" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="403" y="138" text-anchor="middle" fill="#cfd4e0" font-size="11">商品展示</text>
+    <rect x="480" y="190" width="86" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="523" y="208" text-anchor="middle" fill="#cfd4e0" font-size="11">买家购买</text>
+    <rect x="600" y="120" width="86" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="643" y="138" text-anchor="middle" fill="#cfd4e0" font-size="11">支付</text>
+    <rect x="600" y="260" width="86" height="26" rx="4" fill="#1c2130" stroke="#4b5262"/><text x="643" y="278" text-anchor="middle" fill="#cfd4e0" font-size="11">物流发货</text>
+    <rect x="700" y="190" width="86" height="26" rx="13" fill="rgba(94,234,212,.16)"/><text x="743" y="208" text-anchor="middle" fill="#5eead4" font-size="11">收货结束</text>
+
+    <!-- 连线 -->
+    <g stroke="#5eead4" stroke-opacity=".55" stroke-width="1.4" fill="none">
+      <path d="M206 63 L236 63" marker-end="url(#sw)"/>
+      <path d="M283 76 L283 133 L356 133" marker-end="url(#sw)"/>
+      <path d="M403 146 L403 203 L476 203" marker-end="url(#sw)"/>
+      <path d="M523 190 L523 133 L596 133" marker-end="url(#sw)"/>
+      <path d="M643 146 L643 256" marker-end="url(#sw)"/>
+      <path d="M686 273 L720 273 L720 220" marker-end="url(#sw)"/>
+    </g>
+
+    <text x="400" y="322" text-anchor="middle" fill="#6f7686" font-size="11.5">卖家入驻 → 商品展示 → 买家购买 → 支付 → 物流发货 → 收货结束</text>
+  </svg>
+  <figcaption><b>图 10</b> · 泳道图：每条泳道是一个角色，线跨泳道就说明责任交接了</figcaption>
+  </figure>
+
+  <div class="note warn">
+    <span class="tag">⚠ 泳道图的三条</span>
+    <ul>
+      <li><strong>泳道图可以有多个开始和多个结束</strong>（普通流程图不行）</li>
+      <li><strong>不能出现交叉线</strong></li>
+      <li>产品经理的产出物有一个最大、最难把握的标准：<strong>美观</strong></li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <span class="tag">◆ 随堂练习</span>
+    <p>一个教育平台，老师入驻发布课程、学员买课：<strong>老师提交资料 → 平台审核</strong>（不通过要提示哪些信息有误并重新提交）<strong>→ 通过后发布课程、设置上课时间 → 学员看到课程并购买</strong>。用泳道图画出来。</p>
+    <p style="margin-top:10px">提示：审核不通过那条<em>回头的线</em>就是上面说的循环结构，也正是最容易被漏掉的异常分支。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 评分标准 ══════════ -->
+<section id="pingfen">
+  <div class="sechead"><div class="num">EXTRA</div><h2>附：作业评分标准</h2></div>
+  <p>老师给出的评分口径，<strong>可以直接当交作业前的自查清单用</strong>。</p>
+
+  <div class="ck">
+    <div class="h">结构图 <span>逐条对照</span></div>
+    <ul>
+      <li>主要模块（核心功能模块）需要到 <b>6 级及以上</b>节点</li>
+      <li>不能有<b>过多连接线</b>（避免「万箭穿心」）</li>
+      <li>不能出现<b>错别字</b></li>
+      <li>不能留下<b>未编辑的子节点</b>（草稿内容）</li>
+    </ul>
+  </div>
+
+  <div class="ck">
+    <div class="h">流程图 <span>逐条对照</span></div>
+    <ul>
+      <li>不能有<b>交叉线</b></li>
+      <li>要有<b>开始和结束</b></li>
+      <li>出现判定要有<b>「是」和「否」</b></li>
+      <li>需要<b>实现闭环</b> —— 比如登录流程要有从开始到登录完成的全部路径</li>
+      <li>各节点<b>用词准确</b></li>
+      <li>不能出现草稿内容</li>
+    </ul>
+  </div>
+
+  <div class="note key">
+    <span class="tag">◆ 计分方式</span>
+    <p>满足以上给 <strong>8 分</strong>，<strong>视觉效果好给 10 分</strong>；<em>每错一处扣 0.5 分</em>。</p>
+    <p style="margin-top:10px">注意那 2 分的差距在「视觉效果」上 —— 对应课上那句「产品经理的产出物有一个最大、最难把握的标准：美观」。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 自测 ══════════ -->
+<section id="quiz">
+  <div class="sechead"><div class="num">CHECK</div><h2>本节自测</h2></div>
+  <ol class="quizlist">
+    <li>什么是信息架构？它的本质和目的分别是什么？</li>
+    <li>做信息架构要考虑哪 5 个因素？「功能使用频率」为什么要分两类？</li>
+    <li>产品结构图有哪三种？各自专注于什么？</li>
+    <li>信息结构图和产品结构图最大的区别是什么？</li>
+    <li>功能结构图的命名规范是什么？为什么这么要求？</li>
+    <li>产品流程图有哪三种？分别描述什么？</li>
+    <li>流程图必须具备哪三条硬规则？最常见的两个错误是什么？</li>
+    <li>什么时候用泳道图？它和普通流程图有什么不同？</li>
+  </ol>
+</section>
+
+<footer>
+  <span><a href="index.html">← 返回课程目录</a>　·　产品经理培训 · 04 产品规划 · 阅读版</span>
+  <span>上一节：03 用户研究和需求分析　·　下一节：05 原型基础</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

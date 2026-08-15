@@ -3,756 +3,147 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>01 产品基础 · 阅读版</title>
+<title>产品经理培训 · 图文笔记</title>
 <style>
 :root{
   --bg:#0b0c10; --bg2:#101219; --card:#161923; --card2:#1c2130;
   --line:#272c3a; --line2:#343b4d;
   --txt:#e8eaf0; --dim:#9aa2b4; --dim2:#6f7686;
-  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24; --danger:#fb7185; --blue:#60a5fa;
+  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24;
   --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{box-sizing:border-box; margin:0; padding:0}
 body{
-  margin:0; background:var(--bg); color:var(--txt);
+  background:var(--bg); color:var(--txt); min-height:100vh;
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  font-size:16px; line-height:1.85; letter-spacing:.01em;
-  -webkit-font-smoothing:antialiased;
+  font-size:16px; line-height:1.8; -webkit-font-smoothing:antialiased;
 }
-/* ── 背景氛围 ── */
 body::before{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(900px 500px at 12% -8%, rgba(94,234,212,.10), transparent 60%),
-    radial-gradient(800px 500px at 90% 4%, rgba(167,139,250,.10), transparent 60%);
+    radial-gradient(900px 520px at 10% -10%, rgba(94,234,212,.11), transparent 60%),
+    radial-gradient(820px 500px at 92% 2%, rgba(167,139,250,.10), transparent 60%);
 }
-.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 28px 120px; display:grid; grid-template-columns:214px 1fr; gap:52px}
-@media(max-width:900px){ .wrap{grid-template-columns:1fr; gap:0; padding:0 18px 80px} nav.toc{display:none} }
+.wrap{position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 110px}
 
-/* ── 侧栏目录 ── */
-nav.toc{position:sticky; top:0; align-self:start; height:100vh; padding:120px 0 40px; font-size:13.5px}
-nav.toc .lbl{color:var(--dim2); font-size:11px; letter-spacing:.18em; margin-bottom:14px}
-nav.toc a{display:block; color:var(--dim); text-decoration:none; padding:7px 12px; border-left:2px solid var(--line); transition:.18s}
-nav.toc a:hover{color:var(--ac); border-left-color:var(--ac); background:rgba(94,234,212,.05)}
-nav.toc a.sub{padding-left:24px; font-size:12.5px; color:var(--dim2)}
+header{padding:110px 0 56px}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.32em; color:var(--ac); margin-bottom:20px}
+h1{font-size:60px; line-height:1.12; letter-spacing:-.02em; font-weight:700; margin-bottom:22px}
+h1 .thin{color:var(--dim2); font-weight:200}
+.lede{font-size:18.5px; color:var(--dim); max-width:680px; line-height:1.75; margin-bottom:28px}
+.pills{display:flex; gap:10px; flex-wrap:wrap}
+.pill{font-size:12.5px; padding:6px 15px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
+.pill.ac{border-color:rgba(94,234,212,.42); color:var(--ac); background:rgba(94,234,212,.06)}
 
-/* ── 头部 ── */
-header{padding:88px 0 46px}
-.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ac); margin-bottom:18px}
-h1{font-size:52px; line-height:1.15; margin:0 0 22px; letter-spacing:-.01em; font-weight:700}
-h1 .thin{color:var(--dim2); font-weight:300}
-.lede{font-size:19px; color:var(--dim); max-width:660px; line-height:1.75; margin:0 0 26px}
-.meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-.pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; padding:5px 13px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
-.pill b{color:var(--txt); font-weight:600}
-.pill.ac{border-color:rgba(94,234,212,.4); color:var(--ac)}
+.seclbl{font-size:11.5px; letter-spacing:.2em; color:var(--dim2); font-family:var(--mono); margin:52px 0 18px; display:flex; align-items:center; gap:14px}
+.seclbl::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--line2),transparent)}
 
-h2{font-size:15px; margin:0}
-section{scroll-margin-top:30px}
-.sechead{display:flex; align-items:baseline; gap:16px; margin:86px 0 30px; padding-bottom:18px; border-bottom:1px solid var(--line)}
-.sechead .num{font-family:var(--mono); font-size:13px; color:var(--ac); letter-spacing:.1em; padding-top:6px}
-.sechead h2{font-size:32px; font-weight:700; letter-spacing:-.01em}
-h3{font-size:20px; margin:48px 0 14px; font-weight:650}
-h3::before{content:"# "; color:var(--ac2); font-weight:400}
-h4{font-size:16px; margin:30px 0 10px; color:var(--txt); font-weight:650}
-p{margin:0 0 16px; color:#cfd4e0}
-strong{color:#fff; font-weight:650}
-em{font-style:normal; color:var(--ac); font-weight:600}
-a{color:var(--ac)}
+.list{display:grid; gap:14px}
+a.row{
+  display:grid; grid-template-columns:64px 1fr auto; gap:22px; align-items:center;
+  text-decoration:none; border:1px solid var(--line); background:var(--card);
+  border-radius:16px; padding:22px 26px; transition:.2s;
+}
+a.row:hover{border-color:rgba(94,234,212,.5); background:var(--card2); transform:translateY(-2px)}
+a.row .no{font-family:var(--mono); font-size:26px; color:var(--ac); font-weight:600; letter-spacing:-.02em}
+a.row .t{font-size:21px; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-.01em}
+a.row .d{font-size:14px; color:var(--dim); line-height:1.65}
+a.row .meta{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+a.row .tag{font-size:11.5px; padding:4px 11px; border-radius:100px; background:rgba(94,234,212,.1); color:var(--ac); white-space:nowrap}
+a.row .tag.g{background:#1c2130; color:var(--dim2)}
+@media(max-width:720px){
+  a.row{grid-template-columns:48px 1fr; padding:18px}
+  a.row .meta{grid-column:1/-1; justify-content:flex-start}
+  h1{font-size:40px}
+}
 
-/* ── 卡片 / 提示 ── */
-.note{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:20px 24px; margin:26px 0}
-.note.warn{border-color:rgba(251,191,36,.32); background:linear-gradient(180deg,rgba(251,191,36,.07),rgba(251,191,36,.02))}
-.note.key{border-color:rgba(94,234,212,.32); background:linear-gradient(180deg,rgba(94,234,212,.07),rgba(94,234,212,.02))}
-.note.quote{border-color:var(--line2); background:var(--card); border-left:3px solid var(--ac2)}
-.note .tag{display:inline-block; font-size:11px; letter-spacing:.16em; margin-bottom:9px; color:var(--warn); font-family:var(--mono)}
-.note.key .tag{color:var(--ac)}
-.note.quote .tag{color:var(--ac2)}
-.note p:last-child{margin-bottom:0}
-.note ol,.note ul{margin:8px 0 0; padding-left:20px; color:#cfd4e0}
-.note li{margin:5px 0}
+.soon{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+@media(max-width:720px){.soon{grid-template-columns:1fr}}
+.soon div{
+  border:1px dashed var(--line2); border-radius:14px; padding:16px 20px;
+  color:var(--dim2); font-size:15px; display:flex; gap:14px; align-items:baseline;
+}
+.soon div span{font-family:var(--mono); font-size:13px; color:#4b5262}
 
-blockquote{margin:22px 0; padding:2px 0 2px 22px; border-left:3px solid var(--ac2); color:#d6dae6; font-size:17px}
-blockquote p{margin:0}
+.about{margin-top:56px; border:1px solid var(--line); background:var(--card); border-radius:16px; padding:26px 28px}
+.about h3{font-size:15px; color:#fff; margin-bottom:12px; font-weight:650}
+.about ul{list-style:none; display:flex; flex-direction:column; gap:9px}
+.about li{position:relative; padding-left:20px; font-size:14.5px; color:var(--dim); line-height:1.7}
+.about li::before{content:""; position:absolute; left:2px; top:11px; width:6px; height:6px; border-radius:50%; background:var(--ac2)}
+.about b{color:#fff}
 
-/* ── 表格 ── */
-.tw{overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:14px; background:var(--card)}
-table{border-collapse:collapse; width:100%; font-size:14.5px}
-th{text-align:left; padding:13px 18px; font-size:12px; letter-spacing:.1em; color:var(--dim2); font-weight:600; border-bottom:1px solid var(--line); background:var(--bg2); white-space:nowrap}
-td{padding:13px 18px; border-bottom:1px solid var(--line); color:#cfd4e0; vertical-align:top}
-tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(255,255,255,.018)}
-td b,th b{color:#fff}
-
-/* ── 图 ── */
-figure{margin:32px 0; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,var(--card),var(--bg2)); padding:26px 24px 18px; overflow:hidden}
-figure svg{display:block; width:100%; height:auto}
-figcaption{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--dim2); text-align:center}
-figcaption b{color:var(--dim)}
-.svgt{font-family:-apple-system,"PingFang SC",sans-serif}
-
-/* ── 小组件 ── */
-.grid{display:grid; gap:14px; margin:24px 0}
-.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
-@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
-.tile{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 18px 16px; transition:.2s}
-.tile:hover{border-color:var(--line2); background:var(--card2); transform:translateY(-2px)}
-.tile .ic{font-size:22px; margin-bottom:8px; display:block}
-.tile .t{font-size:15px; font-weight:650; color:#fff; margin-bottom:5px}
-.tile .d{font-size:13px; color:var(--dim); line-height:1.65}
-
-.map{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:34px 0 10px}
-@media(max-width:760px){.map{grid-template-columns:repeat(2,1fr)}}
-.map a{text-decoration:none; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:16px; display:block; transition:.2s}
-.map a:hover{border-color:rgba(94,234,212,.45); background:var(--card2)}
-.map .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.14em}
-.map .t{font-size:14.5px; color:var(--txt); margin-top:7px; line-height:1.5; font-weight:600}
-
-.quizlist{counter-reset:q; list-style:none; padding:0; margin:22px 0}
-.quizlist li{counter-increment:q; position:relative; padding:14px 18px 14px 52px; border:1px solid var(--line); background:var(--card); border-radius:12px; margin-bottom:10px; font-size:15px; color:#d6dae6}
-.quizlist li::before{content:counter(q,decimal-leading-zero); position:absolute; left:18px; top:14px; font-family:var(--mono); font-size:12px; color:var(--ac2)}
-
-hr.big{border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line2),transparent); margin:70px 0}
-footer{margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer{margin-top:60px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer a{color:var(--dim); text-decoration:none}
+footer a:hover{color:var(--ac)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<nav class="toc">
-  <div class="lbl">本节目录</div>
-  <a href="#top">封面 · 本节地图</a>
-  <a href="#s1">1 · 定义 / 特质 / 分类</a>
-  <a href="#s1" class="sub">四种软实力</a>
-  <a href="#mvp" class="sub">MVP 与马车</a>
-  <a href="#fenlei" class="sub">三种分类维度</a>
-  <a href="#jiaohu" class="sub">线性 vs 非线性</a>
-  <a href="#s2">2 · 项目组成员</a>
-  <a href="#qiantai" class="sub">前台后台 / 前端后端</a>
-  <a href="#s3">3 · 项目工作流程</a>
-  <a href="#s4">4 · 3D 文档</a>
-  <a href="#quiz">本节自测</a>
-  <a href="#ziliao">配套资料</a>
-</nav>
-
-<main>
-<header id="top">
-  <div class="kicker">产品经理培训 · 第 01 节</div>
-  <h1>产品基础<br><span class="thin">开课第一天</span></h1>
-  <p class="lede">产品经理是干什么的、有哪几类、跟谁配合、一个项目怎么走、要写哪三份文档。这一节是整门课的坐标系，后面每一节都会回到这里。</p>
-  <div class="meta">
-    <span class="pill ac">掌握程度 · <b>了解</b></span>
-    <span class="pill">4 个主题</span>
-    <span class="pill">9 张图解</span>
-    <span class="pill">9 道自测题</span>
+<header>
+  <div class="kicker">PRODUCT MANAGER · COURSE NOTES</div>
+  <h1>产品经理培训<br><span class="thin">图文笔记</span></h1>
+  <p class="lede">把课堂笔记整理成人能读下去的图文文档。深色阅读版，所有图示为手绘 SVG，单文件自包含，断网也能打开。</p>
+  <div class="pills">
+    <span class="pill ac">3 / 11 节已完成</span>
+    <span class="pill">32 张原创图解</span>
+    <span class="pill">无外部依赖</span>
   </div>
-
-  <div class="map">
-    <a href="#s1"><div class="n">01</div><div class="t">产品经理的定义、特质与分类</div></a>
-    <a href="#s2"><div class="n">02</div><div class="t">项目组成员构成及如何配合</div></a>
-    <a href="#s3"><div class="n">03</div><div class="t">项目的工作流程</div></a>
-    <a href="#s4"><div class="n">04</div><div class="t">3D 文档：BRD / MRD / PRD</div></a>
-  </div>
-
 </header>
 
-<!-- ══════════ 1 ══════════ -->
-<section id="s1">
-  <div class="sechead"><div class="num">PART 01</div><h2>产品经理的定义、特质与分类</h2></div>
+<div class="seclbl">已完成</div>
+<div class="list">
+  <a class="row" href="01.html">
+    <div class="no">01</div>
+    <div>
+      <div class="t">产品基础</div>
+      <div class="d">定义与分类 · 项目组配合 · 工作流程 · BRD/MRD/PRD</div>
+    </div>
+    <div class="meta"><span class="tag g">了解</span><span class="tag">9 张图</span></div>
+  </a>
+  <a class="row" href="02.html">
+    <div class="no">02</div>
+    <div>
+      <div class="t">需求收集和需求管理</div>
+      <div class="d">需求三层 · 竞品分析 · SWOT 与道斯矩阵 · 用户体验五要素 · 访谈问卷 · 需求池</div>
+    </div>
+    <div class="meta"><span class="tag g">熟悉</span><span class="tag">12 张图</span></div>
+  </a>
+  <a class="row" href="03.html">
+    <div class="no">03</div>
+    <div>
+      <div class="t">用户研究和需求分析</div>
+      <div class="d">用户角色与画像 · 三套经典画像 · 场景公式 · 真伪需求 · KANO 与四象限 · 功能清单</div>
+    </div>
+    <div class="meta"><span class="tag g">熟悉</span><span class="tag">11 张图</span></div>
+  </a>
+</div>
 
-  <h3>定义</h3>
-  <p><strong>产品经理 = 企业中专门负责「产品管理」的岗位。</strong></p>
-  <blockquote><p>产品经理在互联网公司中，是一个<em>灵魂的角色</em>。</p></blockquote>
+<div class="seclbl">整理中</div>
+<div class="soon">
+  <div><span>04</span>产品规划</div>
+  <div><span>05</span>原型及 Axure 介绍</div>
+  <div><span>06</span>Axure 交互进阶</div>
+  <div><span>07</span>中继器与交互自查</div>
+  <div><span>08</span>产品设计规范（上）</div>
+  <div><span>09</span>产品设计规范（下）</div>
+  <div><span>10</span>后台基础 01</div>
+  <div><span>11</span>后台基础 02</div>
+</div>
 
-  <h3>必备的四种软实力</h3>
-  <p>课上开宗明义给出的四个特质，<strong>顺序不是随便排的</strong>——从"你怎么让事情动起来"，一路推到"事情出问题谁扛"。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 340" class="svgt" role="img" aria-label="产品经理四种软实力关系图">
-    <defs>
-      <radialGradient id="core" cx="50%" cy="45%">
-        <stop offset="0%" stop-color="#5eead4" stop-opacity=".35"/>
-        <stop offset="100%" stop-color="#5eead4" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <circle cx="400" cy="170" r="120" fill="url(#core)"/>
-    <circle cx="400" cy="170" r="56" fill="#0f1720" stroke="#5eead4" stroke-width="1.6"/>
-    <text x="400" y="164" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700">产品经理</text>
-    <text x="400" y="186" text-anchor="middle" fill="#6f7686" font-size="11">四种软实力</text>
-
-    <g stroke="#343b4d" stroke-width="1" stroke-dasharray="3 4">
-      <line x1="358" y1="130" x2="215" y2="78"/><line x1="442" y1="130" x2="585" y2="78"/>
-      <line x1="358" y1="210" x2="215" y2="262"/><line x1="442" y1="210" x2="585" y2="262"/>
-    </g>
-
-    <g>
-      <rect x="40" y="42" width="188" height="74" rx="12" fill="#161923" stroke="#a78bfa" stroke-opacity=".45"/>
-      <text x="58" y="70" fill="#fff" font-size="15" font-weight="700">① 主动性</text>
-      <text x="58" y="93" fill="#9aa2b4" font-size="11.5">产品经理没有实权，</text>
-      <text x="58" y="108" fill="#9aa2b4" font-size="11.5">推动事情全靠主动</text>
-    </g>
-    <g>
-      <rect x="572" y="42" width="188" height="74" rx="12" fill="#161923" stroke="#60a5fa" stroke-opacity=".45"/>
-      <text x="590" y="70" fill="#fff" font-size="15" font-weight="700">② 好奇心</text>
-      <text x="590" y="93" fill="#9aa2b4" font-size="11.5">支撑你去体验产品、</text>
-      <text x="590" y="108" fill="#9aa2b4" font-size="11.5">理解陌生行业</text>
-    </g>
-    <g>
-      <rect x="40" y="226" width="188" height="74" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".45"/>
-      <text x="58" y="254" fill="#fff" font-size="15" font-weight="700">③ 同理心</text>
-      <text x="58" y="277" fill="#9aa2b4" font-size="11.5">判断用户真实需求的基础</text>
-      <text x="58" y="292" fill="#6f7686" font-size="11">→ 对应第 03 节场景分析</text>
-    </g>
-    <g>
-      <rect x="572" y="226" width="188" height="74" rx="12" fill="#161923" stroke="#fbbf24" stroke-opacity=".45"/>
-      <text x="590" y="254" fill="#fff" font-size="15" font-weight="700">④ 责任心</text>
-      <text x="590" y="277" fill="#9aa2b4" font-size="11.5">产品出问题，</text>
-      <text x="590" y="292" fill="#9aa2b4" font-size="11.5">最后是产品经理兜底</text>
-    </g>
-  </svg>
-  <figcaption><b>图 1</b> · 四种软实力：主动性推事、好奇心找料、同理心判需求、责任心兜底</figcaption>
-  </figure>
-
-  <h3 id="mvp">MVP：从"更快的马"说起</h3>
-  <p><strong>MVP = 最小可执行版本</strong>（Minimum Viable Product）。课上用<strong>马车案例</strong>引出——就是福特那句名言。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="马车案例：用户说要更快的马，真实需求是更快到达">
-    <rect x="20" y="60" width="200" height="130" rx="14" fill="#161923" stroke="#272c3a"/>
-    <text x="46" y="96" font-size="30">🙋</text>
-    <text x="90" y="92" fill="#9aa2b4" font-size="11.5" letter-spacing=".1em">用户嘴上说的</text>
-    <text x="46" y="132" fill="#fff" font-size="15" font-weight="700">"我要一匹</text>
-    <text x="46" y="156" fill="#fff" font-size="15" font-weight="700">更快的马"</text>
-    <text x="160" y="170" font-size="26">🐎</text>
-
-    <path d="M232 125 L296 125" stroke="#5eead4" stroke-width="1.6" marker-end="url(#ar1)"/>
-    <defs><marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5eead4"/></marker>
-    <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#a78bfa"/></marker></defs>
-
-    <rect x="300" y="60" width="200" height="130" rx="14" fill="#0f1720" stroke="#5eead4" stroke-opacity=".5"/>
-    <text x="400" y="98" text-anchor="middle" fill="#5eead4" font-size="11.5" letter-spacing=".1em">产品经理翻译</text>
-    <text x="400" y="130" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">本质需求：</text>
-    <text x="400" y="156" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">更快地到达</text>
-    <text x="400" y="178" text-anchor="middle" fill="#6f7686" font-size="11">靠的是「同理心」</text>
-
-    <path d="M512 125 L576 125" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar2)"/>
-
-    <rect x="580" y="60" width="200" height="130" rx="14" fill="#161923" stroke="#a78bfa" stroke-opacity=".45"/>
-    <text x="680" y="98" text-anchor="middle" fill="#a78bfa" font-size="11.5" letter-spacing=".1em">最小可执行版本</text>
-    <text x="680" y="134" text-anchor="middle" font-size="34">🚗</text>
-    <text x="680" y="166" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">MVP</text>
-    <text x="680" y="184" text-anchor="middle" fill="#6f7686" font-size="11">先跑起来，再迭代</text>
-
-    <text x="400" y="228" text-anchor="middle" fill="#6f7686" font-size="12">用户描述的是「解决方案」，产品经理要挖的是「问题」</text>
-  </svg>
-  <figcaption><b>图 2</b> · 马车案例：用户给的是方案，产品经理要还原成需求 —— 这个案例在第 03 节还会再出现一次</figcaption>
-  </figure>
-
-  <h3 id="fenlei">三种分类方式</h3>
-  <p>问"你是做什么产品的"，其实是在问三个维度上的坐标。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 330" class="svgt" role="img" aria-label="产品经理的三种分类维度">
-    <!-- row1 -->
-    <text x="24" y="46" fill="#5eead4" font-size="12" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">维度 A</text>
-    <text x="24" y="70" fill="#fff" font-size="16" font-weight="700">B 端 / C 端</text>
-    <text x="24" y="92" fill="#6f7686" font-size="11">按「谁付钱、谁用」分</text>
-    <rect x="230" y="26" width="255" height="76" rx="12" fill="#161923" stroke="#60a5fa" stroke-opacity=".4"/>
-    <text x="252" y="56" fill="#fff" font-size="15" font-weight="700">B 端</text>
-    <text x="252" y="80" fill="#9aa2b4" font-size="12">面向企业客户</text>
-    <rect x="380" y="46" width="86" height="34" rx="8" fill="rgba(96,165,250,.14)"/>
-    <text x="423" y="68" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="700">重功能</text>
-    <rect x="503" y="26" width="273" height="76" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".4"/>
-    <text x="525" y="56" fill="#fff" font-size="15" font-weight="700">C 端</text>
-    <text x="525" y="80" fill="#9aa2b4" font-size="12">面向个人消费者</text>
-    <rect x="671" y="46" width="86" height="34" rx="8" fill="rgba(94,234,212,.14)"/>
-    <text x="714" y="68" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">重体验</text>
-
-    <!-- row2 -->
-    <text x="24" y="152" fill="#a78bfa" font-size="12" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">维度 B</text>
-    <text x="24" y="176" fill="#fff" font-size="16" font-weight="700">前台 / 后台</text>
-    <text x="24" y="198" fill="#6f7686" font-size="11">按「页面给谁看」分</text>
-    <rect x="230" y="132" width="255" height="76" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".4"/>
-    <text x="252" y="162" fill="#fff" font-size="15" font-weight="700">前台</text>
-    <text x="252" y="186" fill="#9aa2b4" font-size="12">给用户使用</text>
-    <rect x="380" y="152" width="86" height="34" rx="8" fill="rgba(94,234,212,.14)"/>
-    <text x="423" y="174" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">重体验</text>
-    <rect x="503" y="132" width="273" height="76" rx="12" fill="#161923" stroke="#a78bfa" stroke-opacity=".4"/>
-    <text x="525" y="162" fill="#fff" font-size="15" font-weight="700">后台</text>
-    <text x="525" y="186" fill="#9aa2b4" font-size="12">给企业内部人员使用</text>
-    <rect x="643" y="152" width="114" height="34" rx="8" fill="rgba(167,139,250,.14)"/>
-    <text x="700" y="174" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">重逻辑 / 功能</text>
-
-    <!-- row3 -->
-    <text x="24" y="258" fill="#fbbf24" font-size="12" font-family="ui-monospace,Menlo,monospace" letter-spacing=".12em">维度 C</text>
-    <text x="24" y="282" fill="#fff" font-size="16" font-weight="700">端</text>
-    <text x="24" y="304" fill="#6f7686" font-size="11">按「跑在哪」分</text>
-    <g>
-      <rect x="230" y="238" width="126" height="76" rx="12" fill="#161923" stroke="#272c3a"/>
-      <text x="293" y="272" text-anchor="middle" font-size="20">📱</text><text x="293" y="296" text-anchor="middle" fill="#e8eaf0" font-size="13">APP</text>
-      <rect x="366" y="238" width="126" height="76" rx="12" fill="#161923" stroke="#272c3a"/>
-      <text x="429" y="272" text-anchor="middle" font-size="20">💻</text><text x="429" y="296" text-anchor="middle" fill="#e8eaf0" font-size="13">PC</text>
-      <rect x="502" y="238" width="126" height="76" rx="12" fill="#161923" stroke="#272c3a"/>
-      <text x="565" y="272" text-anchor="middle" font-size="20">🌐</text><text x="565" y="296" text-anchor="middle" fill="#e8eaf0" font-size="13">Web</text>
-      <rect x="638" y="238" width="138" height="76" rx="12" fill="#161923" stroke="#272c3a"/>
-      <text x="707" y="272" text-anchor="middle" font-size="20">🧩</text><text x="707" y="296" text-anchor="middle" fill="#e8eaf0" font-size="13">小程序</text>
-    </g>
-    <text x="503" y="330" text-anchor="middle" fill="#fbbf24" font-size="11.5">不同的交互思想 · 不同的设计规范</text>
-  </svg>
-  <figcaption><b>图 3</b> · 三种分类维度：B/C 端看谁用、前台后台看页面给谁、端看跑在哪</figcaption>
-  </figure>
-
-  <h3 id="jiaohu">端的差别里最关键的一条：交互类型</h3>
-  <div class="note key">
-    <span class="tag">◆ 高频考点</span>
-    <p><strong>移动端是线性交互，PC / Web 端是非线性交互。</strong>这一条在第 08 节讲「沉浸式导航很难做，因为它违反线性交互原则」时会再次用到。</p>
-  </div>
-
-  <figure>
-  <svg viewBox="0 0 800 330" class="svgt" role="img" aria-label="线性交互与非线性交互对比">
-    <defs>
-      <marker id="a3" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#5eead4"/></marker>
-      <marker id="a4" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6f7686"/></marker>
-    </defs>
-    <!-- 线性 -->
-    <rect x="16" y="14" width="768" height="140" rx="14" fill="rgba(94,234,212,.04)" stroke="rgba(94,234,212,.28)"/>
-    <text x="38" y="44" fill="#5eead4" font-size="14" font-weight="700">📱 APP / 移动端 —— 线性交互</text>
-    <text x="240" y="44" fill="#6f7686" font-size="11.5">一条路走到底，回来必须原路返回</text>
-    <g>
-      <circle cx="120" cy="88" r="21" fill="#0f1720" stroke="#5eead4"/><text x="120" y="94" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">1</text>
-      <circle cx="280" cy="88" r="21" fill="#0f1720" stroke="#5eead4"/><text x="280" y="94" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">2</text>
-      <circle cx="440" cy="88" r="21" fill="#0f1720" stroke="#5eead4"/><text x="440" y="94" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">3</text>
-      <circle cx="600" cy="88" r="21" fill="#0f1720" stroke="#5eead4"/><text x="600" y="94" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">4</text>
-      <line x1="145" y1="88" x2="252" y2="88" stroke="#5eead4" stroke-width="1.6" marker-end="url(#a3)"/>
-      <line x1="305" y1="88" x2="412" y2="88" stroke="#5eead4" stroke-width="1.6" marker-end="url(#a3)"/>
-      <line x1="465" y1="88" x2="572" y2="88" stroke="#5eead4" stroke-width="1.6" marker-end="url(#a3)"/>
-      <path d="M600 115 Q600 136 560 136 L160 136 Q120 136 120 115" fill="none" stroke="#6f7686" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#a4)"/>
-      <text x="360" y="132" text-anchor="middle" fill="#6f7686" font-size="11">返回：4 → 3 → 2 → 1（只能逐级退）</text>
-      <text x="648" y="93" fill="#6f7686" font-size="11.5">页面栈</text>
-    </g>
-    <!-- 非线性 -->
-    <rect x="16" y="172" width="768" height="146" rx="14" fill="rgba(167,139,250,.04)" stroke="rgba(167,139,250,.28)"/>
-    <text x="38" y="202" fill="#a78bfa" font-size="14" font-weight="700">💻 PC / Web 端 —— 非线性交互</text>
-    <text x="290" y="202" fill="#6f7686" font-size="11.5">任意点跳任意点，导航栏常驻</text>
-    <g stroke="#a78bfa" stroke-opacity=".45" stroke-width="1.2">
-      <line x1="150" y1="248" x2="330" y2="230"/><line x1="150" y1="248" x2="330" y2="285"/><line x1="150" y1="248" x2="530" y2="255"/>
-      <line x1="330" y1="230" x2="530" y2="255"/><line x1="330" y1="285" x2="530" y2="255"/><line x1="330" y1="230" x2="330" y2="285"/>
-      <line x1="530" y1="255" x2="670" y2="230"/><line x1="530" y1="255" x2="670" y2="285"/><line x1="330" y1="230" x2="670" y2="230"/>
-    </g>
-    <g>
-      <circle cx="150" cy="248" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="150" y="254" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">1</text>
-      <circle cx="330" cy="230" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="330" y="236" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">2</text>
-      <circle cx="330" cy="285" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="330" y="291" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">3</text>
-      <circle cx="530" cy="255" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="530" y="261" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">4</text>
-      <circle cx="670" cy="230" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="670" y="236" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">5</text>
-      <circle cx="670" cy="285" r="20" fill="#0f1720" stroke="#a78bfa"/><text x="670" y="291" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">6</text>
-    </g>
-  </svg>
-  <figcaption><b>图 4</b> · 线性 vs 非线性：这是移动端设计规范背后的底层约束，也是第 08 节沉浸式导航难做的原因</figcaption>
-  </figure>
-
-  <h3>一条职业建议</h3>
-  <div class="note quote">
-    <span class="tag">◆ 课上原话</span>
-    <p><strong>从第一天开始就考虑：毕业之后要做什么类型的产品经理？</strong></p>
-    <p style="margin-top:10px"><strong>建议先考虑「行业」，再考虑其他。</strong></p>
-  </div>
-  <p>因为<strong>行业知识的积累是最慢的，也最难跨</strong>。B/C 端、前后台都可以换，<em>行业换起来代价最大</em>。</p>
-  <blockquote><p>另外：<strong>平时要多体验产品</strong>，尤其是国民级产品、现象级产品、明星产品。</p></blockquote>
-
-  <h3>产品经理的六类工作</h3>
-  <div class="grid g3">
-    <div class="tile"><span class="ic">✏️</span><div class="t">① 设计类</div><div class="d">原型、流程图、结构图</div></div>
-    <div class="tile"><span class="ic">📊</span><div class="t">② 分析类</div><div class="d">竞品分析、需求分析、数据分析</div></div>
-    <div class="tile"><span class="ic">📄</span><div class="t">③ 文档类</div><div class="d">BRD / MRD / PRD 等制式文档</div></div>
-    <div class="tile"><span class="ic">🔁</span><div class="t">④ 跟进类</div><div class="d">盯开发进度、盯上线</div></div>
-    <div class="tile"><span class="ic">🗂️</span><div class="t">⑤ 组织类</div><div class="d">组织评审会、组织协作</div></div>
-    <div class="tile"><span class="ic">💬</span><div class="t">⑥ 沟通类</div><div class="d">跟全项目组打交道（下一节重点）</div></div>
-  </div>
-</section>
-
-<hr class="big">
-
-<!-- ══════════ 2 ══════════ -->
-<section id="s2">
-  <div class="sechead"><div class="num">PART 02</div><h2>项目组成员及如何配合</h2></div>
-  <p>这一节的价值<strong>全在「怎么打交道」上</strong>。角色本身不难记，难的是每种角色的相处方式。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 400" class="svgt" role="img" aria-label="产品经理与项目组各角色的配合方式">
-    <defs><radialGradient id="cg" cx="50%" cy="50%"><stop offset="0%" stop-color="#5eead4" stop-opacity=".3"/><stop offset="100%" stop-color="#5eead4" stop-opacity="0"/></radialGradient></defs>
-    <circle cx="400" cy="200" r="130" fill="url(#cg)"/>
-    <g stroke="#343b4d" stroke-width="1" stroke-dasharray="3 4">
-      <line x1="400" y1="145" x2="400" y2="86"/><line x1="345" y1="172" x2="196" y2="120"/><line x1="345" y1="228" x2="196" y2="286"/>
-      <line x1="455" y1="172" x2="604" y2="120"/><line x1="455" y1="228" x2="604" y2="286"/><line x1="400" y1="255" x2="400" y2="316"/>
-    </g>
-    <circle cx="400" cy="200" r="55" fill="#0f1720" stroke="#5eead4" stroke-width="1.8"/>
-    <text x="400" y="195" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">产品经理</text>
-    <text x="400" y="215" text-anchor="middle" fill="#6f7686" font-size="10.5">灵魂角色</text>
-
-    <g><rect x="286" y="24" width="228" height="62" rx="12" fill="#161923" stroke="#fb7185" stroke-opacity=".4"/>
-      <text x="302" y="48" font-size="16">🎨</text><text x="328" y="49" fill="#fff" font-size="14" font-weight="700">UI 设计师</text>
-      <text x="302" y="72" fill="#9aa2b4" font-size="11.5">别叫「美工」· 自己要有基本审美</text></g>
-
-    <g><rect x="10" y="88" width="228" height="62" rx="12" fill="#161923" stroke="#a78bfa" stroke-opacity=".4"/>
-      <text x="26" y="112" font-size="16">🖱️</text><text x="52" y="113" fill="#fff" font-size="14" font-weight="700">交互设计师</text>
-      <text x="26" y="136" fill="#9aa2b4" font-size="11.5">多数公司由产品经理兼任</text></g>
-
-    <g><rect x="562" y="88" width="228" height="62" rx="12" fill="#161923" stroke="#60a5fa" stroke-opacity=".4"/>
-      <text x="578" y="112" font-size="16">⚙️</text><text x="604" y="113" fill="#fff" font-size="14" font-weight="700">开发工程师</text>
-      <text x="578" y="136" fill="#9aa2b4" font-size="11.5">前端管页面 · 后端管数据逻辑</text></g>
-
-    <g><rect x="10" y="256" width="228" height="62" rx="12" fill="#161923" stroke="#fbbf24" stroke-opacity=".4"/>
-      <text x="26" y="280" font-size="16">🐞</text><text x="52" y="281" fill="#fff" font-size="14" font-weight="700">测试工程师</text>
-      <text x="26" y="304" fill="#9aa2b4" font-size="11.5">主要找 bug · 帮着一起测</text></g>
-
-    <g><rect x="562" y="256" width="228" height="62" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".4"/>
-      <text x="578" y="280" font-size="16">📣</text><text x="604" y="281" fill="#fff" font-size="14" font-weight="700">运营经理</text>
-      <text x="578" y="304" fill="#9aa2b4" font-size="11.5">内容 / 用户 / 活动 / 渠道</text></g>
-
-    <g><rect x="286" y="318" width="228" height="58" rx="12" fill="#0f1720" stroke="#5eead4" stroke-opacity=".35" stroke-dasharray="4 4"/>
-      <text x="400" y="343" text-anchor="middle" fill="#5eead4" font-size="12.5" font-weight="700">产品经理没有实权</text>
-      <text x="400" y="363" text-anchor="middle" fill="#6f7686" font-size="11">所有配合都靠沟通推动，不是靠下命令</text></g>
-  </svg>
-  <figcaption><b>图 5</b> · 项目组关系图：产品经理居中，但没有实权 —— 这正是「主动性」排第一的原因</figcaption>
-  </figure>
-
-  <h3>UI 设计师</h3>
-  <div class="note warn"><span class="tag">⚠ 红线</span><p><strong>不要称 UI 为「美工」。</strong></p></div>
+<div class="about">
+  <h3>关于这份笔记</h3>
   <ul>
-    <li>产品经理<strong>不需要具备专业的设计能力，但需要有基本的审美</strong></li>
-    <li><strong>怎么提升审美</strong>：① 多看奢侈品网站；② 多看设计类网站和产品（<em>站酷、花瓣</em>）</li>
+    <li>内容基于个人课堂笔记<b>重新组织和撰写</b>，不是课件原文的转载</li>
+    <li>全部图示为<b>原创手绘 SVG</b>，无第三方素材</li>
+    <li>纯静态单文件 HTML，<b>无外部依赖、无脚本追踪、无 CDN 请求</b>，下载后断网可看</li>
   </ul>
-
-  <h3>交互设计师</h3>
-  <ul>
-    <li><strong>多数企业中，都是由产品经理兼任交互设计师</strong> —— 所以第 08 节的交互说明是必修</li>
-    <li><strong>怎么沟通</strong>：① 传达清楚需求；② 说不明白就<em>找个例子给他看</em></li>
-  </ul>
-
-  <h3 id="qiantai">开发工程师：新人最容易混的一组概念</h3>
-  <div class="tw"><table>
-    <thead><tr><th>角色</th><th>负责</th></tr></thead>
-    <tbody>
-      <tr><td><b>前端</b></td><td>页面和交互实现</td></tr>
-      <tr><td><b>后端</b></td><td>数据和逻辑关系</td></tr>
-    </tbody>
-  </table></div>
-
-  <div class="note warn">
-    <span class="tag">⚠ 必须分清</span>
-    <p><b>「前台 / 后台」和「前端 / 后端」是两回事。</b>前台后台按<strong>页面</strong>区分（给谁用的），前端后端按<strong>开发语言</strong>区分。</p>
-    <p style="margin-top:10px"><strong>无论前台还是后台，都是由前端 + 后端共同开发的。</strong></p>
-  </div>
-
-  <figure>
-  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="前台后台与前端后端的关系矩阵">
-    <text x="24" y="30" fill="#6f7686" font-size="11.5" letter-spacing=".12em">按「页面给谁用」横向分 →</text>
-    <text x="24" y="290" fill="#6f7686" font-size="11.5" letter-spacing=".12em">↑ 按「开发语言」纵向分</text>
-
-    <rect x="150" y="44" width="300" height="216" rx="14" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
-    <text x="300" y="72" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">前台</text>
-    <text x="300" y="92" text-anchor="middle" fill="#6f7686" font-size="11">给「用户」使用 · 重体验</text>
-
-    <rect x="470" y="44" width="300" height="216" rx="14" fill="rgba(167,139,250,.05)" stroke="rgba(167,139,250,.35)"/>
-    <text x="620" y="72" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700">后台</text>
-    <text x="620" y="92" text-anchor="middle" fill="#6f7686" font-size="11">给「企业内部人员」使用 · 重逻辑</text>
-
-    <rect x="24" y="110" width="106" height="58" rx="10" fill="#161923" stroke="#60a5fa" stroke-opacity=".45"/>
-    <text x="77" y="136" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="700">前端</text>
-    <text x="77" y="155" text-anchor="middle" fill="#6f7686" font-size="10.5">页面 / 交互</text>
-    <rect x="24" y="184" width="106" height="58" rx="10" fill="#161923" stroke="#fbbf24" stroke-opacity=".45"/>
-    <text x="77" y="210" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">后端</text>
-    <text x="77" y="229" text-anchor="middle" fill="#6f7686" font-size="10.5">数据 / 逻辑</text>
-
-    <g>
-      <rect x="172" y="110" width="256" height="58" rx="10" fill="rgba(96,165,250,.12)" stroke="#60a5fa" stroke-opacity=".35"/>
-      <text x="300" y="145" text-anchor="middle" fill="#dbeafe" font-size="13">前台的页面 —— 前端写</text>
-      <rect x="172" y="184" width="256" height="58" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-opacity=".35"/>
-      <text x="300" y="219" text-anchor="middle" fill="#fde68a" font-size="13">前台的数据 —— 后端写</text>
-      <rect x="492" y="110" width="256" height="58" rx="10" fill="rgba(96,165,250,.12)" stroke="#60a5fa" stroke-opacity=".35"/>
-      <text x="620" y="145" text-anchor="middle" fill="#dbeafe" font-size="13">后台的页面 —— 前端写</text>
-      <rect x="492" y="184" width="256" height="58" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-opacity=".35"/>
-      <text x="620" y="219" text-anchor="middle" fill="#fde68a" font-size="13">后台的数据 —— 后端写</text>
-    </g>
-  </svg>
-  <figcaption><b>图 6</b> · 两组概念是<b>正交</b>的两个维度，不是同一件事的两种叫法</figcaption>
-  </figure>
-
-  <h4>怎么跟开发沟通</h4>
-  <div class="note">
-    <ol>
-      <li>要<strong>多沟通</strong></li>
-      <li><strong>放低姿态，不懂就多请教</strong></li>
-      <li><strong>平时多充充电</strong> —— 懂点技术才不会提出离谱需求</li>
-    </ol>
-  </div>
-
-  <h3>测试工程师</h3>
-  <ul>
-    <li>测试主要就是<strong>找 bug</strong></li>
-    <li>建议：<strong>帮着做测试，积极主动</strong></li>
-  </ul>
-
-  <h3>运营经理：四种运营</h3>
-  <div class="grid g4">
-    <div class="tile"><span class="ic">📝</span><div class="t">内容运营</div><div class="d">内容的生产与分发</div></div>
-    <div class="tile"><span class="ic">👥</span><div class="t">用户运营</div><div class="d">拉新、留存、活跃</div></div>
-    <div class="tile"><span class="ic">🎉</span><div class="t">活动运营</div><div class="d">策划执行活动</div></div>
-    <div class="tile"><span class="ic">🔗</span><div class="t">渠道运营</div><div class="d">投放与合作</div></div>
-  </div>
-  <p><strong>怎么沟通</strong>：积极沟通，互通有无。</p>
-</section>
-
-<hr class="big">
-
-<!-- ══════════ 3 ══════════ -->
-<section id="s3">
-  <div class="sechead"><div class="num">PART 03</div><h2>项目的工作流程</h2></div>
-  <p>五个阶段，每个阶段都有明确的产出物。<strong>记流程的关键是记产出物</strong> —— 阶段是抽象的，产出物是实的。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 400" class="svgt" role="img" aria-label="项目五阶段工作流程与产出物">
-    <defs><marker id="a5" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#343b4d"/></marker></defs>
-    <g>
-      <rect x="14" y="30" width="140" height="54" rx="11" fill="#161923" stroke="#5eead4" stroke-opacity=".5"/>
-      <text x="84" y="54" text-anchor="middle" fill="#5eead4" font-size="11" font-family="ui-monospace,Menlo,monospace">STAGE 1</text>
-      <text x="84" y="74" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">启动</text>
-      <line x1="158" y1="57" x2="176" y2="57" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a5)"/>
-
-      <rect x="180" y="30" width="140" height="54" rx="11" fill="#161923" stroke="#a78bfa" stroke-opacity=".5"/>
-      <text x="250" y="54" text-anchor="middle" fill="#a78bfa" font-size="11" font-family="ui-monospace,Menlo,monospace">STAGE 2</text>
-      <text x="250" y="74" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">规划</text>
-      <line x1="324" y1="57" x2="342" y2="57" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a5)"/>
-
-      <rect x="346" y="30" width="140" height="54" rx="11" fill="#161923" stroke="#fb7185" stroke-opacity=".5"/>
-      <text x="416" y="54" text-anchor="middle" fill="#fb7185" font-size="11" font-family="ui-monospace,Menlo,monospace">STAGE 3</text>
-      <text x="416" y="74" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">执行</text>
-      <line x1="490" y1="57" x2="508" y2="57" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a5)"/>
-
-      <rect x="512" y="30" width="128" height="54" rx="11" fill="#161923" stroke="#60a5fa" stroke-opacity=".5"/>
-      <text x="576" y="54" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="ui-monospace,Menlo,monospace">STAGE 4</text>
-      <text x="576" y="74" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">跟进</text>
-      <line x1="644" y1="57" x2="662" y2="57" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a5)"/>
-
-      <rect x="666" y="30" width="120" height="54" rx="11" fill="#161923" stroke="#fbbf24" stroke-opacity=".5"/>
-      <text x="726" y="54" text-anchor="middle" fill="#fbbf24" font-size="11" font-family="ui-monospace,Menlo,monospace">STAGE 5</text>
-      <text x="726" y="74" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">上线</text>
-    </g>
-
-    <text x="14" y="118" fill="#6f7686" font-size="11.5" letter-spacing=".14em">产出物</text>
-    <g stroke="#272c3a" stroke-width="1" stroke-dasharray="3 3">
-      <line x1="84" y1="88" x2="84" y2="130"/><line x1="250" y1="88" x2="250" y2="130"/>
-      <line x1="416" y1="88" x2="416" y2="130"/><line x1="576" y1="88" x2="576" y2="130"/><line x1="726" y1="88" x2="726" y2="130"/>
-    </g>
-    <g font-size="12">
-      <rect x="14" y="132" width="140" height="30" rx="7" fill="rgba(94,234,212,.14)"/><text x="84" y="152" text-anchor="middle" fill="#5eead4" font-weight="700">BRD</text>
-      <rect x="14" y="167" width="140" height="30" rx="7" fill="rgba(94,234,212,.14)"/><text x="84" y="187" text-anchor="middle" fill="#5eead4" font-weight="700">MRD</text>
-
-      <rect x="180" y="132" width="140" height="28" rx="7" fill="#1c2130"/><text x="250" y="151" text-anchor="middle" fill="#cfd4e0">需求池</text>
-      <rect x="180" y="164" width="140" height="28" rx="7" fill="#1c2130"/><text x="250" y="183" text-anchor="middle" fill="#cfd4e0">竞品分析</text>
-      <rect x="180" y="196" width="140" height="28" rx="7" fill="rgba(167,139,250,.18)"/><text x="250" y="215" text-anchor="middle" fill="#a78bfa" font-weight="700">PRD</text>
-      <rect x="180" y="228" width="140" height="28" rx="7" fill="#1c2130"/><text x="250" y="247" text-anchor="middle" fill="#cfd4e0">原型</text>
-      <rect x="180" y="260" width="140" height="28" rx="7" fill="#1c2130"/><text x="250" y="279" text-anchor="middle" fill="#cfd4e0">流程图</text>
-      <rect x="180" y="292" width="140" height="28" rx="7" fill="#1c2130"/><text x="250" y="311" text-anchor="middle" fill="#cfd4e0">结构图</text>
-
-      <rect x="346" y="132" width="140" height="30" rx="7" fill="rgba(251,113,133,.14)"/><text x="416" y="152" text-anchor="middle" fill="#fb7185" font-weight="700">需求评审</text>
-
-      <rect x="512" y="132" width="128" height="30" rx="7" fill="#12141b" stroke="#272c3a" stroke-dasharray="3 3"/><text x="576" y="152" text-anchor="middle" fill="#6f7686">—</text>
-
-      <rect x="666" y="132" width="120" height="30" rx="7" fill="rgba(251,191,36,.14)"/><text x="726" y="152" text-anchor="middle" fill="#fbbf24" font-weight="700">验收</text>
-    </g>
-
-    <rect x="346" y="176" width="440" height="44" rx="10" fill="#12141b" stroke="#272c3a"/>
-    <text x="366" y="195" fill="#9aa2b4" font-size="11.5">⚠ 启动阶段 <tspan fill="#e8eaf0">不一定由产品经理完成</tspan>　·　执行阶段 <tspan fill="#e8eaf0">需要一颗强大的内心</tspan></text>
-    <text x="366" y="212" fill="#9aa2b4" font-size="11.5">⚠ 上线之后 <tspan fill="#fbbf24">要发上线通知邮件</tspan>，验收很重要</text>
-
-    <rect x="346" y="234" width="440" height="40" rx="10" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.3)"/>
-    <text x="566" y="259" text-anchor="middle" fill="#5eead4" font-size="12.5">多数产出物都是<tspan font-weight="700">制式文档</tspan> —— 有固定格式，不用从零发明</text>
-  </svg>
-  <figcaption><b>图 7</b> · 五阶段流程与产出物：规划阶段最重，是产品经理产出最密集的地方</figcaption>
-  </figure>
-
-  <div class="tw"><table>
-    <thead><tr><th style="width:110px">阶段</th><th>产出物</th><th>要点</th></tr></thead>
-    <tbody>
-      <tr><td><b>启动</b></td><td><b>BRD、MRD</b></td><td>⚠ <b>不一定由产品经理完成</b></td></tr>
-      <tr><td><b>规划</b></td><td>需求池、竞品分析、<b>PRD</b>、原型、流程图、结构图</td><td>产品经理产出最密集的阶段</td></tr>
-      <tr><td><b>执行</b></td><td>需求评审</td><td>「产品经理需要有一颗<b>强大的内心</b>」（第 10 节还会再说一遍）</td></tr>
-      <tr><td><b>跟进</b></td><td>—</td><td>盯进度，处理开发过程中的问题</td></tr>
-      <tr><td><b>上线</b></td><td>验收</td><td><b>验收很重要</b>；⚠ 上线之后<b>要发上线通知邮件</b></td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<hr class="big">
-
-<!-- ══════════ 4 ══════════ -->
-<section id="s4">
-  <div class="sechead"><div class="num">PART 04</div><h2>3D 文档：BRD / MRD / PRD</h2></div>
-  <p>三份文档最核心的区别<strong>不是内容，是读者</strong>。记住"给谁看"，其他都能推出来。</p>
-
-  <figure>
-  <svg viewBox="0 0 800 360" class="svgt" role="img" aria-label="BRD MRD PRD 三份文档的读者与作用">
-    <defs><marker id="a6" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#343b4d"/></marker></defs>
-
-    <!-- BRD -->
-    <rect x="20" y="40" width="234" height="200" rx="16" fill="#161923" stroke="#fbbf24" stroke-opacity=".45"/>
-    <text x="137" y="76" text-anchor="middle" font-size="26">👔</text>
-    <text x="137" y="106" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">BRD</text>
-    <text x="137" y="128" text-anchor="middle" fill="#6f7686" font-size="11">Business Requirement Doc</text>
-    <line x1="52" y1="144" x2="222" y2="144" stroke="#272c3a"/>
-    <text x="137" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">给老板 / 投资人看</text>
-    <text x="137" y="196" text-anchor="middle" fill="#9aa2b4" font-size="12.5">用来拉融资，</text>
-    <text x="137" y="216" text-anchor="middle" fill="#9aa2b4" font-size="12.5">或让老板同意某个项目</text>
-
-    <line x1="262" y1="140" x2="288" y2="140" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a6)"/>
-
-    <!-- MRD -->
-    <rect x="292" y="40" width="216" height="200" rx="16" fill="#161923" stroke="#60a5fa" stroke-opacity=".45"/>
-    <text x="400" y="76" text-anchor="middle" font-size="26">🌉</text>
-    <text x="400" y="106" text-anchor="middle" fill="#60a5fa" font-size="22" font-weight="700">MRD</text>
-    <text x="400" y="128" text-anchor="middle" fill="#6f7686" font-size="11">Market Requirement Doc</text>
-    <line x1="322" y1="144" x2="478" y2="144" stroke="#272c3a"/>
-    <text x="400" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">过渡文档</text>
-    <text x="400" y="196" text-anchor="middle" fill="#9aa2b4" font-size="12.5">连接 BRD 和 PRD，</text>
-    <text x="400" y="216" text-anchor="middle" fill="#9aa2b4" font-size="12.5">把商业构想落到市场论证</text>
-
-    <line x1="516" y1="140" x2="542" y2="140" stroke="#343b4d" stroke-width="1.5" marker-end="url(#a6)"/>
-
-    <!-- PRD -->
-    <rect x="546" y="40" width="234" height="200" rx="16" fill="rgba(94,234,212,.07)" stroke="#5eead4" stroke-opacity=".6" stroke-width="1.6"/>
-    <text x="663" y="76" text-anchor="middle" font-size="26">🛠️</text>
-    <text x="663" y="106" text-anchor="middle" fill="#5eead4" font-size="22" font-weight="700">PRD</text>
-    <text x="663" y="128" text-anchor="middle" fill="#6f7686" font-size="11">Product Requirement Doc</text>
-    <line x1="578" y1="144" x2="748" y2="144" stroke="#272c3a"/>
-    <text x="663" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">给项目组成员看</text>
-    <text x="663" y="196" text-anchor="middle" fill="#9aa2b4" font-size="12.5">帮助他们理解项目、</text>
-    <text x="663" y="216" text-anchor="middle" fill="#9aa2b4" font-size="12.5">产出项目</text>
-    <rect x="600" y="12" width="126" height="26" rx="13" fill="#5eead4"/>
-    <text x="663" y="30" text-anchor="middle" fill="#08110f" font-size="12" font-weight="700">必须掌握</text>
-
-    <rect x="20" y="262" width="488" height="76" rx="12" fill="#12141b" stroke="#272c3a"/>
-    <text x="44" y="288" fill="#9aa2b4" font-size="12.5">BRD、MRD：根据产品经理的<tspan fill="#e8eaf0">个人能力、行业经验</tspan>等，</text>
-    <text x="44" y="308" fill="#9aa2b4" font-size="12.5">再决定是否由产品经理撰写 —— <tspan fill="#fbbf24">属于非标准产出物</tspan></text>
-    <text x="44" y="328" fill="#6f7686" font-size="11.5">并不是所有公司都要求产品经理去产出 3D 文档</text>
-
-    <rect x="522" y="262" width="258" height="76" rx="12" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.3)"/>
-    <text x="651" y="290" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700">PRD 是唯一的硬性要求</text>
-    <text x="651" y="313" text-anchor="middle" fill="#9aa2b4" font-size="11.5">产品经理必须会产出的文档</text>
-    <text x="651" y="330" text-anchor="middle" fill="#6f7686" font-size="11">其余两份看公司、看你</text>
-  </svg>
-  <figcaption><b>图 8</b> · 三份文档沿「老板 → 市场 → 项目组」逐层落地，只有 PRD 是必须掌握的</figcaption>
-  </figure>
-
-  <h3>BRD 的要点：最大的风险是政策</h3>
-  <div class="note warn">
-    <span class="tag">⚠ 课上强调</span>
-    <p><strong>互联网公司做项目时，最大的风险来源是「政策」。</strong></p>
-    <p style="margin-top:10px">课上推荐的应对办法：装一个 <strong>人民日报 App</strong>，跟政策风向。</p>
-  </div>
-  <p>这一条对应第 02 节 SWOT 里的 <strong>PEST 方法</strong> —— <em>P 就是政治</em>。</p>
-
-  <h3>MRD 的组成模块</h3>
-  <figure>
-  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="MRD 的四个组成模块">
-    <g>
-      <rect x="20" y="24" width="760" height="44" rx="10" fill="#161923" stroke="#272c3a"/>
-      <circle cx="48" cy="46" r="13" fill="rgba(96,165,250,.18)"/><text x="48" y="51" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">1</text>
-      <text x="76" y="51" fill="#fff" font-size="14.5" font-weight="700">基本信息</text>
-
-      <rect x="20" y="76" width="760" height="76" rx="10" fill="#161923" stroke="#60a5fa" stroke-opacity=".4"/>
-      <circle cx="48" cy="100" r="13" fill="rgba(96,165,250,.18)"/><text x="48" y="105" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">2</text>
-      <text x="76" y="105" fill="#fff" font-size="14.5" font-weight="700">市场说明</text>
-      <text x="168" y="105" fill="#6f7686" font-size="12">数据来源：艾瑞网 · 艾媒网 · CNNIC · 易观智库 · 199IT</text>
-      <rect x="76" y="116" width="416" height="26" rx="7" fill="rgba(251,191,36,.12)"/>
-      <text x="92" y="134" fill="#fbbf24" font-size="12">⚠ 引用数据时一定要注明数据来源</text>
-      <text x="504" y="134" fill="#6f7686" font-size="11">第 03、05 节作业点评里反复强调</text>
-
-      <rect x="20" y="160" width="760" height="34" rx="10" fill="#161923" stroke="#272c3a"/>
-      <circle cx="48" cy="177" r="13" fill="rgba(96,165,250,.18)"/><text x="48" y="182" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">3</text>
-      <text x="76" y="182" fill="#fff" font-size="14.5" font-weight="700">用户说明</text>
-
-      <rect x="20" y="202" width="760" height="34" rx="10" fill="#161923" stroke="#272c3a"/>
-      <circle cx="48" cy="219" r="13" fill="rgba(96,165,250,.18)"/><text x="48" y="224" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">4</text>
-      <text x="76" y="224" fill="#fff" font-size="14.5" font-weight="700">产品说明</text>
-    </g>
-  </svg>
-  <figcaption><b>图 9</b> · MRD 四模块：市场说明是重头戏，也是唯一有硬性规范（标注来源）的一块</figcaption>
-  </figure>
-
-  <h3>PRD 的要点</h3>
-  <blockquote>
-    <p><strong>PRD 没有标准格式，但有统一的要求：传达清楚需求。</strong></p>
-    <p style="margin-top:8px"><strong>主要作用：指导项目组成员完成项目开发。</strong></p>
-  </blockquote>
-
-  <div class="note key">
-    <span class="tag">◆ 进企业后的实操三步</span>
-    <ol>
-      <li><strong>先问要不要写 PRD</strong>（很多公司根本不要求）</li>
-      <li>如果要写，<strong>要求给之前的文档作为参考</strong></li>
-      <li>如果要写而且之前没写过，<strong>用学校里任意的模板都可以</strong>，根据老板或领导的反馈再修改细节</li>
-    </ol>
-  </div>
-
-  <h4>关于非功能性需求</h4>
-  <ul>
-    <li>同一个公司中，<strong>不同项目的非功能性需求要求几乎都是相同的</strong>（抄上一份就行）</li>
-    <li><strong>不会写就去问开发或测试同事</strong></li>
-  </ul>
-
-  <div class="note quote">
-    <span class="tag">◆ 课上的定心丸</span>
-    <p><strong>BRD、MRD、PRD 都是偏制式文档，如果真要求你写，不要紧张，对着模板写就不会出问题。</strong></p>
-  </div>
-</section>
-
-<hr class="big">
-
-<!-- ══════════ 自测 ══════════ -->
-<section id="quiz">
-  <div class="sechead"><div class="num">CHECK</div><h2>本节自测</h2></div>
-  <p>能不看笔记答出这 9 题，这一节就过了。</p>
-  <ol class="quizlist">
-    <li>产品经理必备的四种软实力是什么？</li>
-    <li>MVP 是什么的缩写，中文叫什么？</li>
-    <li>产品经理有哪三种分类维度？B 端和 C 端各侧重什么？</li>
-    <li>「前台/后台」和「前端/后端」按什么区分？两者有什么关系？</li>
-    <li>移动端和 PC 端的交互类型有什么本质区别？</li>
-    <li>项目工作流程有哪五个阶段？各阶段产出什么？</li>
-    <li>BRD、MRD、PRD 分别给谁看？哪份是必须掌握的？</li>
-    <li>互联网公司做项目最大的风险来源是什么？</li>
-    <li>进入企业后，被要求写 PRD 该怎么办？</li>
-  </ol>
-</section>
-
-<!-- ══════════ 资料 ══════════ -->
-<section id="ziliao">
-  <div class="sechead"><div class="num">FILES</div><h2>配套资料</h2></div>
-  <div class="note key">
-    <span class="tag">◆ 可直接上手的模板与实例</span>
-    <p>目录：<code style="font-family:var(--mono);font-size:12.5px">~/Downloads/课件/录播课课件/第1阶段-产品基础/_其他资料/</code></p>
-  </div>
-  <div class="tw"><table>
-    <thead><tr><th>文件</th><th>用途</th></tr></thead>
-    <tbody>
-      <tr><td><code style="font-family:var(--mono);font-size:13px">01-《星云》BRD模版.pptx</code></td><td><b>BRD 模板</b></td></tr>
-      <tr><td><code style="font-family:var(--mono);font-size:13px">01-X书 — BRD文档.ppt</code></td><td>BRD 实例</td></tr>
-      <tr><td><code style="font-family:var(--mono);font-size:13px">01-亿牛金融-BRD.ppt</code></td><td>BRD 实例</td></tr>
-      <tr><td><code style="font-family:var(--mono);font-size:13px">01-京东支付PRD.docx</code></td><td><b>PRD 实例</b>（大厂真实文档）</td></tr>
-      <tr><td><code style="font-family:var(--mono);font-size:13px">01-个人注册流程测试用例.xlsx</code></td><td>测试用例示例</td></tr>
-    </tbody>
-  </table></div>
-  <blockquote><p><strong>三份 BRD 和一份京东 PRD 才是这节课最实用的东西</strong> —— 照着模板写就行，正好印证课上那句「对着模板写就不会出问题」。</p></blockquote>
-</section>
+</div>
 
 <footer>
-  <span>产品经理培训 · 01 产品基础 · 阅读版</span>
-  <span>下一节：02 市场调研</span>
+  <span>产品经理培训 · 图文笔记</span>
+  <span><a href="https://github.com/yvaineyu9/pm-course-notes">GitHub</a></span>
 </footer>
-</main>
 </div>
 </body>
 </html>

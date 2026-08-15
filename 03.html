@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 用户研究和需求分析 · 阅读版</title>
+<style>
+:root{
+  --bg:#0b0c10; --bg2:#101219; --card:#161923; --card2:#1c2130;
+  --line:#272c3a; --line2:#343b4d;
+  --txt:#e8eaf0; --dim:#9aa2b4; --dim2:#6f7686;
+  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24; --danger:#fb7185; --blue:#60a5fa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px; line-height:1.85; letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(94,234,212,.10), transparent 60%),
+    radial-gradient(800px 500px at 90% 4%, rgba(167,139,250,.10), transparent 60%);
+}
+.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 28px 120px; display:grid; grid-template-columns:214px 1fr; gap:52px}
+@media(max-width:900px){ .wrap{grid-template-columns:1fr; gap:0; padding:0 18px 80px} nav.toc{display:none} }
+
+nav.toc{position:sticky; top:0; align-self:start; height:100vh; padding:120px 0 40px; font-size:13.5px; overflow-y:auto}
+nav.toc .lbl{color:var(--dim2); font-size:11px; letter-spacing:.18em; margin-bottom:14px}
+nav.toc a{display:block; color:var(--dim); text-decoration:none; padding:7px 12px; border-left:2px solid var(--line); transition:.18s}
+nav.toc a:hover{color:var(--ac); border-left-color:var(--ac); background:rgba(94,234,212,.05)}
+nav.toc a.sub{padding-left:24px; font-size:12.5px; color:var(--dim2)}
+
+header{padding:88px 0 46px}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ac); margin-bottom:18px}
+h1{font-size:52px; line-height:1.15; margin:0 0 22px; letter-spacing:-.01em; font-weight:700}
+h1 .thin{color:var(--dim2); font-weight:300}
+.lede{font-size:19px; color:var(--dim); max-width:660px; line-height:1.75; margin:0 0 26px}
+.meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; padding:5px 13px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
+.pill b{color:var(--txt); font-weight:600}
+.pill.ac{border-color:rgba(94,234,212,.4); color:var(--ac)}
+
+h2{font-size:15px; margin:0}
+section{scroll-margin-top:30px}
+.sechead{display:flex; align-items:baseline; gap:16px; margin:86px 0 30px; padding-bottom:18px; border-bottom:1px solid var(--line)}
+.sechead .num{font-family:var(--mono); font-size:13px; color:var(--ac); letter-spacing:.1em; padding-top:6px}
+.sechead h2{font-size:32px; font-weight:700; letter-spacing:-.01em}
+h3{font-size:20px; margin:48px 0 14px; font-weight:650}
+h3::before{content:"# "; color:var(--ac2); font-weight:400}
+h4{font-size:16px; margin:30px 0 10px; color:var(--txt); font-weight:650}
+p{margin:0 0 16px; color:#cfd4e0}
+strong{color:#fff; font-weight:650}
+em{font-style:normal; color:var(--ac); font-weight:600}
+a{color:var(--ac)}
+ul,ol{color:#cfd4e0}
+li{margin:6px 0}
+
+.note{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:20px 24px; margin:26px 0}
+.note.warn{border-color:rgba(251,191,36,.32); background:linear-gradient(180deg,rgba(251,191,36,.07),rgba(251,191,36,.02))}
+.note.key{border-color:rgba(94,234,212,.32); background:linear-gradient(180deg,rgba(94,234,212,.07),rgba(94,234,212,.02))}
+.note.quote{border-color:var(--line2); background:var(--card); border-left:3px solid var(--ac2)}
+.note .tag{display:inline-block; font-size:11px; letter-spacing:.16em; margin-bottom:9px; color:var(--warn); font-family:var(--mono)}
+.note.key .tag{color:var(--ac)}
+.note.quote .tag{color:var(--ac2)}
+.note p:last-child{margin-bottom:0}
+.note ol,.note ul{margin:8px 0 0; padding-left:20px; color:#cfd4e0}
+.note li{margin:5px 0}
+
+blockquote{margin:22px 0; padding:2px 0 2px 22px; border-left:3px solid var(--ac2); color:#d6dae6; font-size:17px}
+blockquote p{margin:0}
+
+.tw{overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:14px; background:var(--card)}
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th{text-align:left; padding:13px 18px; font-size:12px; letter-spacing:.1em; color:var(--dim2); font-weight:600; border-bottom:1px solid var(--line); background:var(--bg2); white-space:nowrap}
+td{padding:13px 18px; border-bottom:1px solid var(--line); color:#cfd4e0; vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+td b,th b{color:#fff}
+
+figure{margin:32px 0; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,var(--card),var(--bg2)); padding:26px 24px 18px; overflow:hidden}
+figure svg{display:block; width:100%; height:auto}
+figcaption{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--dim2); text-align:center}
+figcaption b{color:var(--dim)}
+.svgt{font-family:-apple-system,"PingFang SC",sans-serif}
+
+.grid{display:grid; gap:14px; margin:24px 0}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 18px 16px; transition:.2s}
+.tile:hover{border-color:var(--line2); background:var(--card2); transform:translateY(-2px)}
+.tile .ic{font-size:22px; margin-bottom:8px; display:block}
+.tile .t{font-size:15px; font-weight:650; color:#fff; margin-bottom:5px}
+.tile .d{font-size:13px; color:var(--dim); line-height:1.65}
+
+.map{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:34px 0 10px}
+@media(max-width:760px){.map{grid-template-columns:repeat(2,1fr)}}
+.map a{text-decoration:none; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:16px; display:block; transition:.2s}
+.map a:hover{border-color:rgba(94,234,212,.45); background:var(--card2)}
+.map .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.14em}
+.map .t{font-size:14.5px; color:var(--txt); margin-top:7px; line-height:1.5; font-weight:600}
+
+.quizlist{counter-reset:q; list-style:none; padding:0; margin:22px 0}
+.quizlist li{counter-increment:q; position:relative; padding:14px 18px 14px 52px; border:1px solid var(--line); background:var(--card); border-radius:12px; margin-bottom:10px; font-size:15px; color:#d6dae6}
+.quizlist li::before{content:counter(q,decimal-leading-zero); position:absolute; left:18px; top:14px; font-family:var(--mono); font-size:12px; color:var(--ac2)}
+
+hr.big{border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line2),transparent); margin:70px 0}
+footer{margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="lbl">本节目录</div>
+  <a href="#top">封面 · 本节地图</a>
+  <a href="#s1">1 · 用户角色 &amp; 用户画像</a>
+  <a href="#biaoqian" class="sub">两类标签</a>
+  <a href="#s2">2 · 三套经典用户画像</a>
+  <a href="#s3">3 · 需求分析</a>
+  <a href="#changjing" class="sub">场景公式</a>
+  <a href="#zhenwei" class="sub">真伪需求</a>
+  <a href="#lilun" class="sub">马斯洛 / 七宗罪</a>
+  <a href="#s4">4 · 需求优先级排序</a>
+  <a href="#kano" class="sub">KANO 模型</a>
+  <a href="#sixiangxian" class="sub">四象限法则</a>
+  <a href="#s5">5 · 功能清单</a>
+  <a href="#quiz">本节自测</a>
+  <a href="#ziliao">配套资料</a>
+</nav>
+
+<main>
+<header id="top">
+  <div class="kicker">产品经理培训 · 第 03 节</div>
+  <h1>用户研究和需求分析<br><span class="thin">把需求变成能开工的东西</span></h1>
+  <p class="lede">上一节把需求收上来了，这节解决三件事——用户到底是谁、哪些需求是真的、先做哪个。</p>
+  <div class="meta">
+    <span class="pill ac">掌握程度 · <b>熟悉</b></span>
+    <span class="pill">5 个主题</span>
+    <span class="pill">11 张图解</span>
+    <span class="pill">9 道自测题</span>
+  </div>
+
+  <div class="map">
+    <a href="#s1"><div class="n">01</div><div class="t">用户角色 &amp; 用户画像</div></a>
+    <a href="#s2"><div class="n">02</div><div class="t">三套经典用户画像</div></a>
+    <a href="#s3"><div class="n">03</div><div class="t">需求分析</div></a>
+    <a href="#s4"><div class="n">04</div><div class="t">需求优先级排序</div></a>
+    <a href="#s5"><div class="n">05</div><div class="t">功能清单</div></a>
+  </div>
+</header>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <div class="sechead"><div class="num">PART 01</div><h2>用户角色与用户画像</h2></div>
+
+  <h3>先问一个问题</h3>
+  <blockquote><p>产品功能是面向<strong>某些用户</strong>考虑，还是面向<strong>所有用户</strong>考虑？</p></blockquote>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:180px">选择</th><th>后果</th></tr></thead>
+    <tbody>
+      <tr><td><b>面向某些用户</b></td><td><b>降低研发复杂度</b> —— 能精准描述目标用户</td></tr>
+      <tr><td>面向所有用户</td><td><b>提高研发复杂度</b> —— 无法准确描述目标用户</td></tr>
+    </tbody>
+  </table></div>
+  <p>这个问题的答案，就是<em>用户角色存在的理由</em>。</p>
+
+  <h3>用户角色（User Persona）</h3>
+  <p><strong>定义</strong>：从用户群体中抽象出来的典型用户。一般包含个人基本信息；家庭、工作、生活环境描述；与产品使用相关的具体情境、用户目标或使用行为描述。</p>
+  <div class="grid g2">
+    <div class="tile"><div class="t">特点一</div><div class="d">用户角色是<b style="color:#fff">用户属性的集合，不是具体某个人</b> —— 指的是一群人</div></div>
+    <div class="tile"><div class="t">特点二</div><div class="d">一般会设置<b style="color:#fff">多个</b>用户角色</div></div>
+  </div>
+  <div class="note key">
+    <span class="tag">◆ 三个作用</span>
+    <ol>
+      <li>产品早期和发展期，帮助产品人员<strong>理解用户需求</strong></li>
+      <li>从「为所有人做产品」转变为「<strong>为特定用户做产品</strong>」，间接降低复杂度</li>
+      <li>辅助决策和设计，<strong>尽可能减少主观臆测</strong></li>
+    </ol>
+  </div>
+
+  <h3>用户画像（User Profile）</h3>
+  <p><strong>定义</strong>：根据用户社会属性、生活习惯和消费行为等信息，抽象出的<em>标签化</em>用户模型。<strong>核心工作就是给用户贴「标签」。</strong></p>
+
+  <figure id="biaoqian">
+  <svg viewBox="0 0 800 360" class="svgt" role="img" aria-label="静态标签与动态标签及数据来源">
+    <rect x="14" y="24" width="380" height="196" rx="16" fill="rgba(96,165,250,.05)" stroke="rgba(96,165,250,.32)"/>
+    <text x="204" y="56" text-anchor="middle" fill="#60a5fa" font-size="17" font-weight="700">静态标签</text>
+    <text x="204" y="78" text-anchor="middle" fill="#6f7686" font-size="12">来自静态信息 · 稳定</text>
+    <text x="40" y="106" fill="#e8eaf0" font-size="13.5" font-weight="700">自然属性</text>
+    <text x="130" y="106" fill="#6f7686" font-size="11.5">先天性，长期稳定</text>
+    <g font-size="11.5">
+      <rect x="40" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="66" y="132" text-anchor="middle" fill="#93c5fd">姓名</text>
+      <rect x="98" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="124" y="132" text-anchor="middle" fill="#93c5fd">性别</text>
+      <rect x="156" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="182" y="132" text-anchor="middle" fill="#93c5fd">年龄</text>
+      <rect x="214" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="240" y="132" text-anchor="middle" fill="#93c5fd">身高</text>
+      <rect x="272" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="298" y="132" text-anchor="middle" fill="#93c5fd">地域</text>
+      <rect x="330" y="116" width="52" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="356" y="132" text-anchor="middle" fill="#93c5fd">星座</text>
+    </g>
+    <text x="40" y="170" fill="#e8eaf0" font-size="13.5" font-weight="700">社会属性</text>
+    <g font-size="11.5">
+      <rect x="130" y="154" width="60" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="160" y="170" text-anchor="middle" fill="#93c5fd">职业</text>
+      <rect x="196" y="154" width="60" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="226" y="170" text-anchor="middle" fill="#93c5fd">婚姻</text>
+      <rect x="262" y="154" width="88" height="24" rx="7" fill="rgba(96,165,250,.14)"/><text x="306" y="170" text-anchor="middle" fill="#93c5fd">教育程度</text>
+    </g>
+    <text x="40" y="204" fill="#6f7686" font-size="11.5">回答「他是谁」</text>
+
+    <rect x="406" y="24" width="380" height="196" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.32)"/>
+    <text x="596" y="56" text-anchor="middle" fill="#5eead4" font-size="17" font-weight="700">动态标签</text>
+    <text x="596" y="78" text-anchor="middle" fill="#6f7686" font-size="12">来自动态信息 · 不稳定</text>
+    <text x="432" y="106" fill="#e8eaf0" font-size="13.5" font-weight="700">行为属性</text>
+    <g font-size="11.5">
+      <rect x="432" y="116" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="458" y="132" text-anchor="middle" fill="#7fe9d8">注册</text>
+      <rect x="490" y="116" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="516" y="132" text-anchor="middle" fill="#7fe9d8">登录</text>
+      <rect x="548" y="116" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="574" y="132" text-anchor="middle" fill="#7fe9d8">搜索</text>
+      <rect x="606" y="116" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="632" y="132" text-anchor="middle" fill="#7fe9d8">浏览</text>
+      <rect x="664" y="116" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="690" y="132" text-anchor="middle" fill="#7fe9d8">评论</text>
+      <rect x="432" y="146" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="458" y="162" text-anchor="middle" fill="#7fe9d8">点赞</text>
+      <rect x="490" y="146" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="516" y="162" text-anchor="middle" fill="#7fe9d8">发布</text>
+      <rect x="548" y="146" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="574" y="162" text-anchor="middle" fill="#7fe9d8">加购</text>
+      <rect x="606" y="146" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="632" y="162" text-anchor="middle" fill="#7fe9d8">购买</text>
+      <rect x="664" y="146" width="52" height="24" rx="7" fill="rgba(94,234,212,.14)"/><text x="690" y="162" text-anchor="middle" fill="#7fe9d8">用券</text>
+    </g>
+    <text x="432" y="204" fill="#6f7686" font-size="11.5">回答「他在干什么」→ 可对用户做深浅度归类，区分活跃 / 不活跃</text>
+
+    <text x="24" y="252" fill="#6f7686" font-size="12" letter-spacing=".14em">标签数据从哪来</text>
+    <rect x="14" y="262" width="250" height="52" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="139" y="284" text-anchor="middle" fill="#e8eaf0" font-size="13" font-weight="600">① 注册时填写的信息</text>
+    <text x="139" y="303" text-anchor="middle" fill="#6f7686" font-size="11">用户主动给</text>
+    <rect x="274" y="262" width="250" height="52" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="399" y="284" text-anchor="middle" fill="#e8eaf0" font-size="13" font-weight="600">② 页面数据埋点</text>
+    <text x="399" y="303" text-anchor="middle" fill="#6f7686" font-size="11">实时采集行为数据</text>
+    <rect x="534" y="262" width="252" height="52" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="660" y="284" text-anchor="middle" fill="#e8eaf0" font-size="13" font-weight="600">③ 购买 / 交易行为分析</text>
+    <text x="660" y="303" text-anchor="middle" fill="#6f7686" font-size="11">花钱的动作最诚实</text>
+
+    <rect x="14" y="324" width="772" height="30" rx="9" fill="rgba(251,191,36,.1)"/>
+    <text x="400" y="344" text-anchor="middle" fill="#fbbf24" font-size="12.5">⚠ 注册时不要让用户填太多，会导致流失 —— 这跟「想多拿标签」直接矛盾，所以才有后两条路径</text>
+  </svg>
+  <figcaption><b>图 1</b> · 两类标签与三个数据来源：静态说明「他是谁」，动态说明「他在干什么」</figcaption>
+  </figure>
+
+  <h3>两者的区别（重点）</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 260" class="svgt" role="img" aria-label="用户角色与用户画像的区别">
+    <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#343b4d"/></marker></defs>
+    <line x1="60" y1="44" x2="740" y2="44" stroke="#343b4d" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="60" y="32" fill="#6f7686" font-size="11.5">产品时间轴</text>
+    <circle cx="230" cy="44" r="5" fill="#a78bfa"/>
+    <circle cx="560" cy="44" r="5" fill="#5eead4"/>
+
+    <rect x="60" y="66" width="330" height="150" rx="16" fill="rgba(167,139,250,.05)" stroke="rgba(167,139,250,.35)"/>
+    <text x="225" y="98" text-anchor="middle" fill="#a78bfa" font-size="18" font-weight="700">用户角色 Persona</text>
+    <line x1="90" y1="112" x2="360" y2="112" stroke="#272c3a"/>
+    <text x="90" y="138" fill="#6f7686" font-size="12">什么时候用</text>
+    <text x="200" y="138" fill="#e8eaf0" font-size="13">产品上线前 / 上线初期</text>
+    <text x="90" y="166" fill="#6f7686" font-size="12">真假</text>
+    <text x="200" y="166" fill="#a78bfa" font-size="13" font-weight="700">虚拟的</text>
+    <text x="260" y="166" fill="#9aa2b4" font-size="12">根据典型用户提出</text>
+    <text x="90" y="194" fill="#6f7686" font-size="12">为什么</text>
+    <text x="200" y="194" fill="#9aa2b4" font-size="12">此时企业手上没有用户数据</text>
+
+    <rect x="410" y="66" width="330" height="150" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
+    <text x="575" y="98" text-anchor="middle" fill="#5eead4" font-size="18" font-weight="700">用户画像 Profile</text>
+    <line x1="440" y1="112" x2="710" y2="112" stroke="#272c3a"/>
+    <text x="440" y="138" fill="#6f7686" font-size="12">什么时候用</text>
+    <text x="550" y="138" fill="#e8eaf0" font-size="13">有了大量用户和数据之后</text>
+    <text x="440" y="166" fill="#6f7686" font-size="12">真假</text>
+    <text x="550" y="166" fill="#5eead4" font-size="13" font-weight="700">真实的</text>
+    <text x="610" y="166" fill="#9aa2b4" font-size="12">基于数据分析结果</text>
+    <text x="440" y="194" fill="#6f7686" font-size="12">为什么</text>
+    <text x="550" y="194" fill="#9aa2b4" font-size="12">此时有行为记录可分析</text>
+
+    <rect x="60" y="228" width="680" height="26" rx="9" fill="rgba(94,234,212,.09)"/>
+    <text x="400" y="246" text-anchor="middle" fill="#5eead4" font-size="12.5">一个产品的用户量级到 <tspan font-weight="700">10 万左右</tspan>，就要考虑做用户画像体系了 —— 一个可操作的时间点</text>
+  </svg>
+  <figcaption><b>图 2</b> · 一个虚拟一个真实，分界线是「你手上有没有数据」</figcaption>
+  </figure>
+
+  <p><strong>制作工具</strong>：易词云（yciyun.com），可编辑文字、间距、数量。</p>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <div class="sechead"><div class="num">PART 02</div><h2>三套经典的用户画像</h2></div>
+  <p>三套是<strong>并列的分类框架</strong>，看问题的角度不同，<em>不是递进关系</em>。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="三套经典用户画像总览">
+    <rect x="14" y="24" width="250" height="262" rx="16" fill="#161923" stroke="#5eead4" stroke-opacity=".38"/>
+    <text x="139" y="54" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">第一套 · 按价值分</text>
+    <line x1="40" y1="68" x2="238" y2="68" stroke="#272c3a"/>
+    <g>
+      <rect x="40" y="80" width="198" height="44" rx="10" fill="rgba(94,234,212,.14)"/>
+      <text x="56" y="100" fill="#5eead4" font-size="13.5" font-weight="700">核心用户</text>
+      <text x="56" y="117" fill="#9aa2b4" font-size="11">规模大 · 忠诚高 · 能反哺平台</text>
+      <rect x="40" y="130" width="198" height="44" rx="10" fill="#1c2130"/>
+      <text x="56" y="150" fill="#e8eaf0" font-size="13.5" font-weight="700">次要用户</text>
+      <text x="56" y="167" fill="#9aa2b4" font-size="11">乐于参与，创造价值有限</text>
+      <rect x="40" y="180" width="198" height="44" rx="10" fill="#1c2130"/>
+      <text x="56" y="200" fill="#e8eaf0" font-size="13.5" font-weight="700">小众用户</text>
+      <text x="56" y="217" fill="#9aa2b4" font-size="11">只留恋平台的单一功能</text>
+      <rect x="40" y="230" width="198" height="44" rx="10" fill="rgba(251,113,133,.12)"/>
+      <text x="56" y="250" fill="#fb7185" font-size="13.5" font-weight="700">负面用户</text>
+      <text x="56" y="267" fill="#9aa2b4" font-size="11">喜欢吐槽的用户</text>
+    </g>
+
+    <rect x="276" y="24" width="250" height="262" rx="16" fill="#161923" stroke="#fbbf24" stroke-opacity=".38"/>
+    <text x="401" y="54" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">第二套 · 按生态位分</text>
+    <line x1="302" y1="68" x2="500" y2="68" stroke="#272c3a"/>
+    <g>
+      <rect x="302" y="80" width="198" height="44" rx="10" fill="#1c2130"/>
+      <text x="318" y="106" font-size="17">🐑</text>
+      <text x="348" y="100" fill="#e8eaf0" font-size="13.5" font-weight="700">第一只羊</text>
+      <text x="348" y="117" fill="#9aa2b4" font-size="11">种子用户</text>
+      <rect x="302" y="130" width="198" height="44" rx="10" fill="#1c2130"/>
+      <text x="318" y="156" font-size="17">🐏</text>
+      <text x="348" y="150" fill="#e8eaf0" font-size="13.5" font-weight="700">羊</text>
+      <text x="348" y="167" fill="#9aa2b4" font-size="11">普通用户</text>
+      <rect x="302" y="180" width="198" height="44" rx="10" fill="rgba(251,191,36,.14)"/>
+      <text x="318" y="206" font-size="17">🦌</text>
+      <text x="348" y="200" fill="#fbbf24" font-size="13.5" font-weight="700">头羊</text>
+      <text x="348" y="217" fill="#9aa2b4" font-size="11">KOL，关键意见领袖</text>
+      <rect x="302" y="230" width="198" height="44" rx="10" fill="rgba(94,234,212,.14)"/>
+      <text x="318" y="256" font-size="17">🐺</text>
+      <text x="348" y="250" fill="#5eead4" font-size="13.5" font-weight="700">狼</text>
+      <text x="348" y="267" fill="#9aa2b4" font-size="11">付费方，比如广告主</text>
+    </g>
+
+    <rect x="538" y="24" width="248" height="262" rx="16" fill="#161923" stroke="#a78bfa" stroke-opacity=".38"/>
+    <text x="662" y="54" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">第三套 · 按消费状态分</text>
+    <line x1="564" y1="68" x2="760" y2="68" stroke="#272c3a"/>
+    <g>
+      <rect x="564" y="80" width="196" height="62" rx="10" fill="rgba(167,139,250,.12)"/>
+      <text x="580" y="102" fill="#a78bfa" font-size="13.5" font-weight="700">大明</text>
+      <text x="628" y="102" fill="#6f7686" font-size="11">目标非常明确</text>
+      <text x="580" y="121" fill="#9aa2b4" font-size="11">男生买衬衫或 3C 产品</text>
+      <text x="580" y="136" fill="#e8eaf0" font-size="11">关注：配置、价格、效率</text>
+
+      <rect x="564" y="148" width="196" height="62" rx="10" fill="rgba(167,139,250,.12)"/>
+      <text x="580" y="170" fill="#a78bfa" font-size="13.5" font-weight="700">笨笨</text>
+      <text x="628" y="170" fill="#6f7686" font-size="11">有需求但不明确</text>
+      <text x="580" y="189" fill="#9aa2b4" font-size="11">女生想买一条裙子</text>
+      <text x="580" y="204" fill="#e8eaf0" font-size="11">关注：逛、被种草</text>
+
+      <rect x="564" y="216" width="196" height="62" rx="10" fill="rgba(167,139,250,.12)"/>
+      <text x="580" y="238" fill="#a78bfa" font-size="13.5" font-weight="700">小闲</text>
+      <text x="628" y="238" fill="#6f7686" font-size="11">没有消费需求</text>
+      <text x="580" y="257" fill="#9aa2b4" font-size="11">就是来打发时间</text>
+      <text x="580" y="272" fill="#e8eaf0" font-size="11">关注：内容有不有趣</text>
+    </g>
+  </svg>
+  <figcaption><b>图 3</b> · 三套框架各自的切分逻辑：按价值、按生态位、按消费状态</figcaption>
+  </figure>
+
+  <div class="note warn">
+    <span class="tag">⚠ 课堂补充</span>
+    <p><strong>用户可以同时有多重身份</strong> —— 比如既是核心用户，又是负面用户。别把用户往一个格子里塞。</p>
+  </div>
+
+  <h3>第二套为什么值得单独说：它直接给出了商业模式</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="羊头羊狼的商业模式">
+    <defs><marker id="m3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5eead4"/></marker></defs>
+    <rect x="14" y="30" width="520" height="150" rx="16" fill="rgba(251,191,36,.04)" stroke="rgba(251,191,36,.3)"/>
+    <text x="40" y="60" fill="#fbbf24" font-size="14" font-weight="700">草地（平台）</text>
+    <text x="150" y="60" fill="#6f7686" font-size="11.5">课上的例子是百度贴吧</text>
+
+    <circle cx="90" cy="112" r="30" fill="#161923" stroke="#5eead4" stroke-opacity=".5"/>
+    <text x="90" y="108" text-anchor="middle" font-size="20">🐑</text>
+    <text x="90" y="160" text-anchor="middle" fill="#9aa2b4" font-size="11.5">第一只羊</text>
+    <text x="90" y="174" text-anchor="middle" fill="#6f7686" font-size="10.5">种子用户</text>
+
+    <text x="140" y="118" fill="#6f7686" font-size="16">→</text>
+
+    <g>
+      <circle cx="196" cy="100" r="19" fill="#161923" stroke="#272c3a"/><text x="196" y="107" text-anchor="middle" font-size="14">🐏</text>
+      <circle cx="234" cy="126" r="19" fill="#161923" stroke="#272c3a"/><text x="234" y="133" text-anchor="middle" font-size="14">🐏</text>
+      <circle cx="196" cy="146" r="19" fill="#161923" stroke="#272c3a"/><text x="196" y="153" text-anchor="middle" font-size="14">🐏</text>
+      <circle cx="252" cy="88" r="19" fill="#161923" stroke="#272c3a"/><text x="252" y="95" text-anchor="middle" font-size="14">🐏</text>
+    </g>
+    <text x="222" y="176" text-anchor="middle" fill="#9aa2b4" font-size="11.5">羊 · 普通用户</text>
+
+    <text x="292" y="118" fill="#6f7686" font-size="16">→</text>
+
+    <circle cx="352" cy="112" r="30" fill="#161923" stroke="#fbbf24" stroke-opacity=".6"/>
+    <text x="352" y="108" text-anchor="middle" font-size="20">🦌</text>
+    <text x="352" y="160" text-anchor="middle" fill="#fbbf24" font-size="11.5">头羊 · KOL</text>
+    <text x="352" y="174" text-anchor="middle" fill="#6f7686" font-size="10.5">羊多了需要管理</text>
+
+    <path d="M400 112 L456 112" stroke="#5eead4" stroke-width="1.6" marker-end="url(#m3)"/>
+
+    <circle cx="490" cy="112" r="30" fill="rgba(94,234,212,.1)" stroke="#5eead4"/>
+    <text x="490" y="108" text-anchor="middle" font-size="20">🐺</text>
+    <text x="490" y="160" text-anchor="middle" fill="#5eead4" font-size="11.5">狼 · 付费方</text>
+    <text x="490" y="174" text-anchor="middle" fill="#6f7686" font-size="10.5">比如广告主</text>
+
+    <rect x="556" y="30" width="230" height="150" rx="16" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.35)"/>
+    <text x="671" y="62" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">这套画像的价值</text>
+    <line x1="580" y1="76" x2="762" y2="76" stroke="#272c3a"/>
+    <text x="671" y="104" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">羊不付费</text>
+    <text x="671" y="132" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">狼付费</text>
+    <text x="671" y="162" text-anchor="middle" fill="#9aa2b4" font-size="12">它直接说清了钱从哪来</text>
+
+    <rect x="14" y="196" width="772" height="42" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="400" y="222" text-anchor="middle" fill="#9aa2b4" font-size="12.5">「我把羊圈起来，向狼收费」—— 用户规模本身不产生收入，<tspan fill="#5eead4">用户规模换来的注意力才产生收入</tspan></text>
+  </svg>
+  <figcaption><b>图 4</b> · 羊 / 头羊 / 狼：一个养羊的比喻，把免费产品的盈利结构讲透了</figcaption>
+  </figure>
+
+  <p>课上追问的是「<strong>谁服务大明？谁服务笨笨？谁服务小闲？</strong>」—— 这三类用户对应<em>完全不同的产品形态</em>：搜索型电商 / 逛型电商 / 内容平台。</p>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <div class="sechead"><div class="num">PART 03</div><h2>需求分析</h2></div>
+
+  <h3>先区分：业务需求 vs 产品需求</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 290" class="svgt" role="img" aria-label="业务需求转化为产品需求">
+    <defs><marker id="m4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5eead4"/></marker></defs>
+
+    <rect x="14" y="24" width="330" height="130" rx="16" fill="rgba(251,191,36,.05)" stroke="rgba(251,191,36,.35)"/>
+    <text x="179" y="56" text-anchor="middle" fill="#fbbf24" font-size="17" font-weight="700">业务需求</text>
+    <text x="179" y="78" text-anchor="middle" fill="#9aa2b4" font-size="12">最根本的动机和目标成果</text>
+    <rect x="46" y="92" width="266" height="40" rx="10" fill="rgba(251,191,36,.13)"/>
+    <text x="179" y="118" text-anchor="middle" fill="#fde68a" font-size="14" font-weight="700">业务动机 + 业务目标</text>
+    <text x="179" y="146" text-anchor="middle" fill="#6f7686" font-size="11.5">什么用户在什么场景下想达成什么目标</text>
+
+    <path d="M356 88 L440 88" stroke="#5eead4" stroke-width="2" marker-end="url(#m4)"/>
+    <text x="398" y="76" text-anchor="middle" fill="#5eead4" font-size="11.5">需求分析</text>
+
+    <rect x="456" y="24" width="330" height="130" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
+    <text x="621" y="56" text-anchor="middle" fill="#5eead4" font-size="17" font-weight="700">产品需求</text>
+    <text x="621" y="78" text-anchor="middle" fill="#9aa2b4" font-size="12">符合产品定位的解决方案</text>
+    <rect x="488" y="92" width="266" height="40" rx="10" fill="rgba(94,234,212,.13)"/>
+    <text x="621" y="118" text-anchor="middle" fill="#b8f5ea" font-size="14" font-weight="700">产品结构 + 产品流程 + 产品功能</text>
+    <text x="621" y="146" text-anchor="middle" fill="#6f7686" font-size="11.5">为了满足它，我们要提供什么功能</text>
+
+    <text x="24" y="188" fill="#6f7686" font-size="12" letter-spacing=".14em">课上的两个案例</text>
+    <rect x="14" y="198" width="330" height="40" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="36" y="223" fill="#cfd4e0" font-size="13">提高 APP 用户数量</text>
+    <text x="356" y="223" fill="#5eead4" font-size="14">→</text>
+    <rect x="380" y="198" width="406" height="40" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="402" y="223" fill="#cfd4e0" font-size="13">邀请奖励功能 —— 邀请好友注册给予奖励</text>
+
+    <rect x="14" y="244" width="330" height="40" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="36" y="269" fill="#cfd4e0" font-size="13">提高用户活跃度</text>
+    <text x="356" y="269" fill="#5eead4" font-size="14">→</text>
+    <rect x="380" y="244" width="406" height="40" rx="10" fill="#161923" stroke="#272c3a"/>
+    <text x="402" y="269" fill="#cfd4e0" font-size="13">做一个小游戏，让用户愿意主动打开 APP</text>
+  </svg>
+  <figcaption><b>图 5</b> · 业务需求说「要什么结果」，产品需求说「怎么做出来」</figcaption>
+  </figure>
+
+  <div class="note quote">
+    <span class="tag">◆ 又见马车</span>
+    <p>这里课上再次引了福特那句「<strong>如果我问用户要什么，他们会说要一匹更快的马</strong>」，用来警告<em>不要照搬用户的字面表述</em>。这个案例第 01 节讲 MVP 时出现过一次。</p>
+  </div>
+
+  <h3 id="changjing">需求分析的核心思路：基于场景</h3>
+  <p><strong>定义</strong>：从业务的需要出发，确定业务目的和目标，<em>将业务需求转为产品需求</em>的过程。思路只有一条 —— <strong>基于场景分析需求</strong>。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 270" class="svgt" role="img" aria-label="场景公式与两个案例">
+    <rect x="14" y="24" width="772" height="76" rx="16" fill="rgba(94,234,212,.06)" stroke="rgba(94,234,212,.4)"/>
+    <text x="400" y="52" text-anchor="middle" fill="#5eead4" font-size="13" letter-spacing=".16em">场景公式</text>
+    <g font-size="15" font-weight="700">
+      <rect x="60" y="62" width="106" height="30" rx="8" fill="rgba(94,234,212,.16)"/><text x="113" y="83" text-anchor="middle" fill="#5eead4">时间</text>
+      <text x="180" y="83" text-anchor="middle" fill="#6f7686">+</text>
+      <rect x="196" y="62" width="106" height="30" rx="8" fill="rgba(94,234,212,.16)"/><text x="249" y="83" text-anchor="middle" fill="#5eead4">地点</text>
+      <text x="316" y="83" text-anchor="middle" fill="#6f7686">+</text>
+      <rect x="332" y="62" width="106" height="30" rx="8" fill="rgba(94,234,212,.16)"/><text x="385" y="83" text-anchor="middle" fill="#5eead4">人物</text>
+      <text x="452" y="83" text-anchor="middle" fill="#6f7686">+</text>
+      <rect x="468" y="62" width="106" height="30" rx="8" fill="rgba(94,234,212,.16)"/><text x="521" y="83" text-anchor="middle" fill="#5eead4">环境</text>
+      <text x="588" y="83" text-anchor="middle" fill="#6f7686">+</text>
+      <rect x="604" y="62" width="106" height="30" rx="8" fill="rgba(94,234,212,.16)"/><text x="657" y="83" text-anchor="middle" fill="#5eead4">事件</text>
+    </g>
+    <text x="740" y="83" fill="#6f7686" font-size="11">或 5W2H</text>
+
+    <rect x="14" y="116" width="380" height="140" rx="14" fill="#161923" stroke="#fbbf24" stroke-opacity=".4"/>
+    <text x="38" y="146" fill="#fbbf24" font-size="14" font-weight="700">案例：国外旅游的客人想吃好吃的</text>
+    <line x1="38" y1="158" x2="370" y2="158" stroke="#272c3a"/>
+    <text x="38" y="182" fill="#9aa2b4" font-size="12.5">做成了「境外版大众点评」：</text>
+    <text x="38" y="200" fill="#9aa2b4" font-size="12.5">距离、口味、类别、价位、评分</text>
+    <text x="38" y="226" fill="#fb7185" font-size="12.5" font-weight="700">但境外游客缺的可能是——</text>
+    <text x="38" y="244" fill="#e8eaf0" font-size="12.5">看得懂的菜单？能不能刷卡？离酒店多远？</text>
+
+    <rect x="406" y="116" width="380" height="140" rx="14" fill="#161923" stroke="#5eead4" stroke-opacity=".4"/>
+    <text x="430" y="146" fill="#5eead4" font-size="14" font-weight="700">结论</text>
+    <line x1="430" y1="158" x2="762" y2="158" stroke="#272c3a"/>
+    <text x="430" y="184" fill="#fff" font-size="14" font-weight="700">同样是提供美食信息，</text>
+    <text x="430" y="206" fill="#fff" font-size="14" font-weight="700">本质却完全不同。</text>
+    <text x="430" y="234" fill="#9aa2b4" font-size="12.5">不想清楚场景，功能就跑偏了。</text>
+  </svg>
+  <figcaption><b>图 6</b> · 场景 = 时间 + 地点 + 人物 + 环境 + 事件 —— 不同需求都在特定场景下才成立</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:130px"></th><th>单纯讨论需求</th><th>考虑场景的需求</th></tr></thead>
+    <tbody>
+      <tr><td><b>面向</b></td><td>问题</td><td>人物、环境和事件</td></tr>
+      <tr><td><b>目的</b></td><td>解决问题</td><td><b>检验解决方案</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="zhenwei">真伪需求的判定</h3>
+  <div class="note warn">
+    <span class="tag">⚠ 最常见的伪需求形态</span>
+    <p><strong>披着需求外衣的产品解决方案。</strong></p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>用户 / 同事说的</th><th>实际上这是</th></tr></thead>
+    <tbody>
+      <tr><td>「用户不知道能干吗，需要做一个新手指引页面」</td><td>一个<b>方案</b>，不是需求</td></tr>
+      <tr><td>「帖子列表未审核的太靠后了，请提供一个筛选功能」</td><td>一个<b>方案</b>，不是需求</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure>
+  <svg viewBox="0 0 800 260" class="svgt" role="img" aria-label="判断需求真伪的三种情况">
+    <rect x="14" y="24" width="772" height="52" rx="14" fill="rgba(167,139,250,.07)" stroke="rgba(167,139,250,.4)"/>
+    <text x="400" y="56" text-anchor="middle" fill="#c4b5fd" font-size="15" font-weight="700">每一个伪需求背后，都是一个没被满足的痛点（准确说是没被发现）</text>
+
+    <text x="24" y="106" fill="#6f7686" font-size="12" letter-spacing=".14em">当你质疑一个需求是伪需求时，通常是这三种情况之一</text>
+
+    <rect x="14" y="118" width="250" height="82" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="139" y="150" text-anchor="middle" fill="#9aa2b4" font-size="13">情况一</text>
+    <text x="139" y="176" text-anchor="middle" fill="#e8eaf0" font-size="15" font-weight="700">用户没说明白</text>
+
+    <rect x="274" y="118" width="250" height="82" rx="14" fill="rgba(251,113,133,.07)" stroke="#fb7185" stroke-opacity=".45"/>
+    <text x="399" y="150" text-anchor="middle" fill="#fb7185" font-size="13">情况二</text>
+    <text x="399" y="176" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">你没听明白</text>
+
+    <rect x="534" y="118" width="252" height="82" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="660" y="150" text-anchor="middle" fill="#9aa2b4" font-size="13">情况三</text>
+    <text x="660" y="172" text-anchor="middle" fill="#e8eaf0" font-size="15" font-weight="700">这不是需求，而是</text>
+    <text x="660" y="192" text-anchor="middle" fill="#e8eaf0" font-size="15" font-weight="700">不靠谱的解决方案</text>
+
+    <rect x="14" y="212" width="772" height="40" rx="12" fill="rgba(94,234,212,.07)" stroke="rgba(94,234,212,.35)"/>
+    <text x="400" y="238" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">判定办法：结合需求实际产生的场景去考虑 —— 又回到场景</text>
+  </svg>
+  <figcaption><b>图 7</b> · 三种情况里，中间那个最容易被跳过 —— 先怀疑自己有没有听懂</figcaption>
+  </figure>
+
+  <p>课上的两个经典伪需求案例：「<strong>把梳子卖给庙里的和尚</strong>」「<strong>把宾馆改造成自习室</strong>」—— 听起来像商业奇谋，实际是<em>硬造需求</em>。</p>
+
+  <h3 id="lilun">两个分析理论</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 356" class="svgt" role="img" aria-label="马斯洛需求层次理论">
+    <g>
+      <path d="M290 30 L334 88 L246 88 Z" fill="rgba(167,139,250,.2)" stroke="#a78bfa" stroke-opacity=".5"/>
+      <text x="290" y="80" text-anchor="middle" fill="#c4b5fd" font-size="12.5" font-weight="700">⑤ 自我实现</text>
+
+      <path d="M241 94 L339 94 L381 150 L199 150 Z" fill="rgba(96,165,250,.16)" stroke="#60a5fa" stroke-opacity=".45"/>
+      <text x="290" y="128" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="700">④ 尊重需求</text>
+
+      <path d="M194 156 L386 156 L428 212 L152 212 Z" fill="rgba(94,234,212,.16)" stroke="#5eead4" stroke-opacity=".45"/>
+      <text x="290" y="190" text-anchor="middle" fill="#7fe9d8" font-size="13" font-weight="700">③ 社交需求</text>
+
+      <path d="M147 218 L433 218 L475 274 L105 274 Z" fill="rgba(251,191,36,.16)" stroke="#fbbf24" stroke-opacity=".45"/>
+      <text x="290" y="252" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">② 安全需求</text>
+
+      <path d="M100 280 L480 280 L518 330 L62 330 Z" fill="rgba(251,113,133,.16)" stroke="#fb7185" stroke-opacity=".45"/>
+      <text x="290" y="311" text-anchor="middle" fill="#fb7185" font-size="13" font-weight="700">① 生理 / 生存需求</text>
+    </g>
+
+    <g stroke="#272c3a" stroke-width="1" stroke-dasharray="3 4">
+      <line x1="336" y1="72" x2="528" y2="72"/>
+      <line x1="372" y1="128" x2="528" y2="128"/>
+      <line x1="420" y1="190" x2="528" y2="190"/>
+      <line x1="466" y1="252" x2="528" y2="252"/>
+      <line x1="500" y1="308" x2="528" y2="308"/>
+    </g>
+    <text x="538" y="77" fill="#9aa2b4" font-size="12">价值观、创造力、责任感</text>
+    <text x="538" y="133" fill="#9aa2b4" font-size="12">成就、名声、地位、晋升</text>
+    <text x="538" y="195" fill="#9aa2b4" font-size="12">亲情、友情、爱情</text>
+    <text x="538" y="257" fill="#9aa2b4" font-size="12">人身财产安全、健康、工作</text>
+    <text x="538" y="313" fill="#9aa2b4" font-size="12">吃喝拉撒、健康</text>
+
+    <text x="14" y="26" fill="#6f7686" font-size="12" letter-spacing=".12em">用法：拿一款产品问「它满足的是哪一层」</text>
+    <rect x="14" y="336" width="772" height="0" fill="none"/>
+    <text x="14" y="350" fill="#fb7185" font-size="12">↓ 层级越低 → 越刚需，也越容易做成生意</text>
+  </svg>
+  <figcaption><b>图 8</b> · 马斯洛需求层次：层级越低越刚需，也越容易做成生意</figcaption>
+  </figure>
+
+  <h4>人性七宗罪 —— 为什么有的产品让人欲罢不能</h4>
+  <div class="grid g4">
+    <div class="tile"><span class="ic">👑</span><div class="t">傲慢</div><div class="d">追求优越感、期望获得关注。拥有得比别人多就高人一等</div></div>
+    <div class="tile"><span class="ic">👀</span><div class="t">妒忌</div><div class="d">别人比自己好时，希望自己做得更好、超过别人</div></div>
+    <div class="tile"><span class="ic">⚔️</span><div class="t">暴怒</div><div class="d">「狼人杀」「三国杀」，一个「杀」字道尽人性阴暗面</div></div>
+    <div class="tile"><span class="ic">🛋️</span><div class="t">懒惰</div><div class="d">只想做简单的事或不做事，只想休息和享受</div></div>
+    <div class="tile"><span class="ic">💰</span><div class="t">贪婪</div><div class="d">渴望而不知满足 —— 两大关键词：<b style="color:#fff">贪小便宜</b>和<b style="color:#fff">免费</b></div></div>
+    <div class="tile"><span class="ic">🍜</span><div class="t">暴食 / 饕餮</div><div class="d">美食分享类、生活分享类网站正是满足这一点</div></div>
+    <div class="tile"><span class="ic">💋</span><div class="t">色欲</div><div class="d">弗洛伊德：「性本能冲动是人一切心理活动的内在动力」</div></div>
+    <div class="tile" style="border-color:rgba(94,234,212,.35)"><div class="t" style="color:var(--ac)">怎么用</div><div class="d">拿它当检查清单：一个产品让人上瘾，通常踩中了其中一到两条</div></div>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 4 ══════════ -->
+<section id="s4">
+  <div class="sechead"><div class="num">PART 04</div><h2>需求优先级排序</h2></div>
+  <p>需求都罗列出来了，但<strong>不可能一起实现</strong>，每个部门都说自己的需求紧急 —— 所以需要排序方法。</p>
+
+  <h3 id="kano">KANO 模型</h3>
+  <p><strong>定义</strong>：东京理工大学教授狩野纪昭发明的需求分类与优先排序工具，以分析用户需求对用户满意的影响为基础，<em>体现产品性能和用户满意度之间的非线性关系</em>。</p>
+  <p><strong>两个维度</strong>：功能完善程度 × 用户满意度。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 430" class="svgt" role="img" aria-label="KANO 模型：四类需求的非线性曲线">
+    <defs>
+      <marker id="axr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#343b4d"/></marker>
+      <marker id="axu" markerWidth="8" markerHeight="8" refX="4" refY="2" orient="auto"><path d="M4,0 L8,8 L0,8 z" fill="#343b4d"/></marker>
+    </defs>
+
+    <!-- 坐标轴：原点 (380,215) -->
+    <line x1="90" y1="215" x2="668" y2="215" stroke="#343b4d" stroke-width="1.2" marker-end="url(#axr)"/>
+    <line x1="380" y1="392" x2="380" y2="44" stroke="#343b4d" stroke-width="1.2" marker-end="url(#axu)"/>
+    <text x="96" y="236" fill="#6f7686" font-size="11.5">← 功能不完善</text>
+    <text x="560" y="236" fill="#6f7686" font-size="11.5">功能完善 →</text>
+    <text x="392" y="52" fill="#6f7686" font-size="11.5">↑ 用户满意</text>
+    <text x="392" y="406" fill="#6f7686" font-size="11.5">↓ 用户不满意</text>
+
+    <!-- 无差别型：与横轴重合 -->
+    <line x1="100" y1="215" x2="650" y2="215" stroke="#8b93a5" stroke-width="2.2" stroke-dasharray="7 6"/>
+
+    <!-- 必要型：左下极不满 → 急升 → 右侧趋平（做得再好也上不去） -->
+    <path d="M100 376 C 190 371, 290 332, 380 242 C 442 206, 540 197, 650 193"
+          fill="none" stroke="#fbbf24" stroke-width="2.6"/>
+    <!-- 期望型：过原点的直线 -->
+    <line x1="100" y1="334" x2="650" y2="100" stroke="#60a5fa" stroke-width="2.6"/>
+    <!-- 兴奋型：左端几乎贴 0 线（没有也不会不满） → 右侧急升 -->
+    <path d="M100 212 C 230 210, 320 206, 400 196 C 500 180, 580 128, 650 62"
+          fill="none" stroke="#5eead4" stroke-width="2.6"/>
+
+    <!-- 端点圆点 -->
+    <circle cx="650" cy="62" r="4" fill="#5eead4"/>
+    <circle cx="650" cy="100" r="4" fill="#60a5fa"/>
+    <circle cx="650" cy="193" r="4" fill="#fbbf24"/>
+
+    <!-- 右侧图例，对齐各自曲线末端 -->
+    <rect x="664" y="48" width="126" height="28" rx="14" fill="rgba(94,234,212,.18)"/>
+    <text x="727" y="67" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700">兴奋型</text>
+    <rect x="664" y="86" width="126" height="28" rx="14" fill="rgba(96,165,250,.18)"/>
+    <text x="727" y="105" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="700">期望型</text>
+    <rect x="664" y="179" width="126" height="28" rx="14" fill="rgba(251,191,36,.18)"/>
+    <text x="727" y="198" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">必要型</text>
+    <rect x="664" y="217" width="126" height="28" rx="14" fill="#1c2130"/>
+    <text x="727" y="236" text-anchor="middle" fill="#9aa2b4" font-size="12.5">无差别型</text>
+
+    <!-- 关键读法标注 -->
+    <text x="104" y="196" fill="#5eead4" font-size="11.5">没有它，用户也不会不满</text>
+    <text x="104" y="398" fill="#fbbf24" font-size="11.5">没有它，用户极度不满</text>
+    <text x="470" y="180" fill="#fbbf24" font-size="11.5">做得再好，也上不去了</text>
+    <line x1="466" y1="184" x2="600" y2="193" stroke="#fbbf24" stroke-opacity=".45" stroke-width="1"/>
+  </svg>
+  <figcaption><b>图 9</b> · KANO 曲线：三条线形状不同，正是「非线性关系」的意思 —— 同样投入，回报曲线完全不一样</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:110px">类型</th><th>含义</th><th style="width:180px">例子</th></tr></thead>
+    <tbody>
+      <tr><td><b style="color:#fbbf24">必要型</b></td><td>产品必须具备。没有它产品无法使用；<b>做得再好用户满意度也不会提高</b></td><td>自行车手刹、手机通话功能</td></tr>
+      <tr><td><b style="color:#60a5fa">期望型</b></td><td>与用户期望契合度极高，<b>实现程度越高满意度越高</b>（线性）</td><td>手机内存容量</td></tr>
+      <tr><td><b style="color:#5eead4">兴奋型</b></td><td><b>稍微做一点点，满意度就极大提升</b></td><td>超预期的小设计</td></tr>
+      <tr><td><b style="color:#9aa2b4">无差别型</b></td><td>做不做都无所谓</td><td><b>尽量别做</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note key">
+    <span class="tag">◆ 优先级顺序</span>
+    <p><strong>必要型 &gt; 期望型 &gt; 兴奋型 &gt; 无差别型</strong></p>
+    <p style="margin-top:10px">实际调研中还会出现两个额外结果：<b>R = 伪需求</b>、<b>Q = 可疑结果</b>。</p>
+  </div>
+
+  <div class="note warn">
+    <span class="tag">⚠ 课堂补充</span>
+    <p><strong>兴奋型需求可能带来大量研发成本。</strong>满意度提升大不等于该做 —— 要算投入产出。</p>
+  </div>
+
+  <h3 id="sixiangxian">四象限法则</h3>
+  <p>时间管理理论的观念，按<strong>重要程度 × 紧急程度</strong>给需求分类。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 380" class="svgt" role="img" aria-label="四象限法则">
+    <text x="24" y="30" fill="#6f7686" font-size="11.5">↑ 重要</text>
+    <text x="740" y="368" fill="#6f7686" font-size="11.5" text-anchor="end">紧急 →</text>
+
+    <rect x="70" y="40" width="340" height="146" rx="14" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-opacity=".42"/>
+    <text x="94" y="72" fill="#60a5fa" font-size="15" font-weight="700">重要 · 不紧急</text>
+    <rect x="290" y="52" width="98" height="28" rx="14" fill="rgba(96,165,250,.2)"/>
+    <text x="339" y="71" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="700">计划做</text>
+    <line x1="94" y1="86" x2="386" y2="86" stroke="#272c3a"/>
+    <text x="94" y="112" fill="#9aa2b4" font-size="12.5">合理排期</text>
+    <text x="94" y="142" fill="#cfd4e0" font-size="13">案例：短信登录成本太高，</text>
+    <text x="94" y="164" fill="#cfd4e0" font-size="13">加上密码登录功能</text>
+
+    <rect x="424" y="40" width="340" height="146" rx="14" fill="rgba(251,113,133,.07)" stroke="#fb7185" stroke-opacity=".55"/>
+    <text x="448" y="72" fill="#fb7185" font-size="15" font-weight="700">重要 · 紧急</text>
+    <rect x="644" y="52" width="98" height="28" rx="14" fill="rgba(251,113,133,.22)"/>
+    <text x="693" y="71" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="700">马上做</text>
+    <line x1="448" y1="86" x2="740" y2="86" stroke="#272c3a"/>
+    <text x="448" y="112" fill="#9aa2b4" font-size="12.5">优先级最高</text>
+    <text x="448" y="142" fill="#cfd4e0" font-size="13">案例：登录按钮点击没反应，</text>
+    <text x="448" y="164" fill="#cfd4e0" font-size="13">用户无法登录</text>
+
+    <rect x="70" y="196" width="340" height="146" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="94" y="228" fill="#9aa2b4" font-size="15" font-weight="700">不重要 · 不紧急</text>
+    <rect x="308" y="208" width="80" height="28" rx="14" fill="#1c2130"/>
+    <text x="348" y="227" text-anchor="middle" fill="#9aa2b4" font-size="14">放着</text>
+    <line x1="94" y1="242" x2="386" y2="242" stroke="#272c3a"/>
+    <text x="94" y="272" fill="#cfd4e0" font-size="13">案例：点赞后加一个动画效果</text>
+
+    <rect x="424" y="196" width="340" height="146" rx="14" fill="rgba(251,191,36,.07)" stroke="#fbbf24" stroke-opacity=".55"/>
+    <text x="448" y="228" fill="#fbbf24" font-size="15" font-weight="700">不重要 · 紧急</text>
+    <rect x="644" y="208" width="98" height="28" rx="14" fill="rgba(251,191,36,.2)"/>
+    <text x="693" y="227" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">授权做</text>
+    <line x1="448" y1="242" x2="740" y2="242" stroke="#272c3a"/>
+    <text x="448" y="268" fill="#cfd4e0" font-size="13">案例：「帮我做一个活动页，今天就要」</text>
+    <rect x="448" y="284" width="292" height="44" rx="10" fill="rgba(251,191,36,.13)"/>
+    <text x="594" y="304" text-anchor="middle" fill="#fbbf24" font-size="12.5" font-weight="700">⚠ 最需要警惕的就是这一格</text>
+    <text x="594" y="321" text-anchor="middle" fill="#9aa2b4" font-size="11.5">迷惑性大、很耽误时间，但人人都想挤进来</text>
+  </svg>
+  <figcaption><b>图 10</b> · 四象限法则：右下角那格是真正的时间黑洞，这是本节最实用的一条</figcaption>
+  </figure>
+
+  <div class="note">
+    <span class="tag">◆ 随堂练习</span>
+    <p>案例来自腾讯内部产品培训。1998 年 QQ 开始规划，1999 年 2 月 Beta1。<strong>Beta1 只能实现 3 个功能</strong>，从卡通头像、安全通讯、聊天室、聊天记录管理器、语音等候选里挑 —— 用上面两个模型来选。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 5 ══════════ -->
+<section id="s5">
+  <div class="sechead"><div class="num">PART 05</div><h2>功能清单</h2></div>
+
+  <p><strong>定义</strong>：产品功能的列表集合。一般包括<em>功能模块、子模块、功能点、优先级、功能描述</em>。</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>模块</th><th>子模块</th><th>功能</th><th>优先级</th><th>描述</th></tr></thead>
+    <tbody>
+      <tr><td>账号</td><td>注册</td><td>验证码注册</td><td><b>P1</b></td><td>输入手机号，发送验证码注册，完善个人信息</td></tr>
+      <tr><td>账号</td><td>手机号登录</td><td>验证码登录</td><td><b>P1</b></td><td>填写手机号，发送验证码，验证后登录</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="grid g3">
+    <div class="tile"><div class="t">① 先总体，再细分</div><div class="d">从模块往下拆，不要一上来就写功能点</div></div>
+    <div class="tile"><div class="t">② 有顺序，依次罗列</div><div class="d">顺序本身就是信息</div></div>
+    <div class="tile"><div class="t">③ 随时关注，及时更新</div><div class="d">它是活的文档</div></div>
+  </div>
+
+  <h3>功能清单 vs 需求池（重点）</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="需求池与功能清单的区别">
+    <defs><marker id="m5" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5eead4"/></marker></defs>
+
+    <rect x="14" y="30" width="330" height="200" rx="16" fill="rgba(167,139,250,.05)" stroke="rgba(167,139,250,.38)"/>
+    <text x="179" y="62" text-anchor="middle" font-size="24">📥</text>
+    <text x="179" y="92" text-anchor="middle" fill="#a78bfa" font-size="18" font-weight="700">需求池</text>
+    <text x="179" y="114" text-anchor="middle" fill="#6f7686" font-size="12">收件箱</text>
+    <line x1="46" y1="128" x2="312" y2="128" stroke="#272c3a"/>
+    <text x="46" y="152" fill="#6f7686" font-size="11.5">内容</text>
+    <text x="110" y="152" fill="#cfd4e0" font-size="12">需求、干系人、时间节点、</text>
+    <text x="110" y="170" fill="#cfd4e0" font-size="12">优先级、原始需求</text>
+    <text x="46" y="194" fill="#6f7686" font-size="11.5">维护人</text>
+    <text x="110" y="194" fill="#cfd4e0" font-size="12">可能由<tspan fill="#fff" font-weight="700">多个部门</tspan>一起维护</text>
+    <text x="46" y="218" fill="#6f7686" font-size="11.5">收录</text>
+    <text x="110" y="218" fill="#cfd4e0" font-size="12">所有需求先汇总在这里</text>
+
+    <path d="M356 130 L440 130" stroke="#5eead4" stroke-width="2" marker-end="url(#m5)"/>
+    <text x="398" y="118" text-anchor="middle" fill="#5eead4" font-size="11.5">进入排期</text>
+
+    <rect x="456" y="30" width="330" height="200" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.38)"/>
+    <text x="621" y="62" text-anchor="middle" font-size="24">✅</text>
+    <text x="621" y="92" text-anchor="middle" fill="#5eead4" font-size="18" font-weight="700">功能清单</text>
+    <text x="621" y="114" text-anchor="middle" fill="#6f7686" font-size="12">待办清单</text>
+    <line x1="488" y1="128" x2="754" y2="128" stroke="#272c3a"/>
+    <text x="488" y="152" fill="#6f7686" font-size="11.5">内容</text>
+    <text x="552" y="152" fill="#cfd4e0" font-size="12"><tspan fill="#fb7185" font-weight="700">没有</tspan>干系人、时间节点、</text>
+    <text x="552" y="170" fill="#cfd4e0" font-size="12">原始需求</text>
+    <text x="488" y="194" fill="#6f7686" font-size="11.5">维护人</text>
+    <text x="552" y="194" fill="#cfd4e0" font-size="12">更多由<tspan fill="#fff" font-weight="700">产品部门</tspan>维护</text>
+    <text x="488" y="218" fill="#6f7686" font-size="11.5">收录</text>
+    <text x="552" y="218" fill="#cfd4e0" font-size="12"><tspan fill="#fff" font-weight="700">只有进入开发排期的</tspan>才进来</text>
+
+    <rect x="14" y="246" width="772" height="42" rx="12" fill="rgba(94,234,212,.07)" stroke="rgba(94,234,212,.32)"/>
+    <text x="400" y="272" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">一句话：需求池是收件箱，功能清单是待办清单</text>
+  </svg>
+  <figcaption><b>图 11</b> · 需求池收一切，功能清单只收排上期的 —— 两者是漏斗的前后两段</figcaption>
+  </figure>
+
+  <div class="note warn">
+    <span class="tag">⚠ 课堂补充</span>
+    <p>功能清单和需求池一样，都属于<strong>非标准产出物</strong>，各公司格式不同。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 自测 ══════════ -->
+<section id="quiz">
+  <div class="sechead"><div class="num">CHECK</div><h2>本节自测</h2></div>
+  <ol class="quizlist">
+    <li>什么是用户角色？它和用户画像在「时间」和「真假」上有什么区别？</li>
+    <li>用户画像由哪两类标签构成？数据从哪三个渠道来？</li>
+    <li>三套经典用户画像分别是什么？</li>
+    <li>业务需求和产品需求怎么区分？</li>
+    <li>需求分析的基本思路是什么？场景的公式是什么？</li>
+    <li>判断需求真伪的方法是什么？三种「质疑伪需求」的情况是哪三种？</li>
+    <li>KANO 模型两个维度、四类需求分别是什么？优先级怎么排？</li>
+    <li>四象限法则里最需要警惕的是哪一类？</li>
+    <li>功能清单和需求池有什么区别？</li>
+  </ol>
+</section>
+
+<!-- ══════════ 资料 ══════════ -->
+<section id="ziliao">
+  <div class="sechead"><div class="num">FILES</div><h2>配套资料</h2></div>
+  <div class="note key">
+    <span class="tag">◆ 可直接上手的实例</span>
+    <p>目录：<code style="font-family:var(--mono);font-size:12.5px">~/Downloads/课件/录播课课件/第1阶段-产品基础/_其他资料/</code></p>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>文件</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td><code style="font-family:var(--mono);font-size:13px">03-功能清单示例.xlsx</code></td><td><b>功能清单实例</b></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <span><a href="index.html" style="color:#5eead4;text-decoration:none">← 返回课程目录</a>　·　产品经理培训 · 03 用户研究和需求分析 · 阅读版</span>
+  <span>上一节：02 需求收集和需求管理　·　下一节：04 产品规划</span>
+</footer>
+</main>
+</div>
+</body>
+</html>

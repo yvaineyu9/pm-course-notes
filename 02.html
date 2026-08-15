@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 需求收集和需求管理 · 阅读版</title>
+<style>
+:root{
+  --bg:#0b0c10; --bg2:#101219; --card:#161923; --card2:#1c2130;
+  --line:#272c3a; --line2:#343b4d;
+  --txt:#e8eaf0; --dim:#9aa2b4; --dim2:#6f7686;
+  --ac:#5eead4; --ac2:#a78bfa; --warn:#fbbf24; --danger:#fb7185; --blue:#60a5fa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px; line-height:1.85; letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(94,234,212,.10), transparent 60%),
+    radial-gradient(800px 500px at 90% 4%, rgba(167,139,250,.10), transparent 60%);
+}
+.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 28px 120px; display:grid; grid-template-columns:214px 1fr; gap:52px}
+@media(max-width:900px){ .wrap{grid-template-columns:1fr; gap:0; padding:0 18px 80px} nav.toc{display:none} }
+
+nav.toc{position:sticky; top:0; align-self:start; height:100vh; padding:120px 0 40px; font-size:13.5px; overflow-y:auto}
+nav.toc .lbl{color:var(--dim2); font-size:11px; letter-spacing:.18em; margin-bottom:14px}
+nav.toc a{display:block; color:var(--dim); text-decoration:none; padding:7px 12px; border-left:2px solid var(--line); transition:.18s}
+nav.toc a:hover{color:var(--ac); border-left-color:var(--ac); background:rgba(94,234,212,.05)}
+nav.toc a.sub{padding-left:24px; font-size:12.5px; color:var(--dim2)}
+
+header{padding:88px 0 46px}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ac); margin-bottom:18px}
+h1{font-size:52px; line-height:1.15; margin:0 0 22px; letter-spacing:-.01em; font-weight:700}
+h1 .thin{color:var(--dim2); font-weight:300}
+.lede{font-size:19px; color:var(--dim); max-width:660px; line-height:1.75; margin:0 0 26px}
+.meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; padding:5px 13px; border-radius:100px; border:1px solid var(--line2); color:var(--dim); background:var(--card)}
+.pill b{color:var(--txt); font-weight:600}
+.pill.ac{border-color:rgba(94,234,212,.4); color:var(--ac)}
+
+h2{font-size:15px; margin:0}
+section{scroll-margin-top:30px}
+.sechead{display:flex; align-items:baseline; gap:16px; margin:86px 0 30px; padding-bottom:18px; border-bottom:1px solid var(--line)}
+.sechead .num{font-family:var(--mono); font-size:13px; color:var(--ac); letter-spacing:.1em; padding-top:6px}
+.sechead h2{font-size:32px; font-weight:700; letter-spacing:-.01em}
+h3{font-size:20px; margin:48px 0 14px; font-weight:650}
+h3::before{content:"# "; color:var(--ac2); font-weight:400}
+h4{font-size:16px; margin:30px 0 10px; color:var(--txt); font-weight:650}
+p{margin:0 0 16px; color:#cfd4e0}
+strong{color:#fff; font-weight:650}
+em{font-style:normal; color:var(--ac); font-weight:600}
+a{color:var(--ac)}
+ul,ol{color:#cfd4e0}
+li{margin:6px 0}
+
+.note{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:20px 24px; margin:26px 0}
+.note.warn{border-color:rgba(251,191,36,.32); background:linear-gradient(180deg,rgba(251,191,36,.07),rgba(251,191,36,.02))}
+.note.key{border-color:rgba(94,234,212,.32); background:linear-gradient(180deg,rgba(94,234,212,.07),rgba(94,234,212,.02))}
+.note.quote{border-color:var(--line2); background:var(--card); border-left:3px solid var(--ac2)}
+.note .tag{display:inline-block; font-size:11px; letter-spacing:.16em; margin-bottom:9px; color:var(--warn); font-family:var(--mono)}
+.note.key .tag{color:var(--ac)}
+.note.quote .tag{color:var(--ac2)}
+.note p:last-child{margin-bottom:0}
+.note ol,.note ul{margin:8px 0 0; padding-left:20px; color:#cfd4e0}
+.note li{margin:5px 0}
+
+blockquote{margin:22px 0; padding:2px 0 2px 22px; border-left:3px solid var(--ac2); color:#d6dae6; font-size:17px}
+blockquote p{margin:0}
+
+.tw{overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:14px; background:var(--card)}
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th{text-align:left; padding:13px 18px; font-size:12px; letter-spacing:.1em; color:var(--dim2); font-weight:600; border-bottom:1px solid var(--line); background:var(--bg2); white-space:nowrap}
+td{padding:13px 18px; border-bottom:1px solid var(--line); color:#cfd4e0; vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+td b,th b{color:#fff}
+
+figure{margin:32px 0; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,var(--card),var(--bg2)); padding:26px 24px 18px; overflow:hidden}
+figure svg{display:block; width:100%; height:auto}
+figcaption{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--dim2); text-align:center}
+figcaption b{color:var(--dim)}
+.svgt{font-family:-apple-system,"PingFang SC",sans-serif}
+
+.grid{display:grid; gap:14px; margin:24px 0}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line); background:var(--card); border-radius:14px; padding:18px 18px 16px; transition:.2s}
+.tile:hover{border-color:var(--line2); background:var(--card2); transform:translateY(-2px)}
+.tile .ic{font-size:22px; margin-bottom:8px; display:block}
+.tile .t{font-size:15px; font-weight:650; color:#fff; margin-bottom:5px}
+.tile .d{font-size:13px; color:var(--dim); line-height:1.65}
+
+.map{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:34px 0 10px}
+@media(max-width:760px){.map{grid-template-columns:repeat(2,1fr)}}
+.map a{text-decoration:none; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:16px; display:block; transition:.2s}
+.map a:hover{border-color:rgba(94,234,212,.45); background:var(--card2)}
+.map .n{font-family:var(--mono); font-size:11px; color:var(--ac); letter-spacing:.14em}
+.map .t{font-size:14.5px; color:var(--txt); margin-top:7px; line-height:1.5; font-weight:600}
+
+.quizlist{counter-reset:q; list-style:none; padding:0; margin:22px 0}
+.quizlist li{counter-increment:q; position:relative; padding:14px 18px 14px 52px; border:1px solid var(--line); background:var(--card); border-radius:12px; margin-bottom:10px; font-size:15px; color:#d6dae6}
+.quizlist li::before{content:counter(q,decimal-leading-zero); position:absolute; left:18px; top:14px; font-family:var(--mono); font-size:12px; color:var(--ac2)}
+
+hr.big{border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line2),transparent); margin:70px 0}
+footer{margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--dim2); font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+footer a{color:var(--dim); text-decoration:none}
+footer a:hover{color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="lbl">本节目录</div>
+  <a href="#top">封面 · 本节地图</a>
+  <a href="#s1">1 · 需求的定义及来源</a>
+  <a href="#s2">2 · 需求收集方法</a>
+  <a href="#s3">3 · 竞品分析</a>
+  <a href="#s4">4 · SWOT 分析</a>
+  <a href="#s4" class="sub">道斯矩阵</a>
+  <a href="#s5">5 · 用户体验五要素</a>
+  <a href="#wuceng" class="sub">五层与产出物</a>
+  <a href="#s6">6 · 用户访谈</a>
+  <a href="#s7">7 · 问卷调查</a>
+  <a href="#s8">8 · 需求池</a>
+  <a href="#quiz">本节自测</a>
+  <a href="#ziliao">配套资料</a>
+</nav>
+
+<main>
+<header id="top">
+  <div class="kicker">产品经理培训 · 第 02 节</div>
+  <h1>需求收集和需求管理<br><span class="thin">产品经理的主场</span></h1>
+  <p class="lede">产品经理绝大多数工作时间都围着需求转。这节讲需求从哪来、怎么收、收完怎么管。</p>
+  <div class="meta">
+    <span class="pill ac">掌握程度 · <b>熟悉</b></span>
+    <span class="pill">8 个主题</span>
+    <span class="pill">11 张图解</span>
+    <span class="pill">6 道自测题</span>
+  </div>
+
+  <div class="map">
+    <a href="#s1"><div class="n">01</div><div class="t">需求的定义及来源</div></a>
+    <a href="#s2"><div class="n">02</div><div class="t">需求收集方法</div></a>
+    <a href="#s3"><div class="n">03</div><div class="t">竞品分析</div></a>
+    <a href="#s4"><div class="n">04</div><div class="t">SWOT 分析</div></a>
+    <a href="#s5"><div class="n">05</div><div class="t">用户体验五要素</div></a>
+    <a href="#s6"><div class="n">06</div><div class="t">用户访谈</div></a>
+    <a href="#s7"><div class="n">07</div><div class="t">问卷调查</div></a>
+    <a href="#s8"><div class="n">08</div><div class="t">需求池</div></a>
+  </div>
+</header>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <div class="sechead"><div class="num">PART 01</div><h2>需求的定义及来源</h2></div>
+
+  <h3>需要 → 欲望 → 需求</h3>
+  <p>三个词不是同义词，是<strong>递进关系</strong>，这是本节的地基。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="需要、欲望、需求的递进关系">
+    <defs>
+      <marker id="a1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5eead4"/></marker>
+    </defs>
+    <rect x="14" y="52" width="228" height="120" rx="14" fill="#161923" stroke="#272c3a"/>
+    <text x="38" y="84" fill="#6f7686" font-size="11.5" letter-spacing=".14em">第一层</text>
+    <text x="38" y="112" fill="#fff" font-size="21" font-weight="700">需要</text>
+    <text x="38" y="138" fill="#9aa2b4" font-size="12.5">某些基本方面没被满足</text>
+    <text x="38" y="157" fill="#9aa2b4" font-size="12.5">而产生的短缺感</text>
+
+    <path d="M250 112 L296 112" stroke="#5eead4" stroke-width="1.8" marker-end="url(#a1)"/>
+    <text x="273" y="98" text-anchor="middle" fill="#5eead4" font-size="11">指向具体</text>
+    <text x="273" y="136" text-anchor="middle" fill="#5eead4" font-size="11">满足物</text>
+
+    <rect x="304" y="52" width="228" height="120" rx="14" fill="#161923" stroke="#a78bfa" stroke-opacity=".4"/>
+    <text x="328" y="84" fill="#6f7686" font-size="11.5" letter-spacing=".14em">第二层</text>
+    <text x="328" y="112" fill="#fff" font-size="21" font-weight="700">欲望</text>
+    <text x="328" y="138" fill="#9aa2b4" font-size="12.5">想达到某种目的的要求，</text>
+    <text x="328" y="157" fill="#9aa2b4" font-size="12.5">比需要更具体</text>
+
+    <path d="M540 112 L586 112" stroke="#5eead4" stroke-width="1.8" marker-end="url(#a1)"/>
+    <text x="563" y="98" text-anchor="middle" fill="#5eead4" font-size="11">具备购买</text>
+    <text x="563" y="136" text-anchor="middle" fill="#5eead4" font-size="11">能力</text>
+
+    <rect x="594" y="52" width="192" height="120" rx="14" fill="rgba(94,234,212,.08)" stroke="#5eead4" stroke-opacity=".6" stroke-width="1.6"/>
+    <text x="618" y="84" fill="#5eead4" font-size="11.5" letter-spacing=".14em">第三层</text>
+    <text x="618" y="112" fill="#fff" font-size="21" font-weight="700">需求</text>
+    <text x="618" y="138" fill="#9aa2b4" font-size="12.5">有能力购买且愿意</text>
+    <text x="618" y="157" fill="#9aa2b4" font-size="12.5">购买的那个欲望</text>
+    <rect x="640" y="22" width="100" height="24" rx="12" fill="#5eead4"/>
+    <text x="690" y="39" text-anchor="middle" fill="#08110f" font-size="12" font-weight="700">产品接这层</text>
+
+    <rect x="14" y="196" width="772" height="86" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="38" y="224" fill="#9aa2b4" font-size="13">「我渴了」= <tspan fill="#e8eaf0">需要</tspan>　　「我想喝可乐」= <tspan fill="#a78bfa">欲望</tspan>　　「我愿意花 3 块钱买这瓶可乐」= <tspan fill="#5eead4" font-weight="700">需求</tspan></text>
+    <text x="38" y="250" fill="#6f7686" font-size="12.5">前两层做出来没人付钱。只有第三层才是产品该接的活。</text>
+    <text x="38" y="272" fill="#fbbf24" font-size="12.5">判断真需求的朴素标准：用户愿意在这个产品上有所投入，并且切实去做了 —— 嘴上说想要不算。</text>
+  </svg>
+  <figcaption><b>图 1</b> · 需要 → 欲望 → 需求：每跨一层都要加一个条件，最后一层才有商业价值</figcaption>
+  </figure>
+
+  <h3>需求从哪来：两个维度，四个方面</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 320" class="svgt" role="img" aria-label="需求的四个来源与收集难度">
+    <rect x="14" y="40" width="380" height="200" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.32)"/>
+    <text x="204" y="72" text-anchor="middle" fill="#5eead4" font-size="17" font-weight="700">内部来源</text>
+    <rect x="150" y="84" width="108" height="26" rx="13" fill="rgba(94,234,212,.16)"/>
+    <text x="204" y="102" text-anchor="middle" fill="#5eead4" font-size="12.5" font-weight="700">易收集</text>
+
+    <rect x="42" y="126" width="152" height="88" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="118" y="164" text-anchor="middle" font-size="24">🧑‍💼</text>
+    <text x="118" y="192" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">产品经理自己</text>
+
+    <rect x="214" y="126" width="152" height="88" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="290" y="164" text-anchor="middle" font-size="24">🏢</text>
+    <text x="290" y="188" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">公司内部</text>
+    <text x="290" y="206" text-anchor="middle" fill="#6f7686" font-size="11">管理层 / 业务部门</text>
+
+    <rect x="406" y="40" width="380" height="200" rx="16" fill="rgba(251,191,36,.05)" stroke="rgba(251,191,36,.32)"/>
+    <text x="596" y="72" text-anchor="middle" fill="#fbbf24" font-size="17" font-weight="700">外部来源</text>
+    <rect x="542" y="84" width="108" height="26" rx="13" fill="rgba(251,191,36,.16)"/>
+    <text x="596" y="102" text-anchor="middle" fill="#fbbf24" font-size="12.5" font-weight="700">难收集</text>
+
+    <rect x="434" y="126" width="152" height="88" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="510" y="164" text-anchor="middle" font-size="24">📈</text>
+    <text x="510" y="188" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">市场</text>
+    <text x="510" y="206" text-anchor="middle" fill="#6f7686" font-size="11">要主动做竞品分析</text>
+
+    <rect x="606" y="126" width="152" height="88" rx="12" fill="#161923" stroke="#272c3a"/>
+    <text x="682" y="164" text-anchor="middle" font-size="24">👥</text>
+    <text x="682" y="188" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">用户</text>
+    <text x="682" y="206" text-anchor="middle" fill="#6f7686" font-size="11">要主动做访谈、问卷</text>
+
+    <rect x="14" y="256" width="380" height="50" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="204" y="286" text-anchor="middle" fill="#9aa2b4" font-size="13">内部需求靠「<tspan fill="#5eead4" font-weight="700">聊天</tspan>」就能收</text>
+
+    <rect x="406" y="256" width="380" height="50" rx="12" fill="#12141b" stroke="#272c3a"/>
+    <text x="596" y="286" text-anchor="middle" fill="#9aa2b4" font-size="13">外部需求必须<tspan fill="#fbbf24" font-weight="700">主动出击</tspan>去挖</text>
+  </svg>
+  <figcaption><b>图 2</b> · 需求四来源：内外之分决定了收集成本，也决定了下一节要用哪种方法</figcaption>
+  </figure>
+
+  <div class="note">
+    <span class="tag">◆ 课堂补充</span>
+    <p>需求评审会有两种，<strong>产品内审</strong>和<strong>项目组评审</strong>，别混为一谈。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <div class="sechead"><div class="num">PART 02</div><h2>需求收集的方法</h2></div>
+  <p>方法不是随便挑的，<strong>每种方法对应一个来源</strong>。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 230" class="svgt" role="img" aria-label="需求来源与收集方法的对应关系">
+    <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#343b4d"/></marker></defs>
+    <text x="90" y="34" text-anchor="middle" fill="#6f7686" font-size="12" letter-spacing=".14em">来源</text>
+    <text x="400" y="34" text-anchor="middle" fill="#6f7686" font-size="12" letter-spacing=".14em">方法</text>
+    <text x="700" y="34" text-anchor="middle" fill="#6f7686" font-size="12" letter-spacing=".14em">研究类型</text>
+
+    <rect x="20" y="52" width="140" height="52" rx="11" fill="#161923" stroke="#fbbf24" stroke-opacity=".45"/>
+    <text x="90" y="84" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="700">市场</text>
+    <line x1="166" y1="78" x2="284" y2="78" stroke="#343b4d" stroke-width="1.4" marker-end="url(#a2)"/>
+    <rect x="292" y="52" width="216" height="52" rx="11" fill="rgba(251,191,36,.1)" stroke="#fbbf24" stroke-opacity=".35"/>
+    <text x="400" y="84" text-anchor="middle" fill="#fde68a" font-size="16" font-weight="700">竞品分析</text>
+    <text x="700" y="84" text-anchor="middle" fill="#6f7686" font-size="14">—</text>
+
+    <rect x="20" y="120" width="140" height="86" rx="11" fill="#161923" stroke="#5eead4" stroke-opacity=".45"/>
+    <text x="90" y="170" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700">用户</text>
+    <line x1="166" y1="146" x2="284" y2="146" stroke="#343b4d" stroke-width="1.4" marker-end="url(#a2)"/>
+    <line x1="166" y1="182" x2="284" y2="182" stroke="#343b4d" stroke-width="1.4" marker-end="url(#a2)"/>
+
+    <rect x="292" y="120" width="216" height="52" rx="11" fill="rgba(94,234,212,.1)" stroke="#5eead4" stroke-opacity=".35"/>
+    <text x="400" y="152" text-anchor="middle" fill="#b8f5ea" font-size="16" font-weight="700">用户访谈</text>
+    <rect x="620" y="128" width="160" height="36" rx="9" fill="rgba(167,139,250,.14)"/>
+    <text x="700" y="152" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">定性</text>
+
+    <rect x="292" y="156" width="216" height="52" rx="11" fill="rgba(94,234,212,.1)" stroke="#5eead4" stroke-opacity=".35"/>
+    <text x="400" y="188" text-anchor="middle" fill="#b8f5ea" font-size="16" font-weight="700">问卷调查</text>
+    <rect x="620" y="164" width="160" height="36" rx="9" fill="rgba(96,165,250,.14)"/>
+    <text x="700" y="188" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="700">定量</text>
+  </svg>
+  <figcaption><b>图 3</b> · 三种方法各有归属：访谈挖「为什么」，问卷测「有多少」</figcaption>
+  </figure>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <div class="sechead"><div class="num">PART 03</div><h2>竞品分析</h2></div>
+
+  <blockquote><p><strong>关注竞品，是贯穿产品经理整个职业生涯的事情。</strong> —— 课上原话，不是一次性任务。</p></blockquote>
+
+  <h3>四个作用</h3>
+  <div class="grid g4">
+    <div class="tile"><span class="ic">🎯</span><div class="t">知己知彼</div><div class="d">百战不殆</div></div>
+    <div class="tile"><span class="ic">🧩</span><div class="t">提供参考</div><div class="d">功能、可用性、关键技术</div></div>
+    <div class="tile"><span class="ic">✨</span><div class="t">提高差异化</div><div class="d">避开同质竞争</div></div>
+    <div class="tile"><span class="ic">🛡️</span><div class="t">降低风险</div><div class="d">给拍脑袋的新项目兜底</div></div>
+  </div>
+
+  <h3>选哪些竞品：三类，各有各的用处</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 240" class="svgt" role="img" aria-label="竞品的三种选择">
+    <rect x="14" y="30" width="248" height="180" rx="16" fill="#161923" stroke="#fbbf24" stroke-opacity=".42"/>
+    <text x="138" y="76" text-anchor="middle" font-size="30">👑</text>
+    <text x="138" y="112" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="700">行业领先 / 榜样</text>
+    <line x1="46" y1="130" x2="230" y2="130" stroke="#272c3a"/>
+    <text x="138" y="158" text-anchor="middle" fill="#9aa2b4" font-size="13">图什么：</text>
+    <text x="138" y="182" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">取其精华</text>
+    <text x="138" y="202" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">去其糟粕</text>
+
+    <rect x="276" y="30" width="248" height="180" rx="16" fill="rgba(251,113,133,.06)" stroke="#fb7185" stroke-opacity=".5"/>
+    <text x="400" y="76" text-anchor="middle" font-size="30">⚔️</text>
+    <text x="400" y="112" text-anchor="middle" fill="#fb7185" font-size="16" font-weight="700">类似于自己的产品</text>
+    <line x1="308" y1="130" x2="492" y2="130" stroke="#272c3a"/>
+    <text x="400" y="158" text-anchor="middle" fill="#9aa2b4" font-size="13">图什么：</text>
+    <text x="400" y="182" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">竞争关系最大</text>
+    <text x="400" y="202" text-anchor="middle" fill="#e8eaf0" font-size="14">威胁最直接</text>
+
+    <rect x="538" y="30" width="248" height="180" rx="16" fill="#161923" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="662" y="76" text-anchor="middle" font-size="30">🌱</text>
+    <text x="662" y="112" text-anchor="middle" fill="#5eead4" font-size="16" font-weight="700">有潜力的竞品</text>
+    <line x1="570" y1="130" x2="754" y2="130" stroke="#272c3a"/>
+    <text x="662" y="158" text-anchor="middle" fill="#9aa2b4" font-size="13">图什么：</text>
+    <text x="662" y="182" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">分析它凭什么活下来</text>
+    <text x="662" y="202" text-anchor="middle" fill="#e8eaf0" font-size="14" font-weight="600">借鉴发展路径</text>
+  </svg>
+  <figcaption><b>图 4</b> · 三类竞品对应三种目的：学榜样、防对手、看未来</figcaption>
+  </figure>
+
+  <h3>信息从哪采</h3>
+  <div class="note">
+    <ol>
+      <li><strong>竞争对手自己的网站</strong> —— 「关于我们」「帮助中心」「规则内容」、历史版本、促销活动、最新调整、<em>招聘信息</em>（招什么人 = 要做什么方向）</li>
+      <li><strong>第三方数据平台</strong> —— 艾瑞咨询、易观、199IT、百度指数、七麦数据、Alexa</li>
+      <li><strong>财报</strong> —— 竞争对手的季度/年度财报，或自己公司市场、运营部门的内部资料</li>
+    </ol>
+  </div>
+  <p>招聘信息这条最容易被忽略，但信息密度很高：对手在招什么岗位、要什么技术栈，基本就把下一步路线图写在明处了。</p>
+
+  <h3>看哪些维度</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:60px">#</th><th>维度</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>战略定位</b></td><td>选做</td></tr>
+      <tr><td>2</td><td><b>用户群体</b></td><td>—</td></tr>
+      <tr><td>3</td><td><b>产品运营推广方式</b></td><td>选做</td></tr>
+      <tr><td>4</td><td><b>产品功能</b></td><td>—</td></tr>
+      <tr><td>5</td><td><b>产品界面</b></td><td>交互方式、视觉体验、产品结构</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>用什么方法</h3>
+  <p>两把工具，下面两节分别展开：<em>SWOT 分析</em>（看战略）、<em>用户体验五要素</em>（看产品本身）。</p>
+
+  <h3>产出：竞品分析报告</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:110px">部分</th><th>写什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>目的</b></td><td>为什么做这份报告</td></tr>
+      <tr><td><b>确定竞品</b></td><td>分析了哪些产品？产品形态、版本、体验环境</td></tr>
+      <tr><td><b>竞品分析</b></td><td>战略定位、目标用户、商业模式、产品结构、产品流程、产品功能、交互设计、特色功能、运营策略</td></tr>
+      <tr><td><b>总结</b></td><td>优缺点、可借鉴之处</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 4 ══════════ -->
+<section id="s4">
+  <div class="sechead"><div class="num">PART 04</div><h2>SWOT 分析</h2></div>
+
+  <p>把研究对象相关的<strong>内部优势、劣势</strong>和<strong>外部机会、威胁</strong>列举出来，按矩阵排列，判断内部是优势还是劣势更明显、外部是机会还是威胁更明显，最终形成<em>阶段性战略</em>。</p>
+  <p><strong>两个维度（内部 / 外部），四个方面（S / W / O / T）。</strong></p>
+
+  <figure>
+  <svg viewBox="0 0 800 400" class="svgt" role="img" aria-label="SWOT 四象限与淘宝案例">
+    <text x="24" y="30" fill="#6f7686" font-size="11.5" letter-spacing=".14em">内部 ↓</text>
+    <text x="24" y="222" fill="#6f7686" font-size="11.5" letter-spacing=".14em">外部 ↓</text>
+
+    <rect x="90" y="40" width="336" height="164" rx="14" fill="rgba(94,234,212,.06)" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="114" y="70" fill="#5eead4" font-size="24" font-weight="700">S</text>
+    <text x="142" y="70" fill="#5eead4" font-size="15" font-weight="700">优势 Strengths</text>
+    <text x="114" y="96" fill="#6f7686" font-size="11.5">我比别人强在哪？</text>
+    <line x1="114" y1="108" x2="402" y2="108" stroke="#272c3a"/>
+    <text x="114" y="130" fill="#cfd4e0" font-size="12.5">海量用户（电商 60% 份额）</text>
+    <text x="114" y="150" fill="#cfd4e0" font-size="12.5">支付宝：安全便捷、一枝独秀</text>
+    <text x="114" y="170" fill="#cfd4e0" font-size="12.5">阿里旺旺：买卖双方沟通</text>
+    <text x="114" y="190" fill="#cfd4e0" font-size="12.5">阿里系代表产品矩阵</text>
+
+    <rect x="440" y="40" width="346" height="164" rx="14" fill="rgba(251,113,133,.06)" stroke="#fb7185" stroke-opacity=".42"/>
+    <text x="464" y="70" fill="#fb7185" font-size="24" font-weight="700">W</text>
+    <text x="496" y="70" fill="#fb7185" font-size="15" font-weight="700">劣势 Weaknesses</text>
+    <text x="464" y="96" fill="#6f7686" font-size="11.5">我不如别人的地方？</text>
+    <line x1="464" y1="108" x2="762" y2="108" stroke="#272c3a"/>
+    <text x="464" y="130" fill="#cfd4e0" font-size="12.5">低质 / 假货多、法律纠纷</text>
+    <text x="464" y="150" fill="#cfd4e0" font-size="12.5">经营成本高（直通车等商家承担）</text>
+    <text x="464" y="170" fill="#cfd4e0" font-size="12.5">商家管理不善：刷单、</text>
+    <text x="464" y="190" fill="#cfd4e0" font-size="12.5">拒绝中差评</text>
+
+    <rect x="90" y="216" width="336" height="164" rx="14" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-opacity=".42"/>
+    <text x="114" y="246" fill="#60a5fa" font-size="24" font-weight="700">O</text>
+    <text x="142" y="246" fill="#60a5fa" font-size="15" font-weight="700">机会 Opportunities</text>
+    <text x="114" y="272" fill="#6f7686" font-size="11.5">外面有什么风口？</text>
+    <line x1="114" y1="284" x2="402" y2="284" stroke="#272c3a"/>
+    <text x="114" y="306" fill="#cfd4e0" font-size="12.5">移动应用快速崛起（手机普及）</text>
+    <text x="114" y="326" fill="#cfd4e0" font-size="12.5">网民网购态度改变（已成习惯）</text>
+    <text x="114" y="346" fill="#cfd4e0" font-size="12.5">购买力提升（经济与收入增长）</text>
+
+    <rect x="440" y="216" width="346" height="164" rx="14" fill="rgba(251,191,36,.06)" stroke="#fbbf24" stroke-opacity=".42"/>
+    <text x="464" y="246" fill="#fbbf24" font-size="24" font-weight="700">T</text>
+    <text x="492" y="246" fill="#fbbf24" font-size="15" font-weight="700">威胁 Threats</text>
+    <text x="464" y="272" fill="#6f7686" font-size="11.5">外面有什么在打我？</text>
+    <line x1="464" y1="284" x2="762" y2="284" stroke="#272c3a"/>
+    <text x="464" y="306" fill="#cfd4e0" font-size="12.5">支付宝受微信支付挑战</text>
+    <text x="464" y="326" fill="#cfd4e0" font-size="12.5">细分电商蚕食（唯品会、小红书）</text>
+    <text x="464" y="346" fill="#cfd4e0" font-size="12.5">京东 16.3%、拼多多 33.2%</text>
+    <text x="464" y="366" fill="#cfd4e0" font-size="12.5">（淘宝 41.8%）· 物流服务滞后</text>
+  </svg>
+  <figcaption><b>图 5</b> · SWOT 四象限，用课上的淘宝案例填满 —— 内部看 SW，外部看 OT</figcaption>
+  </figure>
+
+  <h3>道斯矩阵（TOWS）：从 SWOT 推出战略</h3>
+  <p>SWOT 只是<strong>把牌摊开</strong>，道斯矩阵才是<strong>出牌</strong> —— 把内部和外部两两交叉，得到四种战略。</p>
+
+  <figure>
+  <svg viewBox="0 0 800 340" class="svgt" role="img" aria-label="道斯矩阵：四种战略">
+    <text x="230" y="34" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">S 优势</text>
+    <text x="560" y="34" text-anchor="middle" fill="#fb7185" font-size="14" font-weight="700">W 劣势</text>
+    <text x="46" y="128" fill="#60a5fa" font-size="14" font-weight="700">O 机会</text>
+    <text x="46" y="264" fill="#fbbf24" font-size="14" font-weight="700">T 威胁</text>
+
+    <rect x="106" y="48" width="248" height="128" rx="14" fill="rgba(94,234,212,.07)" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="128" y="78" fill="#5eead4" font-size="18" font-weight="700">SO</text>
+    <text x="172" y="78" fill="#fff" font-size="15" font-weight="700">增长型战略</text>
+    <text x="128" y="104" fill="#6f7686" font-size="11.5">用优势抓机会</text>
+    <line x1="128" y1="116" x2="332" y2="116" stroke="#272c3a"/>
+    <text x="128" y="140" fill="#cfd4e0" font-size="12.5">上线淘宝移动端，</text>
+    <text x="128" y="160" fill="#cfd4e0" font-size="12.5">覆盖移动互联网人群</text>
+
+    <rect x="366" y="48" width="248" height="128" rx="14" fill="rgba(96,165,250,.07)" stroke="#60a5fa" stroke-opacity=".42"/>
+    <text x="388" y="78" fill="#60a5fa" font-size="18" font-weight="700">WO</text>
+    <text x="438" y="78" fill="#fff" font-size="15" font-weight="700">扭转型战略</text>
+    <text x="388" y="104" fill="#6f7686" font-size="11.5">补短板抓机会</text>
+    <line x1="388" y1="116" x2="592" y2="116" stroke="#272c3a"/>
+    <text x="388" y="140" fill="#cfd4e0" font-size="12.5">打造天猫商城提升品质；</text>
+    <text x="388" y="160" fill="#cfd4e0" font-size="12.5">线下无人超市</text>
+
+    <rect x="106" y="188" width="248" height="128" rx="14" fill="rgba(167,139,250,.07)" stroke="#a78bfa" stroke-opacity=".42"/>
+    <text x="128" y="218" fill="#a78bfa" font-size="18" font-weight="700">ST</text>
+    <text x="168" y="218" fill="#fff" font-size="15" font-weight="700">多点型战略</text>
+    <text x="128" y="244" fill="#6f7686" font-size="11.5">用优势避威胁</text>
+    <line x1="128" y1="256" x2="332" y2="256" stroke="#272c3a"/>
+    <text x="128" y="280" fill="#cfd4e0" font-size="12.5">尝试淘宝保险、淘宝游戏</text>
+    <text x="128" y="300" fill="#cfd4e0" font-size="12.5">等多领域经营</text>
+
+    <rect x="366" y="188" width="248" height="128" rx="14" fill="rgba(251,113,133,.07)" stroke="#fb7185" stroke-opacity=".42"/>
+    <text x="388" y="218" fill="#fb7185" font-size="18" font-weight="700">WT</text>
+    <text x="436" y="218" fill="#fff" font-size="15" font-weight="700">防御型战略</text>
+    <text x="388" y="244" fill="#fb7185" font-size="11.5" font-weight="700">活下去</text>
+    <line x1="388" y1="256" x2="592" y2="256" stroke="#272c3a"/>
+    <text x="388" y="280" fill="#cfd4e0" font-size="12.5">推出淘宝特价、聚划算，</text>
+    <text x="388" y="300" fill="#cfd4e0" font-size="12.5">应对京东拼多多</text>
+
+    <rect x="626" y="48" width="160" height="268" rx="14" fill="#12141b" stroke="rgba(251,191,36,.4)"/>
+    <text x="706" y="80" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">⚠ 两条硬规矩</text>
+    <line x1="646" y1="94" x2="766" y2="94" stroke="#272c3a"/>
+    <text x="646" y="122" fill="#e8eaf0" font-size="12" font-weight="700">① 必须有真实数据</text>
+    <text x="646" y="142" fill="#9aa2b4" font-size="11.5">能判断出优势劣势</text>
+    <text x="646" y="160" fill="#9aa2b4" font-size="11.5">哪个多、机会威胁</text>
+    <text x="646" y="178" fill="#9aa2b4" font-size="11.5">哪个多，否则矩阵</text>
+    <text x="646" y="196" fill="#9aa2b4" font-size="11.5">填不出来</text>
+    <text x="646" y="230" fill="#e8eaf0" font-size="12" font-weight="700">② 同一时间</text>
+    <text x="646" y="250" fill="#e8eaf0" font-size="12" font-weight="700">只能存在一个战略</text>
+    <text x="646" y="272" fill="#9aa2b4" font-size="11.5">不能既增长</text>
+    <text x="646" y="290" fill="#9aa2b4" font-size="11.5">又防御</text>
+  </svg>
+  <figcaption><b>图 6</b> · 道斯矩阵：内外两两交叉出四种战略，但同一时间只能选一个</figcaption>
+  </figure>
+
+  <h3>怎么分析：两套方法</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 220" class="svgt" role="img" aria-label="QCDMS 与 PEST 两套分析方法">
+    <rect x="14" y="24" width="378" height="176" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.32)"/>
+    <text x="40" y="56" fill="#5eead4" font-size="18" font-weight="700">QCDMS</text>
+    <text x="40" y="78" fill="#9aa2b4" font-size="12.5">分析内部优势劣势（S / W）</text>
+    <g font-size="12.5">
+      <rect x="40" y="92" width="66" height="30" rx="8" fill="rgba(94,234,212,.14)"/><text x="73" y="112" text-anchor="middle" fill="#5eead4" font-weight="700">Q 品质</text>
+      <text x="116" y="112" fill="#9aa2b4">安全性、稳定性、可靠性</text>
+      <rect x="40" y="128" width="66" height="30" rx="8" fill="rgba(94,234,212,.14)"/><text x="73" y="148" text-anchor="middle" fill="#5eead4" font-weight="700">C 成本</text>
+      <rect x="116" y="128" width="60" height="30" rx="8" fill="rgba(94,234,212,.14)"/><text x="146" y="148" text-anchor="middle" fill="#5eead4" font-weight="700">D 交付</text>
+      <rect x="186" y="128" width="60" height="30" rx="8" fill="rgba(94,234,212,.14)"/><text x="216" y="148" text-anchor="middle" fill="#5eead4" font-weight="700">M 管理</text>
+      <rect x="256" y="128" width="60" height="30" rx="8" fill="rgba(94,234,212,.14)"/><text x="286" y="148" text-anchor="middle" fill="#5eead4" font-weight="700">S 服务</text>
+    </g>
+    <text x="40" y="182" fill="#6f7686" font-size="11.5">向内看：我这家公司能力怎么样</text>
+
+    <rect x="406" y="24" width="380" height="176" rx="16" fill="rgba(251,191,36,.05)" stroke="rgba(251,191,36,.32)"/>
+    <text x="432" y="56" fill="#fbbf24" font-size="18" font-weight="700">PEST</text>
+    <text x="432" y="78" fill="#9aa2b4" font-size="12.5">分析外部机会威胁（O / T）</text>
+    <g font-size="12.5">
+      <rect x="432" y="92" width="76" height="30" rx="8" fill="rgba(251,191,36,.14)"/><text x="470" y="112" text-anchor="middle" fill="#fbbf24" font-weight="700">P 政治</text>
+      <rect x="518" y="92" width="76" height="30" rx="8" fill="rgba(251,191,36,.14)"/><text x="556" y="112" text-anchor="middle" fill="#fbbf24" font-weight="700">E 经济</text>
+      <rect x="604" y="92" width="76" height="30" rx="8" fill="rgba(251,191,36,.14)"/><text x="642" y="112" text-anchor="middle" fill="#fbbf24" font-weight="700">S 社会</text>
+      <rect x="690" y="92" width="76" height="30" rx="8" fill="rgba(251,191,36,.14)"/><text x="728" y="112" text-anchor="middle" fill="#fbbf24" font-weight="700">T 技术</text>
+    </g>
+    <rect x="432" y="134" width="334" height="30" rx="8" fill="rgba(251,113,133,.1)"/>
+    <text x="448" y="154" fill="#fb7185" font-size="12">P 就是第 01 节说的「最大风险来源是政策」</text>
+    <text x="432" y="186" fill="#6f7686" font-size="11.5">向外看：环境对我是顺风还是逆风</text>
+  </svg>
+  <figcaption><b>图 7</b> · 内看 QCDMS，外看 PEST —— 两套方法各管 SWOT 的一半</figcaption>
+  </figure>
+
+  <div class="note warn">
+    <span class="tag">⚠ 四条注意事项</span>
+    <ol>
+      <li><strong>缺乏事实和数据，分析就会变得笼统</strong>，制定的战略也就没有价值 —— 这是最常见的坑</li>
+      <li>必须对公司的优势与劣势有<strong>客观</strong>认识</li>
+      <li>必须区分公司的<strong>现状</strong>与<strong>前景</strong></li>
+      <li>必须与竞争对手<strong>比较</strong>，说清是优于还是劣于对方</li>
+    </ol>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 5 ══════════ -->
+<section id="s5">
+  <div class="sechead"><div class="num">PART 05</div><h2>用户体验五要素</h2></div>
+
+  <h3>先说用户体验为什么重要</h3>
+  <p><strong>定义</strong>：用户在使用产品过程中建立起来的一种<em>纯主观感受</em>。</p>
+  <p>两个后果，都是花钱的：</p>
+  <div class="grid g2">
+    <div class="tile"><span class="ic">🚪</span><div class="t">会失去用户</div><div class="d">体验不好用户不会用你的产品，而且<b style="color:#fff">产品很难有二次机会接触用户</b></div></div>
+    <div class="tile"><span class="ic">💸</span><div class="t">会增加成本</div><div class="d">获客成本越来越高，因体验流失的用户<b style="color:#fff">等于白花的钱</b></div></div>
+  </div>
+
+  <h3>两种应用场景，方向相反</h3>
+  <div class="note key">
+    <span class="tag">◆ 最容易记混的地方</span>
+    <p>同一个五层模型，<strong>竞品分析是从上往下扒，做新产品是从下往上搭</strong>。</p>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="用户体验五要素的两种应用方向">
+    <defs>
+      <marker id="dn" markerWidth="9" markerHeight="9" refX="4.5" refY="8" orient="auto"><path d="M0,0 L9,0 L4.5,9 z" fill="#fbbf24"/></marker>
+      <marker id="up" markerWidth="9" markerHeight="9" refX="4.5" refY="1" orient="auto"><path d="M4.5,0 L9,9 L0,9 z" fill="#5eead4"/></marker>
+    </defs>
+    <rect x="14" y="24" width="380" height="262" rx="16" fill="rgba(251,191,36,.05)" stroke="rgba(251,191,36,.3)"/>
+    <text x="204" y="54" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="700">场景一：竞品分析</text>
+    <text x="204" y="76" text-anchor="middle" fill="#9aa2b4" font-size="12">具体 → 抽象（表现层往下扒）</text>
+    <g font-size="12.5">
+      <rect x="52" y="90" width="260" height="30" rx="7" fill="rgba(251,191,36,.16)"/><text x="182" y="110" text-anchor="middle" fill="#fde68a" font-weight="700">⑤ 表现层（你先看到这个）</text>
+      <rect x="52" y="126" width="260" height="30" rx="7" fill="#1c2130"/><text x="182" y="146" text-anchor="middle" fill="#cfd4e0">④ 框架层</text>
+      <rect x="52" y="162" width="260" height="30" rx="7" fill="#1c2130"/><text x="182" y="182" text-anchor="middle" fill="#cfd4e0">③ 结构层</text>
+      <rect x="52" y="198" width="260" height="30" rx="7" fill="#1c2130"/><text x="182" y="218" text-anchor="middle" fill="#cfd4e0">② 范围层</text>
+      <rect x="52" y="234" width="260" height="30" rx="7" fill="#1c2130"/><text x="182" y="254" text-anchor="middle" fill="#cfd4e0">① 战略层（反推出这个）</text>
+    </g>
+    <line x1="336" y1="96" x2="336" y2="252" stroke="#fbbf24" stroke-width="1.8" marker-end="url(#dn)"/>
+    <text x="204" y="280" text-anchor="middle" fill="#6f7686" font-size="11.5">你只能看到对手的成品，从视觉一层层反推战略</text>
+
+    <rect x="406" y="24" width="380" height="262" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.3)"/>
+    <text x="596" y="54" text-anchor="middle" fill="#5eead4" font-size="15" font-weight="700">场景二：新项目 / 从 0 到 1</text>
+    <text x="596" y="76" text-anchor="middle" fill="#9aa2b4" font-size="12">抽象 → 具体（战略层往上搭）</text>
+    <g font-size="12.5">
+      <rect x="444" y="90" width="260" height="30" rx="7" fill="#1c2130"/><text x="574" y="110" text-anchor="middle" fill="#cfd4e0">⑤ 表现层（最后才做）</text>
+      <rect x="444" y="126" width="260" height="30" rx="7" fill="#1c2130"/><text x="574" y="146" text-anchor="middle" fill="#cfd4e0">④ 框架层</text>
+      <rect x="444" y="162" width="260" height="30" rx="7" fill="#1c2130"/><text x="574" y="182" text-anchor="middle" fill="#cfd4e0">③ 结构层</text>
+      <rect x="444" y="198" width="260" height="30" rx="7" fill="#1c2130"/><text x="574" y="218" text-anchor="middle" fill="#cfd4e0">② 范围层</text>
+      <rect x="444" y="234" width="260" height="30" rx="7" fill="rgba(94,234,212,.16)"/><text x="574" y="254" text-anchor="middle" fill="#b8f5ea" font-weight="700">① 战略层（先想清这个）</text>
+    </g>
+    <line x1="728" y1="252" x2="728" y2="96" stroke="#5eead4" stroke-width="1.8" marker-end="url(#up)"/>
+    <text x="596" y="280" text-anchor="middle" fill="#6f7686" font-size="11.5">自己做产品，得先想清楚做什么再画界面</text>
+  </svg>
+  <figcaption><b>图 8</b> · 同一个五层，两个相反的读法 —— 拆别人从上往下，造自己从下往上</figcaption>
+  </figure>
+
+  <h3 id="wuceng">五层分别是什么，各交付什么</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 380" class="svgt" role="img" aria-label="用户体验五要素各层的核心问题与产出物">
+    <text x="240" y="30" text-anchor="middle" fill="#6f7686" font-size="11.5" letter-spacing=".14em">层级与核心问题</text>
+    <text x="646" y="30" text-anchor="middle" fill="#6f7686" font-size="11.5" letter-spacing=".14em">产出物</text>
+
+    <g>
+      <rect x="14" y="44" width="500" height="58" rx="12" fill="#161923" stroke="#a78bfa" stroke-opacity=".45"/>
+      <text x="40" y="70" fill="#a78bfa" font-size="15" font-weight="700">⑤ 表现层</text>
+      <text x="130" y="70" fill="#9aa2b4" font-size="12.5">页面效果的视觉呈现</text>
+      <text x="40" y="90" fill="#6f7686" font-size="12">做成了什么样子？</text>
+      <rect x="528" y="44" width="258" height="58" rx="12" fill="rgba(167,139,250,.12)"/>
+      <text x="657" y="80" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">UI 设计</text>
+
+      <rect x="14" y="110" width="500" height="58" rx="12" fill="#161923" stroke="#60a5fa" stroke-opacity=".45"/>
+      <text x="40" y="136" fill="#60a5fa" font-size="15" font-weight="700">④ 框架层</text>
+      <text x="130" y="136" fill="#9aa2b4" font-size="12.5">界面设计、导航设计、信息设计</text>
+      <text x="40" y="156" fill="#6f7686" font-size="12">每个页面长什么样？布局、导航怎么排？</text>
+      <rect x="528" y="110" width="258" height="58" rx="12" fill="rgba(96,165,250,.12)"/>
+      <text x="657" y="140" text-anchor="middle" fill="#60a5fa" font-size="13.5" font-weight="700">低保真原型</text>
+      <text x="657" y="158" text-anchor="middle" fill="#6f7686" font-size="11">是否带交互取决于各公司</text>
+
+      <rect x="14" y="176" width="500" height="58" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".45"/>
+      <text x="40" y="202" fill="#5eead4" font-size="15" font-weight="700">③ 结构层</text>
+      <text x="130" y="202" fill="#9aa2b4" font-size="12.5">产品的整体结构设计</text>
+      <text x="40" y="222" fill="#6f7686" font-size="12">用哪些页面承载这些功能？流程是否明确？</text>
+      <rect x="528" y="176" width="258" height="58" rx="12" fill="rgba(94,234,212,.12)"/>
+      <text x="657" y="206" text-anchor="middle" fill="#5eead4" font-size="13.5" font-weight="700">PRD（部分）</text>
+      <text x="657" y="224" text-anchor="middle" fill="#5eead4" font-size="13.5" font-weight="700">+ 低保真原型</text>
+
+      <rect x="14" y="242" width="500" height="58" rx="12" fill="#161923" stroke="#5eead4" stroke-opacity=".45"/>
+      <text x="40" y="268" fill="#5eead4" font-size="15" font-weight="700">② 范围层</text>
+      <text x="130" y="268" fill="#9aa2b4" font-size="12.5">功能及内容需求整合</text>
+      <text x="40" y="288" fill="#6f7686" font-size="12">要做哪些功能来满足这些需求？</text>
+      <rect x="528" y="242" width="258" height="58" rx="12" fill="rgba(94,234,212,.12)"/>
+      <text x="657" y="278" text-anchor="middle" fill="#5eead4" font-size="14" font-weight="700">PRD（部分）</text>
+
+      <rect x="14" y="308" width="500" height="58" rx="12" fill="rgba(251,191,36,.07)" stroke="#fbbf24" stroke-opacity=".5"/>
+      <text x="40" y="334" fill="#fbbf24" font-size="15" font-weight="700">① 战略层</text>
+      <text x="130" y="334" fill="#9aa2b4" font-size="12.5">产品目标和用户需求</text>
+      <text x="40" y="354" fill="#6f7686" font-size="12">做什么？为什么做？用户是谁、需求是什么？</text>
+      <rect x="528" y="308" width="258" height="58" rx="12" fill="rgba(251,191,36,.14)"/>
+      <text x="657" y="344" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">BRD &amp; MRD</text>
+    </g>
+  </svg>
+  <figcaption><b>图 9</b> · 层级对应产出物 —— 这张把第 01 节的 3D 文档接了回来：战略层出 BRD/MRD，范围结构层出 PRD</figcaption>
+  </figure>
+
+  <blockquote><p><strong>先考虑产品的可实现性，再考虑产品的易用性。</strong></p></blockquote>
+  <p>做不出来的好用是空谈。</p>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 6 ══════════ -->
+<section id="s6">
+  <div class="sechead"><div class="num">PART 06</div><h2>用户访谈</h2></div>
+
+  <p><strong>定义</strong>：用提问交流的方式了解用户体验的过程，属于<em>定性研究</em>。内容通常包括使用过程、使用感受、品牌印象。</p>
+  <p><strong>实际场景</strong>：接听客服电话、主动访谈客户（电话或见面）。</p>
+
+  <h3>两种形式</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:110px">形式</th><th>优点</th><th>缺点</th></tr></thead>
+    <tbody>
+      <tr><td><b>一对一</b></td><td>更深入、全面地获取资料</td><td>抽样误差大、成本高</td></tr>
+      <tr><td><b>一对多</b></td><td>互动性强</td><td>容易被强势者带偏，难深入</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>四个错误，逐条记住</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="用户访谈的四个常见错误">
+    <rect x="14" y="24" width="380" height="122" rx="14" fill="#161923" stroke="#fb7185" stroke-opacity=".4"/>
+    <text x="38" y="54" fill="#fb7185" font-size="15" font-weight="700">❶ 明知故问</text>
+    <line x1="38" y1="66" x2="370" y2="66" stroke="#272c3a"/>
+    <text x="38" y="90" fill="#9aa2b4" font-size="12.5">反面例子：</text>
+    <text x="38" y="112" fill="#cfd4e0" font-size="13">问废墟中只露出头的男子</text>
+    <text x="38" y="132" fill="#cfd4e0" font-size="13">「您身上哪些部位被压到了」</text>
+
+    <rect x="406" y="24" width="380" height="122" rx="14" fill="#161923" stroke="#fb7185" stroke-opacity=".4"/>
+    <text x="430" y="54" fill="#fb7185" font-size="15" font-weight="700">❷ 引导用户</text>
+    <line x1="430" y1="66" x2="762" y2="66" stroke="#272c3a"/>
+    <text x="430" y="90" fill="#9aa2b4" font-size="12.5">反面例子：</text>
+    <text x="430" y="112" fill="#cfd4e0" font-size="13">「我们优化了这个功能，</text>
+    <text x="430" y="132" fill="#cfd4e0" font-size="13">您觉得怎么样？」← 答案已塞给用户</text>
+
+    <rect x="14" y="158" width="380" height="122" rx="14" fill="#161923" stroke="#fbbf24" stroke-opacity=".4"/>
+    <text x="38" y="188" fill="#fbbf24" font-size="15" font-weight="700">❸ 问题太开放</text>
+    <line x1="38" y1="200" x2="370" y2="200" stroke="#272c3a"/>
+    <text x="38" y="224" fill="#9aa2b4" font-size="12.5">反面例子：</text>
+    <text x="38" y="246" fill="#cfd4e0" font-size="13">「您对投资理财有什么看法？」</text>
+    <text x="38" y="266" fill="#6f7686" font-size="12.5">用户不知从何答起</text>
+
+    <rect x="406" y="158" width="380" height="122" rx="14" fill="#161923" stroke="#fbbf24" stroke-opacity=".4"/>
+    <text x="430" y="188" fill="#fbbf24" font-size="15" font-weight="700">❹ 问题太细节</text>
+    <line x1="430" y1="200" x2="762" y2="200" stroke="#272c3a"/>
+    <text x="430" y="224" fill="#9aa2b4" font-size="12.5">反面例子：</text>
+    <text x="430" y="246" fill="#cfd4e0" font-size="13">问某个深层功能的具体操作路径</text>
+    <text x="430" y="266" fill="#6f7686" font-size="12.5">用户根本回忆不起来</text>
+  </svg>
+  <figcaption><b>图 10</b> · 四个错误分成两组：上排是「问了等于没问」，下排是「用户答不上来」</figcaption>
+  </figure>
+
+  <h3>怎么问：三步套路</h3>
+  <div class="note key">
+    <ol>
+      <li><strong>明确访谈目标</strong> —— 主题是什么，为什么做这次访谈</li>
+      <li><strong>确定访谈对象</strong> —— 跟谁聊</li>
+      <li><strong>设计访谈提纲</strong> —— 具体聊什么
+        <ul>
+          <li>问题要<b>由易到难</b></li>
+          <li>题目要<b>通俗易懂</b></li>
+          <li>提纲最好<b>迭代设计</b></li>
+          <li>具体问题围绕：<em>现状 → 痛点 → 方案</em></li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <p><strong>案例</strong>（给餐厅在食材快耗完时供菜的 APP）：</p>
+  <div class="tw"><table>
+    <thead><tr><th>问什么</th><th>挖什么</th></tr></thead>
+    <tbody>
+      <tr><td>你现在是如何做的？</td><td><b>现状</b></td></tr>
+      <tr><td>遇到什么困难？</td><td><b>痛点</b></td></tr>
+      <tr><td>怎么解决的？</td><td><b>方案</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="tag">◆ 课堂补充</span>
+    <p>真实工作场景中，<strong>用户访谈都是多个部门配合一起完成的</strong>，不是产品经理一个人的活。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 7 ══════════ -->
+<section id="s7">
+  <div class="sechead"><div class="num">PART 07</div><h2>问卷调查</h2></div>
+
+  <p><strong>定义</strong>：通过制定详细周密的问卷，要求被调查者据此回答以收集资料，属于<em>定量研究</em>。</p>
+
+  <div class="grid g3">
+    <div class="tile"><span class="ic">🎯</span><div class="t">主题</div><div class="d">先确定问卷主题；<b style="color:#fff">所有题目不能偏离主题</b></div></div>
+    <div class="tile"><span class="ic">👤</span><div class="t">对象</div><div class="d">投放对象要<b style="color:#fff">有代表性</b>、<b style="color:#fff">随机选择</b></div></div>
+    <div class="tile"><span class="ic">✅</span><div class="t">体验</div><div class="d">尽量设<b style="color:#fff">封闭性问题</b>（选择题）；通俗易懂；<b style="color:#fff">题量 20 以内</b></div></div>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 800 250" class="svgt" role="img" aria-label="问卷调查的好问题与坏问题对照">
+    <rect x="14" y="24" width="380" height="176" rx="16" fill="rgba(94,234,212,.05)" stroke="rgba(94,234,212,.35)"/>
+    <text x="204" y="56" text-anchor="middle" fill="#5eead4" font-size="17" font-weight="700">✓ Good</text>
+    <rect x="42" y="72" width="324" height="54" rx="10" fill="#161923"/>
+    <text x="60" y="96" fill="#e8eaf0" font-size="12.5">您平时用哪种方式登录？</text>
+    <text x="60" y="116" fill="#5eead4" font-size="12.5">邮箱 / 手机号 / 第三方账号</text>
+    <rect x="42" y="134" width="324" height="46" rx="10" fill="#161923"/>
+    <text x="60" y="158" fill="#e8eaf0" font-size="12.5">对产品整体评价，</text>
+    <text x="60" y="176" fill="#5eead4" font-size="12.5">1-10 分能给几分？</text>
+
+    <rect x="406" y="24" width="380" height="176" rx="16" fill="rgba(251,113,133,.05)" stroke="rgba(251,113,133,.35)"/>
+    <text x="596" y="56" text-anchor="middle" fill="#fb7185" font-size="17" font-weight="700">✗ Bad</text>
+    <rect x="434" y="72" width="324" height="54" rx="10" fill="#161923"/>
+    <text x="452" y="103" fill="#e8eaf0" font-size="12.5">您是怎么操作登录这个功能的？</text>
+    <rect x="434" y="134" width="324" height="46" rx="10" fill="#161923"/>
+    <text x="452" y="162" fill="#e8eaf0" font-size="12.5">您对我们产品感觉如何？</text>
+
+    <rect x="14" y="212" width="772" height="34" rx="10" fill="#12141b" stroke="#272c3a"/>
+    <text x="400" y="234" text-anchor="middle" fill="#9aa2b4" font-size="13">规律：<tspan fill="#5eead4" font-weight="700">好问题给选项、可量化</tspan>；<tspan fill="#fb7185" font-weight="700">坏问题开放、要用户自己组织语言</tspan></text>
+  </svg>
+  <figcaption><b>图 11</b> · 好问题与坏问题：能不能直接汇总成数字，是定量研究的分水岭</figcaption>
+  </figure>
+
+  <p><strong>常用工具</strong>：问卷网（wenjuan.com）｜ 问卷星（wjx.cn）｜ 腾讯问卷（wj.qq.com）</p>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 8 ══════════ -->
+<section id="s8">
+  <div class="sechead"><div class="num">PART 08</div><h2>需求池</h2></div>
+
+  <p><strong>定义</strong>：用来收集和管理各方需求的集合。<em>不只记需求是什么，还记这个需求相关的关键信息。</em></p>
+
+  <div class="note warn">
+    <span class="tag">⚠ 别死记模板</span>
+    <p><strong>需求池没有统一标准</strong>，各公司格式不同。典型字段：提交时间、提交人、需求来源、需求类型、产品模块、需求描述、优先级、状态、备注。</p>
+  </div>
+
+  <h3>必须包含的四类内容</h3>
+
+  <figure>
+  <svg viewBox="0 0 800 300" class="svgt" role="img" aria-label="需求池必须包含的四类内容">
+    <rect x="14" y="24" width="380" height="126" rx="14" fill="rgba(94,234,212,.06)" stroke="#5eead4" stroke-opacity=".42"/>
+    <text x="38" y="54" fill="#5eead4" font-size="16" font-weight="700">① 需求</text>
+    <line x1="38" y1="66" x2="370" y2="66" stroke="#272c3a"/>
+    <text x="38" y="90" fill="#e8eaf0" font-size="13" font-weight="600">原始需求</text>
+    <text x="38" y="110" fill="#9aa2b4" font-size="12">什么用户、在什么场景下、想达成什么目标</text>
+    <text x="38" y="132" fill="#e8eaf0" font-size="13" font-weight="600">产品需求</text>
+    <text x="150" y="132" fill="#9aa2b4" font-size="12">产品给出的解决方案</text>
+
+    <rect x="406" y="24" width="380" height="126" rx="14" fill="#161923" stroke="#a78bfa" stroke-opacity=".42"/>
+    <text x="430" y="54" fill="#a78bfa" font-size="16" font-weight="700">② 干系人</text>
+    <line x1="430" y1="66" x2="762" y2="66" stroke="#272c3a"/>
+    <g font-size="12.5">
+      <rect x="430" y="80" width="76" height="28" rx="8" fill="rgba(167,139,250,.14)"/><text x="468" y="99" text-anchor="middle" fill="#a78bfa">需求方</text>
+      <rect x="514" y="80" width="76" height="28" rx="8" fill="rgba(167,139,250,.14)"/><text x="552" y="99" text-anchor="middle" fill="#a78bfa">记录人</text>
+      <rect x="598" y="80" width="90" height="28" rx="8" fill="rgba(167,139,250,.14)"/><text x="643" y="99" text-anchor="middle" fill="#a78bfa">产品经理</text>
+      <rect x="430" y="114" width="180" height="28" rx="8" fill="rgba(167,139,250,.14)"/><text x="520" y="133" text-anchor="middle" fill="#a78bfa">其他项目干系人</text>
+    </g>
+
+    <rect x="14" y="162" width="380" height="126" rx="14" fill="#161923" stroke="#60a5fa" stroke-opacity=".42"/>
+    <text x="38" y="192" fill="#60a5fa" font-size="16" font-weight="700">③ 时间</text>
+    <line x1="38" y1="204" x2="370" y2="204" stroke="#272c3a"/>
+    <g font-size="12.5">
+      <rect x="38" y="218" width="140" height="28" rx="8" fill="rgba(96,165,250,.14)"/><text x="108" y="237" text-anchor="middle" fill="#60a5fa">需求提出时间</text>
+      <rect x="186" y="218" width="110" height="28" rx="8" fill="rgba(96,165,250,.14)"/><text x="241" y="237" text-anchor="middle" fill="#60a5fa">需求节点</text>
+    </g>
+    <text x="38" y="272" fill="#6f7686" font-size="12">时间戳决定了需求能不能回溯</text>
+
+    <rect x="406" y="162" width="380" height="126" rx="14" fill="#161923" stroke="#fbbf24" stroke-opacity=".42"/>
+    <text x="430" y="192" fill="#fbbf24" font-size="16" font-weight="700">④ 优先级</text>
+    <line x1="430" y1="204" x2="762" y2="204" stroke="#272c3a"/>
+    <g font-size="12.5">
+      <rect x="430" y="218" width="110" height="28" rx="8" fill="rgba(251,191,36,.14)"/><text x="485" y="237" text-anchor="middle" fill="#fbbf24">主优先级</text>
+      <rect x="548" y="218" width="110" height="28" rx="8" fill="rgba(251,191,36,.14)"/><text x="603" y="237" text-anchor="middle" fill="#fbbf24">子优先级</text>
+    </g>
+    <text x="430" y="272" fill="#fbbf24" font-size="12.5">一般由需求方给定，不是产品经理拍的</text>
+  </svg>
+  <figcaption><b>图 12</b> · 需求池四类内容：记「是什么」只占四分之一，另外三块才让需求可管理</figcaption>
+  </figure>
+
+  <h3>三个作用</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:120px">作用</th><th>具体做什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>管理需求</b></td><td>收到新需求就记；需求多时分批、分优先级</td></tr>
+      <tr><td><b>需求维护</b></td><td>每条需求怎么处理的？现在什么阶段、什么状态？</td></tr>
+      <tr><td><b>需求回溯</b></td><td>未处理的：这需求怎么产生的，用户和场景是什么？<br>已处理的：当时为什么这么做？</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="tag">◆ 课堂补充</span>
+    <p>需求池由谁记录、维护，<strong>各公司要求不同</strong>。</p>
+  </div>
+</section>
+
+<hr class="big">
+
+<!-- ══════════ 扩展 ══════════ -->
+<section id="baogao">
+  <div class="sechead"><div class="num">EXTRA</div><h2>扩展：产品体验报告</h2></div>
+  <p>站在产品经理视角审视一款产品，五个部分：</p>
+  <div class="grid g3">
+    <div class="tile"><div class="t">① 概述</div><div class="d">产品信息及体验环境</div></div>
+    <div class="tile"><div class="t">② 市场及行业分析</div><div class="d">—</div></div>
+    <div class="tile"><div class="t">③ 用户分析</div><div class="d">—</div></div>
+    <div class="tile"><div class="t">④ 产品主要功能及页面</div><div class="d">—</div></div>
+    <div class="tile"><div class="t">⑤ 小结</div><div class="d">针对这款产品的建议</div></div>
+  </div>
+  <div class="note warn">
+    <span class="tag">⚠ 作业要求</span>
+    <p>用 PPT 制作。<strong>不能出现大段文字</strong>（拆成小点）；<strong>引用数据必须注明来源</strong>；<strong>图片/截图必须有文字说明</strong>。</p>
+  </div>
+</section>
+
+<!-- ══════════ 自测 ══════════ -->
+<section id="quiz">
+  <div class="sechead"><div class="num">CHECK</div><h2>本节自测</h2></div>
+  <ol class="quizlist">
+    <li>需求有几种来源？（两个维度、四个方面分别是什么）</li>
+    <li>需求收集有哪几种方法？各对应什么来源？</li>
+    <li>什么是竞品分析？选竞品的三类标准是什么？</li>
+    <li>什么是 SWOT 分析？道斯矩阵的四种战略分别叫什么？有什么硬性限制？</li>
+    <li>用户体验五要素是哪五层？两种应用场景方向有什么不同？</li>
+    <li>用户访谈和调查问卷有什么区别？（提示：定性 vs 定量）</li>
+  </ol>
+</section>
+
+<!-- ══════════ 资料 ══════════ -->
+<section id="ziliao">
+  <div class="sechead"><div class="num">FILES</div><h2>配套资料</h2></div>
+  <div class="note key">
+    <span class="tag">◆ 可直接上手的模板与实例</span>
+    <p>目录：<code style="font-family:var(--mono);font-size:12.5px">~/Downloads/课件/录播课课件/第1阶段-产品基础/_其他资料/</code></p>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>文件</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td><code style="font-family:var(--mono);font-size:13px">02-竞品分析示例文档.pptx</code></td><td><b>完整竞品分析报告范例</b></td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:13px">02-需求池示例1.xlsx</code>、<code style="font-family:var(--mono);font-size:13px">02-需求池示例2.xlsx</code></td><td>两份需求池实例</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:13px">02-需求池制作示例.xlsx</code></td><td><b>需求池制作模板</b></td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:13px">02-范围层对比.xlsx</code></td><td>用户体验五要素范围层功能对比表</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <span><a href="index.html" style="color:#5eead4;text-decoration:none">← 返回课程目录</a>　·　产品经理培训 · 02 需求收集和需求管理 · 阅读版</span>
+  <span>上一节：01 产品基础　·　下一节：03 用户研究和需求分析</span>
+</footer>
+</main>
+</div>
+</body>
+</html>
